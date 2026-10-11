@@ -32,25 +32,24 @@
             cursor: default;
         }
 
-        /* --- ОБЛАКА, ВЫХОДЯЩИЕ ИЗ-ЗА ЭКРАНА --- */
+        /* --- МАЛЕНЬКИЕ АККУРАТНЫЕ ОБЛАКА ТОЛЬКО СВЕРХУ --- */
         .cloud {
             position: fixed;
-            left: -380px; /* Стартуют строго за левым краем экрана */
-            background: rgba(55, 75, 64, 0.85);
-            border-radius: 120px;
-            filter: blur(12px);
+            left: -200px;
+            background: rgba(55, 75, 64, 0.75);
+            border-radius: 60px;
+            filter: blur(8px);
             pointer-events: none;
             z-index: 0;
             animation: driftCloud linear infinite;
             box-shadow: 
-                40px 15px 40px rgba(10, 25, 15, 0.8),
-                -40px 20px 35px rgba(10, 25, 15, 0.8),
-                0 -20px 25px rgba(80, 110, 95, 0.5);
+                20px 8px 20px rgba(10, 25, 15, 0.6),
+                -20px 10px 15px rgba(10, 25, 15, 0.6);
         }
 
         @keyframes driftCloud {
             0% { transform: translateX(0); }
-            100% { transform: translateX(calc(100vw + 600px)); } /* Пролетают до конца за правый край */
+            100% { transform: translateX(calc(100vw + 350px)); }
         }
 
         /* --- МНОГО ЭЛЕКТРИЧЕСКИХ ПРОВОДОВ --- */
@@ -429,7 +428,7 @@
             transform: translateY(-3px);
         }
 
-        /* БЛОКИ ИЗОБРАЖЕНИЙ ПРОЕКТОВ (ПИНГВИН ПОЛНОСТЬЮ ВИДЕН) */
+        /* БЛОКИ ИЗОБРАЖЕНИЙ ПРОЕКТОВ */
         .project-img-box {
             height: 135px;
             width: 100%;
@@ -487,10 +486,10 @@
 </head>
 <body>
 
-    <!-- Плотные облака, выходящие из-за левого края экрана -->
-    <div class="cloud" style="width: 280px; height: 85px; top: 10%; animation-duration: 24s; animation-delay: -3s;"></div>
-    <div class="cloud" style="width: 360px; height: 110px; top: 45%; animation-duration: 32s; animation-delay: -12s;"></div>
-    <div class="cloud" style="width: 310px; height: 95px; top: 75%; animation-duration: 28s; animation-delay: -7s;"></div>
+    <!-- Маленькие аккуратные облака строго вверху экрана, выходящие из-за левого края -->
+    <div class="cloud" style="width: 140px; height: 35px; top: 12px; animation-duration: 25s; animation-delay: -2s;"></div>
+    <div class="cloud" style="width: 170px; height: 40px; top: 22px; animation-duration: 32s; animation-delay: -12s;"></div>
+    <div class="cloud" style="width: 130px; height: 32px; top: 8px; animation-duration: 28s; animation-delay: -7s;"></div>
 
     <!-- Множество электрических проводов по всему периметру -->
     <svg id="wires-canvas"></svg>
@@ -623,6 +622,12 @@
     </div>
 
     <script>
+        // Проверка активности вкладки, чтобы сайт не лагал при переключении
+        let isTabActive = true;
+        document.addEventListener('visibilitychange', () => {
+            isTabActive = !document.hidden;
+        });
+
         // --- МНОГО ЭЛЕКТРИЧЕСКИХ ПРОВОДОВ И ИСКРЫ ---
         let wireTips = [];
 
@@ -636,7 +641,6 @@
 
             wireTips = [];
 
-            // Расширенная сеть проводов по периметру
             const wires = [
                 { color: '#ef4444', d: `M 0,20 L 110,20 L 150,55`, end: { x: 150, y: 55 } },
                 { color: '#3b82f6', d: `M 0,45 L 90,45 L 130,90`, end: { x: 130, y: 90 } },
@@ -694,7 +698,9 @@
                 const randomTime = 2500 + Math.random() * 4500;
 
                 const interval = setInterval(() => {
-                    for (let i = 0; i < 5; i++) {
+                    if (!isTabActive) return; // Не спавним искры, если вкладка неактивна
+
+                    for (let i = 0; i < 4; i++) {
                         let spark = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                         spark.setAttribute('cx', pt.x);
                         spark.setAttribute('cy', pt.y);
@@ -711,10 +717,14 @@
                         let opacity = 1.0;
 
                         function animateSpark() {
+                            if (!isTabActive) {
+                                spark.remove();
+                                return;
+                            }
                             velY += gravity;
                             posX += velX;
                             posY += velY;
-                            opacity -= 0.03;
+                            opacity -= 0.04;
 
                             if (opacity <= 0) {
                                 spark.remove();
@@ -736,7 +746,7 @@
         window.addEventListener('resize', initElectricWires);
         initElectricWires();
 
-        // --- НАДЁЖНЫЙ ЛОКАЛЬНЫЙ СЧЕТЧИК ПОСЕЩЕНИЙ ---
+        // --- ЛОКАЛЬНЫЙ СЧЕТЧИК ПОСЕЩЕНИЙ ---
         function initVisitorCounter() {
             let views = localStorage.getItem('thedyserrealm_views');
             if (!views) {
@@ -745,7 +755,6 @@
                 views = parseInt(views);
             }
 
-            // Считаем уникальный заход за сессию
             if (!sessionStorage.getItem('thedyserrealm_visited')) {
                 views += 1;
                 localStorage.setItem('thedyserrealm_views', views);
@@ -758,6 +767,7 @@
 
         // --- МОЛНИИ ИЗ ОБЛАКОВ В МЫШКУ ---
         function strikeLightningFromClouds() {
+            if (!isTabActive) return;
             const clouds = document.querySelectorAll('.cloud');
             if (clouds.length === 0) return;
 
@@ -810,6 +820,7 @@
         let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
 
         document.addEventListener('mousemove', (e) => {
+            if (!isTabActive) return;
             mouseX = e.clientX;
             mouseY = e.clientY;
             
@@ -871,6 +882,7 @@
         }
 
         function typeWriter() {
+            if (!isTabActive) return;
             if (charIndex < currentTextToType.length) {
                 typedElement.textContent += currentTextToType.charAt(charIndex);
                 charIndex++;
@@ -899,6 +911,7 @@
         let lastStatus = null;
 
         async function loadDiscordData() {
+            if (!isTabActive) return;
             try {
                 const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
                 const data = await res.json();
