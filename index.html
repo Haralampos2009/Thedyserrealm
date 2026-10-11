@@ -24,7 +24,7 @@
     <!-- Электрические провода -->
     <svg id="wires-canvas"></svg>
 
-    <!-- Бегущие цифры (полный массив строк) -->
+    <!-- Бегущие цифры -->
     <div class="binary-rain-container">
         <div class="binary-col fall-down">0<br>1<br>0<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>1<br>0<br>0<br>1<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>1<br>0<br>1</div>
         <div class="binary-col fall-up">1<br>0<br>1<br>1<br>0<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>1<br>0<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>1<br>0<br>1<br>0</div>
@@ -42,11 +42,11 @@
     <!-- Основной сайт -->
     <div class="site-container" id="siteContainer">
         <aside class="profile-sidebar">
-            <!-- Контейнер для 3D-переворота карточки -->
+            <!-- Контейнер для 3D-переворота -->
             <div class="card-flip-container" id="cardFlipContainer">
                 
                 <!-- ЛИЦЕВАЯ СТОРОНА КАРТОЧКИ -->
-                <div class="profile-card" id="tiltCard">
+                <div class="profile-card-side card-front" id="tiltCard">
                     <!-- Кнопка-стрелочка для открытия обратной стороны -->
                     <button class="flip-btn" id="flipToBackBtn" title="Открыть меню">➔</button>
 
@@ -122,7 +122,7 @@
                 </div>
 
                 <!-- ОБРАТНАЯ СТОРОНА КАРТОЧКИ (МЕНЮ ВЫБОРА) -->
-                <div class="profile-card profile-card-back">
+                <div class="profile-card-side card-back">
                     <!-- Кнопка возврата на лицевую сторону -->
                     <button class="flip-btn" id="flipToFrontBtn" title="Назад">⬅</button>
 
