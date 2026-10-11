@@ -32,22 +32,24 @@
             cursor: default;
         }
 
-        /* --- ЗАМЕТНЫЕ ПЛЫВУЩИЕ ОБЛАКА --- */
+        /* --- НАСТОЯЩИЕ СЕРЫЕ ОБЛАКА ПО ФОРМЕ --- */
         .cloud {
             position: fixed;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(52, 211, 153, 0.2);
-            border-radius: 50px;
-            filter: blur(8px);
+            background: rgba(45, 60, 52, 0.45);
+            border-radius: 100px;
+            filter: blur(10px);
             pointer-events: none;
             z-index: 0;
             animation: driftCloud linear infinite;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+            box-shadow: 
+                30px 10px 30px rgba(20, 35, 25, 0.6),
+                -30px 15px 25px rgba(20, 35, 25, 0.6),
+                0 -15px 20px rgba(60, 85, 72, 0.3);
         }
 
         @keyframes driftCloud {
-            0% { transform: translateX(-300px); }
-            100% { transform: translateX(calc(100vw + 300px)); }
+            0% { transform: translateX(-350px); }
+            100% { transform: translateX(calc(100vw + 350px)); }
         }
 
         /* --- РАЗВЕТВЛЁННЫЕ ЭЛЕКТРИЧЕСКИЕ ПРОВОДА --- */
@@ -426,7 +428,7 @@
             transform: translateY(-3px);
         }
 
-        /* БЛОКИ ИЗОБРАЖЕНИЙ ПРОЕКТОВ */
+        /* БЛОКИ ИЗОБРАЖЕНИЙ ПРОЕКТОВ (СМЕЩЕНЫ ЧУТЬ ВНИЖЕ, ЧТОБЫ ВИДЕТЬ ГОЛОВУ ПИНГВИНА) */
         .project-img-box {
             height: 135px;
             width: 100%;
@@ -442,6 +444,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center 25%; /* Смещение кадра выше, чтобы была видна голова */
             transition: transform 0.3s ease;
         }
 
@@ -483,10 +486,10 @@
 </head>
 <body>
 
-    <!-- Заметные облака на фоне -->
-    <div class="cloud" style="width: 260px; height: 80px; top: 12%; animation-duration: 25s; animation-delay: -2s;"></div>
-    <div class="cloud" style="width: 340px; height: 100px; top: 55%; animation-duration: 35s; animation-delay: -12s;"></div>
-    <div class="cloud" style="width: 220px; height: 70px; top: 80%; animation-duration: 28s; animation-delay: -8s;"></div>
+    <!-- Настоящие серые облака на фоне -->
+    <div class="cloud" style="width: 280px; height: 85px; top: 10%; animation-duration: 26s; animation-delay: -3s;"></div>
+    <div class="cloud" style="width: 360px; height: 110px; top: 50%; animation-duration: 36s; animation-delay: -14s;"></div>
+    <div class="cloud" style="width: 240px; height: 75px; top: 78%; animation-duration: 30s; animation-delay: -7s;"></div>
 
     <!-- Разветвлённые электрические провода на фоне -->
     <svg id="wires-canvas"></svg>
@@ -632,19 +635,13 @@
 
             sparkEndPoints = [];
 
-            // Расширенная сеть проводов по всем углам
             const wires = [
-                // Левый верхний угол
                 { color: '#ef4444', d: `M 0,20 L 100,20 L 140,50`, end: { x: 140, y: 50 } },
                 { color: '#3b82f6', d: `M 0,40 L 80,40 L 120,80`, end: { x: 120, y: 80 } },
                 { color: '#84cc16', stripe: true, d: `M 0,60 L 60,60 L 100,110`, end: { x: 100, y: 110 } },
-
-                // Правый верхний угол
                 { color: '#ef4444', d: `M ${w},20 L ${w-100},20 L ${w-140},50`, end: { x: w-140, y: 50 } },
                 { color: '#3b82f6', d: `M ${w},40 L ${w-80},40 L ${w-120},80`, end: { x: w-120, y: 80 } },
                 { color: '#84cc16', stripe: true, d: `M ${w},60 L ${w-60},60 L ${w-100},110`, end: { x: w-100, y: 110 } },
-
-                // Левый нижний угол
                 { color: '#3b82f6', d: `M 0,${h-30} L 90,${h-30} L 130,${h-70}`, end: { x: 130, y: h-70 } },
                 { color: '#ef4444', d: `M 0,${h-50} L 70,${h-50} L 110,${h-100}`, end: { x: 110, y: h-100 } }
             ];
@@ -705,7 +702,7 @@
         setTimeout(throwWhiteSparks, 1000);
         setInterval(throwWhiteSparks, 20000);
 
-        // --- МОЛНИИ ИЗ ОБЛАКОВ ПРПЯМО В МЫШКУ ---
+        // --- МОЛНИИ ИЗ ОБЛАКОВ В МЫШКУ ---
         function strikeLightningFromClouds() {
             const clouds = document.querySelectorAll('.cloud');
             if (clouds.length === 0) return;
