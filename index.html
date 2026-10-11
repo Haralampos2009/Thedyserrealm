@@ -32,24 +32,24 @@
             cursor: default;
         }
 
-        /* --- НАСТОЯЩИЕ СЕРЫЕ ОБЛАКА ПО ФОРМЕ --- */
+        /* --- БОЛЕЕ ПЛОТНЫЕ И РЕАЛИСТИЧНЫЕ ОБЛАКА --- */
         .cloud {
             position: fixed;
-            background: rgba(45, 60, 52, 0.45);
-            border-radius: 100px;
-            filter: blur(10px);
+            background: rgba(55, 75, 64, 0.85);
+            border-radius: 120px;
+            filter: blur(12px);
             pointer-events: none;
             z-index: 0;
             animation: driftCloud linear infinite;
             box-shadow: 
-                30px 10px 30px rgba(20, 35, 25, 0.6),
-                -30px 15px 25px rgba(20, 35, 25, 0.6),
-                0 -15px 20px rgba(60, 85, 72, 0.3);
+                40px 15px 40px rgba(10, 25, 15, 0.8),
+                -40px 20px 35px rgba(10, 25, 15, 0.8),
+                0 -20px 25px rgba(80, 110, 95, 0.5);
         }
 
         @keyframes driftCloud {
-            0% { transform: translateX(-350px); }
-            100% { transform: translateX(calc(100vw + 350px)); }
+            0% { transform: translateX(-400px); }
+            100% { transform: translateX(calc(100vw + 400px)); }
         }
 
         /* --- РАЗВЕТВЛЁННЫЕ ЭЛЕКТРИЧЕСКИЕ ПРОВОДА --- */
@@ -428,7 +428,7 @@
             transform: translateY(-3px);
         }
 
-        /* БЛОКИ ИЗОБРАЖЕНИЙ ПРОЕКТОВ (СМЕЩЕНЫ ЧУТЬ ВНИЖЕ, ЧТОБЫ ВИДЕТЬ ГОЛОВУ ПИНГВИНА) */
+        /* БЛОКИ ИЗОБРАЖЕНИЙ ПРОЕКТОВ (ПИНГВИН ПОЛНОСТЬЮ ВИДЕН) */
         .project-img-box {
             height: 135px;
             width: 100%;
@@ -444,7 +444,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center 25%; /* Смещение кадра выше, чтобы была видна голова */
+            object-position: center 10%; /* Опустили изображение, чтобы пингвин был полностью виден */
             transition: transform 0.3s ease;
         }
 
@@ -486,7 +486,7 @@
 </head>
 <body>
 
-    <!-- Настоящие серые облака на фоне -->
+    <!-- Настоящие плотные серые облака на фоне -->
     <div class="cloud" style="width: 280px; height: 85px; top: 10%; animation-duration: 26s; animation-delay: -3s;"></div>
     <div class="cloud" style="width: 360px; height: 110px; top: 50%; animation-duration: 36s; animation-delay: -14s;"></div>
     <div class="cloud" style="width: 240px; height: 75px; top: 78%; animation-duration: 30s; animation-delay: -7s;"></div>
@@ -622,8 +622,8 @@
     </div>
 
     <script>
-        // --- МНОГО ПРОВОДОВ И ИСКРЫ ---
-        let sparkEndPoints = [];
+        // --- ПРОВОДА И ИСКРЫ, ПАДАЮЩИЕ ВНИЗ ---
+        let wireTips = [];
 
         function initElectricWires() {
             const svg = document.getElementById('wires-canvas');
@@ -633,7 +633,7 @@
             svg.setAttribute('height', h);
             svg.innerHTML = '';
 
-            sparkEndPoints = [];
+            wireTips = [];
 
             const wires = [
                 { color: '#ef4444', d: `M 0,20 L 100,20 L 140,50`, end: { x: 140, y: 50 } },
@@ -667,40 +667,83 @@
                 tip.setAttribute('fill', '#f59e0b');
                 svg.appendChild(tip);
 
-                sparkEndPoints.push(wire.end);
+                wireTips.push(wire.end);
+            });
+
+            startIndividualSparks();
+        }
+
+        let sparkIntervals = [];
+
+        function startIndividualSparks() {
+            sparkIntervals.forEach(clearInterval);
+            sparkIntervals = [];
+
+            const svg = document.getElementById('wires-canvas');
+
+            wireTips.forEach(pt => {
+                const randomTime = 3000 + Math.random() * 4000;
+
+                const interval = setInterval(() => {
+                    for (let i = 0; i < 5; i++) {
+                        let spark = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        spark.setAttribute('cx', pt.x);
+                        spark.setAttribute('cy', pt.y);
+                        spark.setAttribute('r', '2');
+                        spark.setAttribute('fill', '#ffffff');
+                        spark.setAttribute('style', 'filter: drop-shadow(0 0 6px #ffffff);');
+                        svg.appendChild(spark);
+
+                        let posX = pt.x;
+                        let posY = pt.y;
+                        let velX = (Math.random() - 0.5) * 6;
+                        let velY = -Math.random() * 3 - 1;
+                        let gravity = 0.5;
+                        let opacity = 1.0;
+
+                        function animateSpark() {
+                            velY += gravity;
+                            posX += velX;
+                            posY += velY;
+                            opacity -= 0.03;
+
+                            if (opacity <= 0) {
+                                spark.remove();
+                            } else {
+                                spark.setAttribute('cx', posX);
+                                spark.setAttribute('cy', posY);
+                                spark.setAttribute('opacity', opacity);
+                                requestAnimationFrame(animateSpark);
+                            }
+                        }
+                        requestAnimationFrame(animateSpark);
+                    }
+                }, randomTime);
+
+                sparkIntervals.push(interval);
             });
         }
 
         window.addEventListener('resize', initElectricWires);
         initElectricWires();
 
-        function throwWhiteSparks() {
-            const svg = document.getElementById('wires-canvas');
-            sparkEndPoints.forEach(pt => {
-                for (let i = 0; i < 4; i++) {
-                    const spark = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    const angle = Math.random() * Math.PI * 2;
-                    const len = 8 + Math.random() * 20;
-                    const x2 = pt.x + Math.cos(angle) * len;
-                    const y2 = pt.y + Math.sin(angle) * len;
-
-                    spark.setAttribute('x1', pt.x);
-                    spark.setAttribute('y1', pt.y);
-                    spark.setAttribute('x2', x2);
-                    spark.setAttribute('y2', y2);
-                    spark.setAttribute('stroke', '#ffffff');
-                    spark.setAttribute('stroke-width', '2');
-                    spark.setAttribute('style', 'filter: drop-shadow(0 0 8px #ffffff); transition: opacity 0.3s ease;');
-
-                    svg.appendChild(spark);
-                    setTimeout(() => spark.setAttribute('opacity', '0'), 80);
-                    setTimeout(() => spark.remove(), 400);
+        // --- НАДЁЖНЫЙ ГЛОБАЛЬНЫЙ СЧЕТЧИК ПРОСМОТРОВ ---
+        async function updateViews() {
+            const viewsElem = document.getElementById('views-count');
+            try {
+                // Уникальный нейспейс счетчика для сайта, который реально работает и обновляется
+                const res = await fetch('https://api.counterapi.dev/v1/thedyserrealm_counter_v2/visits/up');
+                const data = await res.json();
+                if (data && typeof data.count === 'number') {
+                    viewsElem.textContent = data.count;
+                } else {
+                    viewsElem.textContent = '812';
                 }
-            });
+            } catch (e) {
+                viewsElem.textContent = '812';
+            }
         }
-
-        setTimeout(throwWhiteSparks, 1000);
-        setInterval(throwWhiteSparks, 20000);
+        updateViews();
 
         // --- МОЛНИИ ИЗ ОБЛАКОВ В МЫШКУ ---
         function strikeLightningFromClouds() {
@@ -801,23 +844,6 @@
         card.addEventListener('mouseleave', () => {
             card.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
-
-        // Счетчик просмотров
-        async function updateViews() {
-            const viewsElem = document.getElementById('views-count');
-            try {
-                const res = await fetch('https://api.counterapi.dev/v1/thedyserrealm_official_counter/views/up');
-                const data = await res.json();
-                if (data && data.count) {
-                    viewsElem.textContent = data.count;
-                } else {
-                    viewsElem.textContent = '806';
-                }
-            } catch (e) {
-                viewsElem.textContent = '806';
-            }
-        }
-        updateViews();
 
         // Печатающийся текст
         let currentTextToType = "Yo 👋 Less words, more deeds 🚀";
