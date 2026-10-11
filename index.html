@@ -33,9 +33,10 @@
             padding: 40px 20px;
             overflow-x: hidden;
             position: relative;
+            cursor: default;
         }
 
-        /* --- БЕГУЩИЕ ЦИФРЫ 01 --- */
+        /* --- БЕГУЩИЕ ЦИФРЫ 01 В ОБЕ СТОРОНЫ --- */
         .binary-rain-container {
             position: fixed;
             top: 0;
@@ -147,8 +148,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
             transform-style: preserve-3d;
@@ -263,7 +264,7 @@
 
         /* --- СТИЛИ СТАТУСОВ DISCORD --- */
         
-        /* Online (В сети) */
+        /* Online */
         .status-online { 
             background-color: #23a55a !important; 
             box-shadow: 0 0 10px #23a55a !important; 
@@ -273,7 +274,7 @@
         }
         .status-online::after { display: none !important; }
 
-        /* Idle (Неактивен — Луна) */
+        /* Idle (Луна) */
         .status-idle { 
             background-color: #f0b232 !important; 
             box-shadow: 0 0 8px #f0b232 !important;
@@ -283,7 +284,7 @@
         }
         .status-idle::after { display: none !important; }
 
-        /* Do Not Disturb (Не беспокоить) */
+        /* Do Not Disturb (Красный с полосой) */
         .status-dnd { 
             background-color: #f23f43 !important; 
             box-shadow: 0 0 8px #f23f43 !important; 
@@ -300,7 +301,7 @@
             border-radius: 2px;
         }
 
-        /* Offline / Invisible (Офлайн — Серый круг без маски луны) */
+        /* Offline / Invisible (Серый ободок) */
         .status-offline { 
             background-color: #020f07 !important; 
             border: 3px solid #80848e !important;
@@ -340,7 +341,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- КНОПКИ --- */
+        /* --- КНОПКИ С ШРИФТОМ SYNE --- */
         .social-links {
             display: flex;
             flex-direction: column;
@@ -468,7 +469,7 @@
 </head>
 <body>
 
-    <!-- Бегущие 01 -->
+    <!-- Бегущие цифры 01 в обе стороны -->
     <div class="binary-rain-container">
         <div class="binary-col fall-down">0<br>1<br>0<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1</div>
         <div class="binary-col fall-up">1<br>0<br>1<br>1<br>0<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0</div>
@@ -482,10 +483,10 @@
     <!-- Анимированный курсор -->
     <div class="cursor-main" id="cursor"></div>
 
-    <!-- Canvas для рисующихся молний -->
+    <!-- Canvas для молний -->
     <svg id="lightning-canvas"></svg>
 
-    <!-- Основной интерфейс -->
+    <!-- Основной сайт -->
     <div class="site-container" id="siteContainer">
         <!-- Карточка профиля -->
         <aside class="profile-sidebar">
@@ -537,7 +538,7 @@
                 <h2 class="section-title">projects</h2>
                 <div class="projects-grid">
                     <div class="project-card">
-                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(6,78,59,0.3), rgba(4,120,87,0.3));">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(6,78,59,0.2), rgba(4,120,87,0.2));">
                             <span class="proj-emoji">⚡</span>
                         </div>
                         <div class="project-info">
@@ -548,7 +549,7 @@
                     </div>
 
                     <div class="project-card">
-                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(2,44,34,0.3), rgba(6,95,70,0.3));">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(2,44,34,0.2), rgba(6,95,70,0.2));">
                             <span class="proj-emoji">🎮</span>
                         </div>
                         <div class="project-info">
@@ -587,14 +588,14 @@
 
             setTimeout(() => trail.remove(), 450);
 
-            // Параллакс-эффект
+            // Параллакс-эффект движения сайта
             const siteContainer = document.getElementById('siteContainer');
             const moveY = (mouseY - window.innerHeight / 2) / 35;
             const moveX = (mouseX - window.innerWidth / 2) / 35;
             siteContainer.style.transform = `translate(${moveX}px, ${moveY}px)`;
         });
 
-        // 3D Tilt при наведении
+        // 3D Tilt строго при наведении на карточку
         const card = document.getElementById('tiltCard');
 
         card.addEventListener('mousemove', (e) => {
@@ -615,7 +616,7 @@
             card.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
 
-        // Счетчик просмотров
+        // Счетчик просмотров (CountAPI)
         async function updateViews() {
             try {
                 const res = await fetch('https://api.counterapi.dev/v1/thedyserrealm/views/up');
@@ -627,7 +628,7 @@
         }
         updateViews();
 
-        // Отрисовка одной молнии
+        // Функция генерации одной молнии
         function generateSingleBolt(targetX, targetY) {
             const svg = document.getElementById('lightning-canvas');
             const startX = Math.random() * window.innerWidth;
@@ -655,7 +656,7 @@
             setTimeout(() => path.remove(), 350);
         }
 
-        // Молнии (30 секунд, 100%, 70%, 40%)
+        // Логика молний каждые 30 секунд: 100% первая, 70% вторая, 40% третья
         function triggerLightningStrike() {
             const targetX = mouseX || window.innerWidth / 2;
             const targetY = mouseY || window.innerHeight / 2;
@@ -672,7 +673,7 @@
         }
         setInterval(triggerLightningStrike, 30000);
 
-        // Эффект печати
+        // Печатающийся текст
         let textToType = "Hello";
         let typedElement = document.getElementById('typed-text');
         let charIndex = 0;
@@ -686,7 +687,7 @@
         }
         typeWriter();
 
-        // Часы и Lanyard API
+        // Часы
         function updateTime() {
             const now = new Date();
             document.getElementById('local-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -694,9 +695,9 @@
         setInterval(updateTime, 1000);
         updateTime();
 
+        // Discord Lanyard API
         const DISCORD_ID = '1142187822250471535';
 
-        // Английские названия статусов
         const statusMap = {
             'online': 'Online',
             'idle': 'Idle',
@@ -720,12 +721,11 @@
                     const statusDot = document.getElementById('status-dot');
                     const statusText = document.getElementById('status-text');
 
-                    // Проверка полученного статуса
+                    // Если юзер офлайн или невидимый, гарантированно выставляем offline
                     const currentStatus = (discord_status && statusMap[discord_status]) ? discord_status : 'offline';
 
                     statusText.textContent = statusMap[currentStatus];
 
-                    // Применяем обновленные CSS-классы
                     avatarStatus.className = `status-indicator status-${currentStatus}`;
                     statusDot.className = `status-dot-icon status-${currentStatus}`;
 
