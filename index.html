@@ -263,34 +263,33 @@
 
         /* --- СТИЛИ СТАТУСОВ DISCORD --- */
         
-        /* Online */
+        /* Online (В сети) */
         .status-online { 
             background-color: #23a55a !important; 
             box-shadow: 0 0 10px #23a55a !important; 
             border: none !important;
-            mask: none;
-            -webkit-mask: none;
+            mask: none !important;
+            -webkit-mask: none !important;
         }
         .status-online::after { display: none !important; }
 
-        /* Idle (Форма Луны / Полумесяца) */
+        /* Idle (Неактивен — Луна) */
         .status-idle { 
             background-color: #f0b232 !important; 
             box-shadow: 0 0 8px #f0b232 !important;
             border: none !important;
-            /* Вырез в форме луны как в Discord */
-            mask: radial-gradient(circle at 30% 30%, transparent 55%, #000 56%);
-            -webkit-mask: radial-gradient(circle at 30% 30%, transparent 55%, #000 56%);
+            mask: radial-gradient(circle at 30% 30%, transparent 55%, #000 56%) !important;
+            -webkit-mask: radial-gradient(circle at 30% 30%, transparent 55%, #000 56%) !important;
         }
         .status-idle::after { display: none !important; }
 
-        /* Do Not Disturb (Красный с чертой) */
+        /* Do Not Disturb (Не беспокоить) */
         .status-dnd { 
             background-color: #f23f43 !important; 
             box-shadow: 0 0 8px #f23f43 !important; 
             border: none !important;
-            mask: none;
-            -webkit-mask: none;
+            mask: none !important;
+            -webkit-mask: none !important;
         }
         .status-dnd::after {
             content: '';
@@ -301,13 +300,13 @@
             border-radius: 2px;
         }
 
-        /* Offline / Invisible (Серый ободок) */
+        /* Offline / Invisible (Офлайн — Серый круг без маски луны) */
         .status-offline { 
             background-color: #020f07 !important; 
             border: 3px solid #80848e !important;
             box-shadow: none !important;
-            mask: none;
-            -webkit-mask: none;
+            mask: none !important;
+            -webkit-mask: none !important;
         }
         .status-offline::after { display: none !important; }
 
@@ -697,6 +696,7 @@
 
         const DISCORD_ID = '1142187822250471535';
 
+        // Английские названия статусов
         const statusMap = {
             'online': 'Online',
             'idle': 'Idle',
@@ -720,10 +720,14 @@
                     const statusDot = document.getElementById('status-dot');
                     const statusText = document.getElementById('status-text');
 
-                    statusText.textContent = statusMap[discord_status] || 'Offline';
+                    // Проверка полученного статуса
+                    const currentStatus = (discord_status && statusMap[discord_status]) ? discord_status : 'offline';
 
-                    avatarStatus.className = `status-indicator status-${discord_status}`;
-                    statusDot.className = `status-dot-icon status-${discord_status}`;
+                    statusText.textContent = statusMap[currentStatus];
+
+                    // Применяем обновленные CSS-классы
+                    avatarStatus.className = `status-indicator status-${currentStatus}`;
+                    statusDot.className = `status-dot-icon status-${currentStatus}`;
 
                     if (activities && activities.length > 0) {
                         const custom = activities.find(a => a.type === 4);
