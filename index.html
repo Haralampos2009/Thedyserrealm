@@ -1,945 +1,339 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thedyserrealm</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    
-    <!-- Подключение шрифтов Inter, Syne и Space Grotesk -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        body {
-            background-color: #03140a; /* Чистый глубокий тёмно-зелёный фон */
-            color: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-            position: relative;
-            overflow-x: hidden;
-            cursor: default;
-        }
-
-        /* --- МАЛЕНЬКИЕ АККУРАТНЫЕ ОБЛАКА ТОЛЬКО СВЕРХУ --- */
-        .cloud {
-            position: fixed;
-            left: -200px;
-            background: rgba(55, 75, 64, 0.75);
-            border-radius: 60px;
-            filter: blur(8px);
-            pointer-events: none;
-            z-index: 0;
-            animation: driftCloud linear infinite;
-            box-shadow: 
-                20px 8px 20px rgba(10, 25, 15, 0.6),
-                -20px 10px 15px rgba(10, 25, 15, 0.6);
-        }
-
-        @keyframes driftCloud {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(calc(100vw + 350px)); }
-        }
-
-        /* --- ЭЛЕКТРИЧЕСКИЕ ПРОВОДА --- */
-        #wires-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* --- ЗЕЛЁНОЕ СВЕЧЕНИЕ НА ФОНЕ --- */
-        body::before {
-            content: "";
-            position: fixed;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* --- БЕГУЩИЕ ЦИФРЫ --- */
-        .binary-rain-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            display: flex;
-            justify-content: space-around;
-            opacity: 0.15;
-            overflow: hidden;
-            font-family: monospace;
-            font-weight: 700;
-            font-size: 16px;
-            color: #10b981;
-            background: transparent !important;
-        }
-
-        .binary-col {
-            display: flex;
-            flex-direction: column;
-            white-space: nowrap;
-        }
-
-        .fall-down { animation: fallDown 10s linear infinite; }
-        .fall-up { animation: fallUp 10s linear infinite; }
-
-        .binary-col:nth-child(2n) { animation-duration: 7s; animation-delay: -2s; color: #34d399; }
-        .binary-col:nth-child(3n) { animation-duration: 14s; animation-delay: -5s; opacity: 0.6; }
-        .binary-col:nth-child(5n) { animation-duration: 9s; animation-delay: -3s; }
-
-        @keyframes fallDown {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100vh); }
-        }
-
-        @keyframes fallUp {
-            0% { transform: translateY(100vh); }
-            100% { transform: translateY(-100%); }
-        }
-
-        /* --- КУРСОР И ШЛЕЙФ --- */
-        .cursor-main {
-            width: 14px;
-            height: 14px;
-            background: #ffffff;
-            border-radius: 50%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 9999;
-            box-shadow: 0 0 12px #10b981;
-            transform: translate(-50%, -50%);
-        }
-
-        .cursor-trail {
-            width: 8px;
-            height: 8px;
-            background: rgba(16, 185, 129, 0.6);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-
-        #lightning-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 999;
-        }
-
-        /* --- СЕТКА И КОНТЕЙНЕРЫ --- */
-        .site-container {
-            display: flex;
-            gap: 40px;
-            max-width: 1000px;
-            width: 100%;
-            align-items: flex-start;
-            z-index: 1;
-            transition: transform 0.15s cubic-bezier(0.1, 0.5, 0.1, 1);
-            will-change: transform;
-        }
-
-        @media(max-width: 850px) {
-            .site-container {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        /* --- ЛЕВАЯ КАРТОЧКА ПРОФИЛЯ --- */
-        .profile-sidebar {
-            width: 320px;
-            flex-shrink: 0;
-            perspective: 1000px;
-        }
-
-        .profile-card {
-            background: rgba(3, 20, 10, 0.2);
-            border: 1px solid rgba(52, 211, 153, 0.25);
-            border-radius: 24px;
-            padding: 30px 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-            transform-style: preserve-3d;
-            will-change: transform;
-        }
-
-        .profile-card:hover {
-            border-color: rgba(52, 211, 153, 0.5);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(16, 185, 129, 0.25);
-        }
-
-        /* Аватар */
-        .avatar-container {
-            position: relative;
-            width: 90px;
-            height: 90px;
-            margin-bottom: 20px;
-        }
-
-        .avatar-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
-            border: 2px solid rgba(52, 211, 153, 0.2);
-        }
-
-        .status-indicator {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 3px solid #03140a;
-            transition: all 0.3s ease;
-        }
-
-        /* Имя и био */
-        .profile-name {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .sparkle {
-            font-size: 14px;
-        }
-
-        .profile-bio {
-            font-size: 13px;
-            color: #a7f3d0;
-            margin-bottom: 16px;
-            text-align: center;
-            min-height: 20px;
-        }
-
-        .typing-cursor {
-            display: inline-block;
-            width: 2px;
-            height: 13px;
-            background-color: #34d399;
-            margin-left: 2px;
-            animation: blink 0.8s infinite;
-            vertical-align: middle;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* Плашка статуса */
-        .status-pill {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(52, 211, 153, 0.15);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #a0a0ab;
-            margin-bottom: 24px;
-        }
-
-        .status-dot-icon {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-
-        .status-online { background-color: #23a55a !important; box-shadow: 0 0 8px #23a55a; }
-        .status-idle { background-color: #f0b232 !important; box-shadow: 0 0 8px #f0b232; }
-        .status-dnd { background-color: #f23f43 !important; box-shadow: 0 0 8px #f23f43; }
-        .status-offline { background-color: #747f8d !important; }
-
-        /* Статистика */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            width: 100%;
-            margin-bottom: 24px;
-        }
-
-        .stat-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(52, 211, 153, 0.1);
-            border-radius: 14px;
-            padding: 12px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .stat-value {
-            font-size: 13px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-
-        #local-time {
-            color: #ffffff !important;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-        }
-
-        .stat-label {
-            font-size: 10px;
-            color: #6e6e78;
-            letter-spacing: 0.5px;
-        }
-
-        /* --- БЕЛЫЙ ЦВЕТ ТЕКСТА ДЛЯ STATCOUNTER --- */
-        #views-count, 
-        #views-count *, 
-        .statcounter, 
-        .statcounter a, 
-        .statcounter span {
-            color: #ffffff !important;
-            font-weight: 600 !important;
-            font-size: 13px !important;
-            text-decoration: none !important;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-        }
-
-        .statcounter img {
-            vertical-align: middle;
-            filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.8));
-        }
-
-        /* Кнопки */
-        .social-links {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .social-btn {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(52, 211, 153, 0.15);
-            padding: 12px 16px;
-            border-radius: 14px;
-            color: #d0d0dc;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .btn-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .social-icon {
-            width: 18px;
-            height: 18px;
-            fill: #a7f3d0;
-            transition: transform 0.25s ease, fill 0.25s ease;
-        }
-
-        .social-btn:hover {
-            background: rgba(16, 185, 129, 0.15);
-            border-color: rgba(52, 211, 153, 0.4);
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .social-btn:hover .social-icon {
-            fill: #ffffff;
-            transform: scale(1.1);
-        }
-
-        .arrow {
-            color: #6e6e78;
-            font-size: 14px;
-            transition: transform 0.2s ease, color 0.2s ease;
-        }
-
-        .social-btn:hover .arrow {
-            color: #34d399;
-            transform: translate(2px, -2px);
-        }
-
-        /* --- ПРАВАЯ КОЛОНКА (ПРОЕКТЫ) --- */
-        .main-content {
-            flex: 1;
-            width: 100%;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #8a8a93;
-            margin-bottom: 16px;
-            text-transform: lowercase;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-        }
-
-        .project-card {
-            background: rgba(3, 20, 10, 0.8);
-            border: 1px solid rgba(52, 211, 153, 0.15);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            display: block;
-        }
-
-        .project-card:hover {
-            border-color: rgba(52, 211, 153, 0.4);
-            transform: translateY(-3px);
-        }
-
-        /* ИЗОБРАЖЕНИЯ ПРОЕКТОВ (ПИНГВИН ПОЛНОСТЬЮ ВИДЕН) */
-        .project-img-box {
-            height: 135px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .project-banner-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center 10%;
-            transition: transform 0.3s ease;
-        }
-
-        .project-card:hover .project-banner-img {
-            transform: scale(1.06);
-        }
-
-        .proj-emoji {
-            font-size: 36px;
-        }
-
-        .project-info {
-            padding: 16px;
-        }
-
-        .project-info h3 {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: #fff;
-        }
-
-        .project-info p {
-            font-size: 12px;
-            color: #8a8a93;
-            margin-bottom: 12px;
-        }
-
-        .project-link {
-            font-size: 11px;
-            color: #34d399;
-            text-decoration: none;
-        }
-
-        .project-card:hover .project-link {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#03140a">
+  <title>Thedyserrealm</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="cloud cloud-one"></div><div class="cloud cloud-two"></div><div class="cloud cloud-three"></div>
+  <svg id="wires-canvas" aria-hidden="true"></svg>
+  <div class="binary-rain-container" aria-hidden="true">
+    <div class="binary-col fall-down">0<br>1<br>0<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>0<br>1</div>
+    <div class="binary-col fall-up">1<br>0<br>1<br>1<br>0<br>0<br>1<br>0<br>1<br>0<br>1<br>0</div>
+    <div class="binary-col fall-down">0<br>0<br>1<br>0<br>1<br>1<br>0<br>1<br>0<br>0<br>1<br>1</div>
+    <div class="binary-col fall-up">1<br>1<br>0<br>1<br>0<br>0<br>1<br>1<br>1<br>0<br>0<br>1</div>
+    <div class="binary-col fall-down">0<br>1<br>0<br>1<br>1<br>0<br>1<br>0<br>0<br>1<br>1<br>0</div>
+    <div class="binary-col fall-up">1<br>0<br>1<br>0<br>0<br>1<br>0<br>1<br>1<br>0<br>1<br>0</div>
+  </div>
+  <div class="cursor-main" id="cursor" aria-hidden="true"></div>
+  <svg id="lightning-canvas" aria-hidden="true"></svg>
 
-    <!-- Маленькие облака строго вверху экрана -->
-    <div class="cloud" style="width: 140px; height: 35px; top: 12px; animation-duration: 25s; animation-delay: -2s;"></div>
-    <div class="cloud" style="width: 170px; height: 40px; top: 22px; animation-duration: 32s; animation-delay: -12s;"></div>
-    <div class="cloud" style="width: 130px; height: 32px; top: 8px; animation-duration: 28s; animation-delay: -7s;"></div>
-
-    <!-- Электрические провода -->
-    <svg id="wires-canvas"></svg>
-
-    <!-- Бегущие цифры -->
-    <div class="binary-rain-container">
-        <div class="binary-col fall-down">0<br>1<br>0<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1</div>
-        <div class="binary-col fall-up">1<br>0<br>1<br>1<br>0<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0</div>
-        <div class="binary-col fall-down">0<br>0<br>1<br>0<br>1<br>1<br>0<br>1<br>0<br>0<br>1<br>1<br>0<br>1</div>
-        <div class="binary-col fall-up">1<br>1<br>0<br>1<br>0<br>0<br>1<br>1<br>1<br>0<br>0<br>1<br>0<br>1</div>
-        <div class="binary-col fall-down">0<br>1<br>0<br>1<br>1<br>0<br>1<br>0<br>0<br>1<br>1<br>0<br>1<br>0</div>
-        <div class="binary-col fall-up">1<br>0<br>1<br>0<br>0<br>1<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>1</div>
-        <div class="binary-col fall-down">0<br>1<br>1<br>0<br>1<br>0<br>1<br>1<br>0<br>1<br>0<br>0<br>1<br>0</div>
-    </div>
-
-    <!-- Анимированный курсор -->
-    <div class="cursor-main" id="cursor"></div>
-    <svg id="lightning-canvas"></svg>
-
-    <!-- Основной сайт -->
-    <div class="site-container" id="siteContainer">
-        <aside class="profile-sidebar">
-            <div class="profile-card" id="tiltCard">
-                <div class="avatar-container">
-                    <img id="discord-avatar" src="favicon.png" alt="Avatar" class="avatar-img">
-                    <span id="discord-status" class="status-indicator status-offline"></span>
-                </div>
-
-                <h1 class="profile-name">lampik2009 <span class="sparkle">✨</span></h1>
-                <p class="profile-bio"><span id="typed-text"></span><span class="typing-cursor"></span></p>
-
-                <div class="status-pill">
-                    <span class="status-dot-icon status-offline" id="status-dot"></span>
-                    <span id="status-text">Offline</span>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div id="local-time" class="stat-value">12:00:00 AM</div>
-                        <div class="stat-label">LOCAL TIME</div>
-                    </div>
-                    <div class="stat-box">
-                        <div id="views-count" class="stat-value">
-                            <!-- STATCOUNTER -->
-                            <script type="text/javascript">
-                            var sc_project=13359308; 
-                            var sc_invisible=0; 
-                            var sc_security="baef770d"; 
-                            var scJsHost = "https://";
-                            document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-                            "statcounter.com/counter/counter.js'></"+"script>");
-                            </script>
-                            <noscript><div class="statcounter"><a title="Web Analytics"
-                            href="https://statcounter.com/" target="_blank"><img class="statcounter"
-                            src="https://c.statcounter.com/13359308/0/baef770d/0/" alt="Web Analytics"
-                            referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-                        </div>
-                        <div class="stat-label">VIEWS</div>
-                    </div>
-                </div>
-
-                <div class="social-links">
-                    <a href="https://discord.com/users/1142187822250471535" target="_blank" class="social-btn">
-                        <div class="btn-left">
-                            <svg class="social-icon" viewBox="0 0 24 24">
-                                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-                            </svg>
-                            <span>Discord</span>
-                        </div>
-                        <span class="arrow">↗</span>
-                    </a>
-
-                    <a href="https://github.com/Haralampos2009" target="_blank" class="social-btn">
-                        <div class="btn-left">
-                            <svg class="social-icon" viewBox="0 0 24 24">
-                                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385c.6.105.825-.255.825-.57c0-.285-.015-1.23-.015-2.235c-3.015.555-3.795-.735-4.035-1.41c-.135-.345-.72-1.41-1.23-1.695c-.42-.225-1.02-.78-.015-.795c.945-.015 1.62.87 1.845 1.23c1.08 1.815 2.805 1.305 3.495.99c.105-.78.42-1.305.765-1.605c-2.67-.3-5.46-1.335-5.46-5.925c0-1.305.465-2.385 1.23-3.225c-.12-.3-.54-1.53.12-3.18c0 0 1.005-.315 3.3 1.23c.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23c.66 1.65.24 2.88.12 3.18c.765.84 1.23 1.905 1.23 3.225c0 4.605-2.805 5.625-5.475 5.925c.435.375.81 1.095.81 2.22c0 1.605-.015 2.895-.015 3.3c0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-                            </svg>
-                            <span>GitHub</span>
-                        </div>
-                        <span class="arrow">↗</span>
-                    </a>
-
-                    <a href="https://www.youtube.com/@Dyser_l" target="_blank" class="social-btn">
-                        <div class="btn-left">
-                            <svg class="social-icon" viewBox="0 0 24 24">
-                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                            </svg>
-                            <span>YouTube</span>
-                        </div>
-                        <span class="arrow">↗</span>
-                    </a>
-                </div>
+  <div class="site-container" id="siteContainer">
+    <aside class="profile-sidebar">
+      <div class="profile-card" id="tiltCard">
+        <div class="avatar-container">
+          <img id="discord-avatar" src="favicon.png" alt="lampik2009 avatar" class="avatar-img">
+          <span id="discord-status" class="status-indicator status-offline"></span>
+        </div>
+        <h1 class="profile-name">lampik2009 <span class="sparkle">✨</span></h1>
+        <p class="profile-bio"><span id="typed-text"></span><span class="typing-cursor"></span></p>
+        <div class="status-pill"><span class="status-dot-icon status-offline" id="status-dot"></span><span id="status-text">Offline</span></div>
+        <div class="stats-grid">
+          <div class="stat-box"><div id="local-time" class="stat-value">--:--:--</div><div class="stat-label">LOCAL TIME</div></div>
+          <div class="stat-box">
+            <div id="views-count" class="stat-value">
+              <script>
+                var sc_project=13359308;
+                var sc_invisible=0;
+                var sc_security="baef770d";
+                var scJsHost="https://";
+                document.write("<sc"+"ript type='text/javascript' src='"+scJsHost+"statcounter.com/counter/counter.js'></"+"script>");
+              </script>
+              <noscript><div class="statcounter"><a title="Web Analytics" href="https://statcounter.com/" target="_blank" rel="noopener noreferrer"><img src="https://c.statcounter.com/13359308/0/baef770d/0/" alt="Web Analytics" referrerpolicy="no-referrer-when-downgrade"></a></div></noscript>
             </div>
-        </aside>
+            <div class="stat-label">VIEWS</div>
+          </div>
+        </div>
+        <div class="social-links">
+          <a href="https://discord.com/users/1142187822250471535" target="_blank" rel="noopener noreferrer" class="social-btn"><span class="btn-left"><span class="social-emoji">◈</span><span>Discord</span></span><span class="arrow">↗</span></a>
+          <a href="https://github.com/Haralampos2009" target="_blank" rel="noopener noreferrer" class="social-btn"><span class="btn-left"><span class="social-emoji">⌘</span><span>GitHub</span></span><span class="arrow">↗</span></a>
+          <a href="https://www.youtube.com/@Dyser_l" target="_blank" rel="noopener noreferrer" class="social-btn"><span class="btn-left"><span class="social-emoji">▶</span><span>YouTube</span></span><span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </aside>
 
-        <main class="main-content">
-            <section class="content-section">
-                <h2 class="section-title">projects</h2>
-                <div class="projects-grid">
-                    <a href="https://haralampos2009.github.io/Thedyserrealm/" target="_blank" rel="noopener noreferrer" class="project-card">
-                        <div class="project-img-box">
-                            <img src="website-banner.png" alt="Site Cover" class="project-banner-img">
-                        </div>
-                        <div class="project-info">
-                            <h3>Thedyserrealm</h3>
-                            <p>the site you're on</p>
-                            <span class="project-link">haralampos2009.github.io/Thedyserrealm ↗</span>
-                        </div>
-                    </a>
+    <main class="main-content">
+      <section class="content-section">
+        <h2 class="section-title">projects</h2>
+        <div class="projects-grid">
+          <a href="https://haralampos2009.github.io/Thedyserrealm/" target="_blank" rel="noopener noreferrer" class="project-card">
+            <div class="project-img-box"><img src="website-banner.png" alt="Thedyserrealm website preview" class="project-banner-img" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="image-fallback" style="display:none">🌐</span></div>
+            <div class="project-info"><h3>Thedyserrealm</h3><p>The site you're on</p><span class="project-link">haralampos2009.github.io/Thedyserrealm ↗</span></div>
+          </a>
+          <a href="https://discord.gg/wy4BwVb8DC" target="_blank" rel="noopener noreferrer" class="project-card">
+            <div class="project-img-box"><img src="discord-banner.jpg" alt="Discord server preview" class="project-banner-img" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="image-fallback" style="display:none">💬</span></div>
+            <div class="project-info"><h3>Discord Server</h3><p>My community server</p><span class="project-link">discord.gg/wy4BwVb8DC ↗</span></div>
+          </a>
+          <a href="https://github.com/Haralampos2009" target="_blank" rel="noopener noreferrer" class="project-card">
+            <div class="project-img-box emoji-box"><span class="proj-emoji">🎮</span></div>
+            <div class="project-info"><h3>Smash Blast</h3><p>My very own game</p><span class="project-link">github.com/Haralampos2009 ↗</span></div>
+          </a>
+        </div>
+      </section>
 
-                    <a href="https://discord.gg/wy4BwVb8DC" target="_blank" rel="noopener noreferrer" class="project-card">
-                        <div class="project-img-box">
-                            <img src="discord-banner.jpg" alt="Discord Server Cover" class="project-banner-img">
-                        </div>
-                        <div class="project-info">
-                            <h3>Discord Server</h3>
-                            <p>my community server</p>
-                            <span class="project-link">discord.gg/wy4BwVb8DC ↗</span>
-                        </div>
-                    </a>
+      <section class="content-section arcade-section" id="arcade">
+        <h2 class="section-title">mini arcade</h2>
+        <p class="arcade-subtitle">Three games. One realm. Progress saves on this device.</p>
+        <div class="arcade-grid">
+          <article class="game-card">
+            <div class="game-heading"><span class="game-icon">🐍</span><div><h3>Snake</h3><p>Eat, grow, survive.</p></div></div>
+            <canvas id="snake-board" width="300" height="300" aria-label="Snake game board"></canvas>
+            <div class="game-stats"><span>Score: <strong id="snake-score">0</strong></span><span>Best: <strong id="snake-best">0</strong></span></div>
+            <button class="game-btn full-btn" id="snake-start">Start game</button>
+            <p class="game-hint">Arrow keys / WASD. On mobile, swipe the board.</p>
+          </article>
 
-                    <a href="https://github.com/Haralampos2009" target="_blank" rel="noopener noreferrer" class="project-card">
-                        <div class="project-img-box" style="background: rgba(16, 185, 129, 0.1);">
-                            <span class="proj-emoji">🎮</span>
-                        </div>
-                        <div class="project-info">
-                            <h3>Smash Blast</h3>
-                            <p>my very own game</p>
-                            <span class="project-link">github.com/Haralampos2009 ↗</span>
-                        </div>
-                    </a>
-                </div>
-            </section>
-        </main>
-    </div>
+          <article class="game-card">
+            <div class="game-heading"><span class="game-icon">🔢</span><div><h3>2048</h3><p>Merge tiles to reach 2048.</p></div></div>
+            <div class="game-2048-stats"><span>Score: <strong id="s2048-score">0</strong></span><span>Best: <strong id="s2048-best">0</strong></span></div>
+            <div id="board-2048" class="board-2048" tabindex="0" role="group" aria-label="2048 board"></div>
+            <div class="game-controls"><button class="game-btn" id="s2048-new">New game</button><button class="game-btn secondary" id="s2048-undo">Undo</button></div>
+            <p class="game-hint">Use arrow keys or swipe the board.</p>
+          </article>
 
-    <script>
-        // Защита от лагов при переключении вкладок
-        let isTabActive = true;
-        document.addEventListener('visibilitychange', () => {
-            isTabActive = !document.hidden;
-        });
+          <article class="game-card clicker-card">
+            <div class="game-heading"><span class="game-icon">⚡</span><div><h3>Realm Clicker</h3><p>Collect energy and upgrade.</p></div></div>
+            <div class="clicker-energy"><span id="clicker-energy">0</span><small>ENERGY</small></div>
+            <button class="clicker-core" id="clicker-tap" aria-label="Collect energy">⚡</button>
+            <p class="clicker-power">Per click: <strong id="clicker-power">1</strong> · Per second: <strong id="clicker-auto">0</strong></p>
+            <div class="upgrade-list">
+              <button class="game-btn upgrade-btn" id="clicker-upgrade"><span>Upgrade click (+1)</span><span>Cost: <b id="clicker-cost">25</b></span></button>
+              <button class="game-btn upgrade-btn" id="clicker-auto-buy"><span>Auto generator (+1/sec)</span><span>Cost: <b id="clicker-auto-cost">100</b></span></button>
+            </div>
+            <p class="game-hint">Energy and upgrades save automatically.</p>
+          </article>
+        </div>
+        <p class="save-note" id="arcade-save-status" aria-live="polite">Progress saves automatically on this device.</p>
+      </section>
+      <footer class="site-footer">Built in Thedyserrealm <span>✦</span></footer>
+    </main>
+  </div>
 
-        // --- ЭЛЕКТРИЧЕСКИЕ ПРОВОДА И ИСКРЫ ---
-        let wireTips = [];
+<script>
+(() => {
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const SAVE_KEY = "thedyserrealm_arcade_v1";
+  let saveData = {};
+  try { saveData = JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch (_) {}
+  const status = $("arcade-save-status");
+  function saveArcade() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+      if (status) status.textContent = "✓ Progress saved on this device.";
+    } catch (_) {
+      if (status) status.textContent = "Browser storage is unavailable; progress may not save.";
+    }
+  }
 
-        function initElectricWires() {
-            const svg = document.getElementById('wires-canvas');
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-            svg.setAttribute('width', w);
-            svg.setAttribute('height', h);
-            svg.innerHTML = '';
+  // Clock and typewriter intro
+  function updateTime() { $("local-time").textContent = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit", second:"2-digit"}); }
+  updateTime(); setInterval(updateTime, 1000);
+  const intro = "Yo 👋 Less words, more deeds 🚀";
+  let introIndex = 0;
+  (function typeIntro() {
+    if (introIndex < intro.length) {
+      $("typed-text").textContent += intro.charAt(introIndex++);
+      setTimeout(typeIntro, 75);
+    }
+  })();
 
-            wireTips = [];
+  // Optional live Discord status. The page still works if the service is unavailable.
+  async function loadDiscordData() {
+    try {
+      const res = await fetch("https://api.lanyard.rest/v1/users/1142187822250471535");
+      const json = await res.json();
+      if (!json.success) return;
+      const d = json.data;
+      if (d.discord_user && d.discord_user.avatar) {
+        $("discord-avatar").src = `https://cdn.discordapp.com/avatars/${d.discord_user.id}/${d.discord_user.avatar}.png?size=256`;
+      }
+      const state = ["online","idle","dnd"].includes(d.discord_status) ? d.discord_status : "offline";
+      $("discord-status").className = "status-indicator status-" + state;
+      $("status-dot").className = "status-dot-icon status-" + state;
+      $("status-text").textContent = ({online:"Online",idle:"Inactive",dnd:"Do Not Disturb",offline:"Offline"})[state];
+    } catch (_) {}
+  }
+  loadDiscordData(); setInterval(loadDiscordData, 60000);
 
-            const wires = [
-                { color: '#ef4444', d: `M 0,20 L 110,20 L 150,55`, end: { x: 150, y: 55 } },
-                { color: '#3b82f6', d: `M 0,45 L 90,45 L 130,90`, end: { x: 130, y: 90 } },
-                { color: '#84cc16', stripe: true, d: `M 0,70 L 70,70 L 110,125`, end: { x: 110, y: 125 } },
-                { color: '#f59e0b', d: `M 0,95 L 50,95 L 90,160`, end: { x: 90, y: 160 } },
-                { color: '#ef4444', d: `M ${w},20 L ${w-110},20 L ${w-150},55`, end: { x: w-150, y: 55 } },
-                { color: '#3b82f6', d: `M ${w},45 L ${w-90},45 L ${w-130},90`, end: { x: w-130, y: 90 } },
-                { color: '#84cc16', stripe: true, d: `M ${w},70 L ${w-70},70 L ${w-110},125`, end: { x: w-110, y: 125 } },
-                { color: '#f59e0b', d: `M ${w},95 L ${w-50},95 L ${w-90},160`, end: { x: w-90, y: 160 } },
-                { color: '#3b82f6', d: `M 0,${h-35} L 100,${h-35} L 140,${h-80}`, end: { x: 140, y: h-80 } },
-                { color: '#ef4444', d: `M 0,${h-60} L 80,${h-60} L 120,${h-110}`, end: { x: 120, y: h-110 } },
-                { color: '#3b82f6', d: `M ${w},${h-35} L ${w-100},${h-35} L ${w-140},${h-80}`, end: { x: w-140, y: h-80 } },
-                { color: '#ef4444', d: `M ${w},${h-60} L ${w-80},${h-60} L ${w-120},${h-110}`, end: { x: w-120, y: h-110 } }
-            ];
+  // Realistic multi-layer SVG cables and occasional sparks
+  const svgNS = "http://www.w3.org/2000/svg";
+  const wiresSvg = $("wires-canvas");
+  let wireTips = [];
+  function svgEl(tag, attrs) {
+    const el = document.createElementNS(svgNS, tag);
+    Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k, v));
+    return el;
+  }
+  function addCable(wire) {
+    wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:"#000", "stroke-width":"12","stroke-linecap":"round","stroke-linejoin":"round",opacity:".55",style:"filter:blur(3px)"}));
+    wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:"#101a15","stroke-width":"8","stroke-linecap":"round","stroke-linejoin":"round"}));
+    wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:wire.color,"stroke-width":"4.8","stroke-linecap":"round","stroke-linejoin":"round",style:`filter:drop-shadow(0 0 3px ${wire.color})`}));
+    wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:"#fff","stroke-width":"1","stroke-linecap":"round","stroke-linejoin":"round",opacity:".35",transform:"translate(0 -1)"}));
+    wiresSvg.appendChild(svgEl("circle",{cx:wire.x,cy:wire.y,r:"5.2",fill:"#111b15",stroke:"#687c70","stroke-width":"1.3"}));
+    wiresSvg.appendChild(svgEl("circle",{cx:wire.x,cy:wire.y,r:"2.2",fill:wire.color,style:`filter:drop-shadow(0 0 5px ${wire.color})`}));
+    wireTips.push({x:wire.x,y:wire.y,color:wire.color});
+  }
+  function initWires() {
+    const w = innerWidth, h = innerHeight;
+    wiresSvg.setAttribute("viewBox",`0 0 ${w} ${h}`);
+    wiresSvg.innerHTML = ""; wireTips = [];
+    [
+      {color:"#ef4444",d:"M 0 22 C 45 22 82 22 115 26 S 145 45 155 59",x:155,y:59},
+      {color:"#3b82f6",d:"M 0 48 C 42 48 72 48 94 53 S 119 75 132 91",x:132,y:91},
+      {color:"#84cc16",d:"M 0 74 C 32 74 53 74 74 82 S 96 109 111 126",x:111,y:126},
+      {color:"#f59e0b",d:"M 0 100 C 25 100 43 103 57 113 S 77 143 91 160",x:91,y:160},
+      {color:"#ef4444",d:`M ${w} 22 C ${w-45} 22 ${w-82} 22 ${w-115} 26 S ${w-145} 45 ${w-155} 59`,x:w-155,y:59},
+      {color:"#3b82f6",d:`M ${w} 48 C ${w-42} 48 ${w-72} 48 ${w-94} 53 S ${w-119} 75 ${w-132} 91`,x:w-132,y:91},
+      {color:"#84cc16",d:`M ${w} 74 C ${w-32} 74 ${w-53} 74 ${w-74} 82 S ${w-96} 109 ${w-111} 126`,x:w-111,y:126},
+      {color:"#f59e0b",d:`M ${w} 100 C ${w-25} 100 ${w-43} 103 ${w-57} 113 S ${w-77} 143 ${w-91} 160`,x:w-91,y:160},
+      {color:"#3b82f6",d:`M 0 ${h-35} C 48 ${h-35} 86 ${h-35} 110 ${h-47} S 130 ${h-65} 145 ${h-82}`,x:145,y:h-82},
+      {color:"#ef4444",d:`M ${w} ${h-35} C ${w-48} ${h-35} ${w-86} ${h-35} ${w-110} ${h-47} S ${w-130} ${h-65} ${w-145} ${h-82}`,x:w-145,y:h-82}
+    ].forEach(addCable);
+  }
+  initWires(); addEventListener("resize",initWires);
+  setInterval(() => {
+    if (document.hidden || !wireTips.length) return;
+    const p = wireTips[Math.floor(Math.random()*wireTips.length)];
+    const spark = svgEl("circle",{cx:p.x,cy:p.y,r:"3",fill:"#fff",style:"filter:drop-shadow(0 0 7px #fff)"});
+    wiresSvg.appendChild(spark);
+    const dx=(Math.random()-.5)*55, dy=-15-Math.random()*28;
+    spark.animate([{transform:"translate(0,0)",opacity:1},{transform:`translate(${dx}px,${dy}px)`,opacity:0}],{duration:450, easing:"ease-out"}).onfinish=()=>spark.remove();
+  },1200);
 
-            wires.forEach(wire => {
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('d', wire.d);
-                path.setAttribute('stroke', wire.color);
-                path.setAttribute('stroke-width', '4');
-                path.setAttribute('fill', 'none');
-                path.setAttribute('stroke-linecap', 'round');
-                path.setAttribute('style', 'filter: drop-shadow(0 0 6px ' + wire.color + ');');
-                
-                if (wire.stripe) {
-                    path.setAttribute('stroke-dasharray', '8 6');
-                }
-                svg.appendChild(path);
+  // Lightning flashes toward the pointer
+  let mouseX=innerWidth/2, mouseY=innerHeight/2;
+  document.addEventListener("mousemove",e=>{
+    mouseX=e.clientX; mouseY=e.clientY;
+    const cursor=$("cursor"); cursor.style.left=mouseX+"px"; cursor.style.top=mouseY+"px";
+    if (Math.random() < .15) {
+      const trail=document.createElement("span"); trail.className="cursor-trail";
+      trail.style.left=mouseX+"px"; trail.style.top=mouseY+"px"; document.body.appendChild(trail);
+      setTimeout(()=>trail.remove(),420);
+    }
+  });
+  setInterval(()=>{
+    if(document.hidden) return;
+    const cloud=document.querySelector(".cloud"); if(!cloud) return;
+    const r=cloud.getBoundingClientRect(), x=mouseX || innerWidth/2, y=mouseY || innerHeight/2;
+    const startX=r.left+r.width/2, startY=r.top+r.height/2;
+    const pts=[`${startX},${startY}`]; let px=startX,py=startY;
+    for(let i=1;i<=10;i++){px+=(x-px)/(11-i)+(Math.random()-.5)*25;py+=(y-py)/(11-i)+(Math.random()-.5)*25;pts.push(`${px},${py}`);}
+    const line=svgEl("polyline",{points:pts.join(" "),stroke:"#d1fae5","stroke-width":"2","stroke-linecap":"round",fill:"none",style:"filter:drop-shadow(0 0 7px #34d399)"});
+    $("lightning-canvas").appendChild(line); setTimeout(()=>line.remove(),240);
+  },9000);
 
-                const tip = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                tip.setAttribute('cx', wire.end.x);
-                tip.setAttribute('cy', wire.end.y);
-                tip.setAttribute('r', '3.5');
-                tip.setAttribute('fill', '#f59e0b');
-                svg.appendChild(tip);
+  // Profile card tilt
+  const card=$("tiltCard");
+  card.addEventListener("mousemove",e=>{
+    if(innerWidth<850) return;
+    const r=card.getBoundingClientRect();
+    card.style.transform=`rotateX(${((e.clientY-r.top-r.height/2)/(r.height/2))*-5}deg) rotateY(${((e.clientX-r.left-r.width/2)/(r.width/2))*5}deg)`;
+  });
+  card.addEventListener("mouseleave",()=>card.style.transform="rotateX(0) rotateY(0)");
 
-                wireTips.push(wire.end);
-            });
+  // SNAKE — saves best score
+  const canvas=$("snake-board"), ctx=canvas.getContext("2d"), CELL=15, GRID=20;
+  let snake=[{x:9,y:10},{x:8,y:10},{x:7,y:10}], dir={x:1,y:0}, nextDir={x:1,y:0};
+  let food={x:14,y:10}, snakeScore=0, snakeBest=Number(saveData.snakeBest)||0, snakeTimer=null, snakeRunning=false;
+  $("snake-best").textContent=snakeBest;
+  function randomFood(){let p;do{p={x:Math.floor(Math.random()*GRID),y:Math.floor(Math.random()*GRID)}}while(snake.some(s=>s.x===p.x&&s.y===p.y));return p}
+  function drawSnake(){
+    ctx.fillStyle="#071810";ctx.fillRect(0,0,300,300);
+    ctx.strokeStyle="rgba(52,211,153,.07)";
+    for(let i=0;i<=300;i+=CELL){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,300);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(300,i);ctx.stroke()}
+    ctx.fillStyle="#fb7185";ctx.shadowColor="#fb7185";ctx.shadowBlur=12;ctx.beginPath();ctx.arc(food.x*CELL+7.5,food.y*CELL+7.5,5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    snake.forEach((p,i)=>{ctx.fillStyle=i===0?"#a7f3d0":"#10b981";ctx.shadowColor="#10b981";ctx.shadowBlur=i===0?8:2;ctx.fillRect(p.x*CELL+1,p.y*CELL+1,13,13)});ctx.shadowBlur=0;
+    $("snake-score").textContent=snakeScore;$("snake-best").textContent=snakeBest;
+  }
+  function stopSnake(text){clearInterval(snakeTimer);snakeTimer=null;snakeRunning=false;if(text)$("snake-start").textContent=text}
+  function startSnake(){stopSnake();snake=[{x:9,y:10},{x:8,y:10},{x:7,y:10}];dir={x:1,y:0};nextDir={x:1,y:0};snakeScore=0;food=randomFood();snakeRunning=true;$("snake-start").textContent="Restart";drawSnake();snakeTimer=setInterval(tickSnake,125)}
+  function tickSnake(){
+    dir={...nextDir};const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y},ate=head.x===food.x&&head.y===food.y,body=ate?snake:snake.slice(0,-1);
+    if(head.x<0||head.x>=GRID||head.y<0||head.y>=GRID||body.some(p=>p.x===head.x&&p.y===head.y)){stopSnake("Game over — retry");return}
+    snake.unshift(head);
+    if(ate){snakeScore++;if(snakeScore>snakeBest){snakeBest=snakeScore;saveData.snakeBest=snakeBest;saveArcade()}food=randomFood()}else snake.pop();
+    drawSnake();
+  }
+  const keyDirs={ArrowUp:[0,-1],w:[0,-1],W:[0,-1],ArrowDown:[0,1],s:[0,1],S:[0,1],ArrowLeft:[-1,0],a:[-1,0],A:[-1,0],ArrowRight:[1,0],d:[1,0],D:[1,0]};
+  document.addEventListener("keydown",e=>{
+    const m=keyDirs[e.key];if(!m)return;
+    if(e.target.closest("input,textarea,button"))return;
+    if(e.key.startsWith("Arrow")&&$("arcade").contains(e.target))e.preventDefault();
+    if($("arcade").contains(e.target)||document.activeElement===document.body){
+      if(m[0]===-dir.x&&m[1]===-dir.y)return;nextDir={x:m[0],y:m[1]};
+    }
+  });
+  let snakeTouch=null;
+  canvas.addEventListener("touchstart",e=>{const t=e.changedTouches[0];snakeTouch={x:t.clientX,y:t.clientY}},{passive:true});
+  canvas.addEventListener("touchend",e=>{if(!snakeTouch)return;const t=e.changedTouches[0],dx=t.clientX-snakeTouch.x,dy=t.clientY-snakeTouch.y;snakeTouch=null;if(Math.max(Math.abs(dx),Math.abs(dy))<15)return;const m=Math.abs(dx)>Math.abs(dy)?[Math.sign(dx),0]:[0,Math.sign(dy)];if(m[0]!==-dir.x||m[1]!==-dir.y)nextDir={x:m[0],y:m[1]};if(!snakeRunning)startSnake()},{passive:true});
+  $("snake-start").addEventListener("click",startSnake);drawSnake();
 
-            startIndividualSparks();
-        }
+  // 2048 — persists the current board and best score
+  const GKEY="game2048";let game=saveData[GKEY], previousGame=null;
+  function new2048(){game={board:Array(16).fill(0),score:0,over:false};addTile();addTile();saveData[GKEY]=game;render2048();saveArcade()}
+  function addTile(){const empty=game.board.map((v,i)=>v===0?i:-1).filter(i=>i>=0);if(!empty.length)return;game.board[empty[Math.floor(Math.random()*empty.length)]]=Math.random()<.9?2:4}
+  function render2048(){
+    const board=$("board-2048");board.replaceChildren();
+    game.board.forEach(v=>{const t=document.createElement("div");t.className="tile-2048";t.dataset.value=v;t.textContent=v||"";board.appendChild(t)});
+    $("s2048-score").textContent=game.score;$("s2048-best").textContent=saveData.best2048||0;
+  }
+  function move2048(dirName){
+    if(!game||game.over)return;
+    const old=game.board.slice(),oldScore=game.score;let gained=0;
+    for(let line=0;line<4;line++){
+      const idx=[];
+      for(let i=0;i<4;i++)idx.push(dirName==="left"?line*4+i:dirName==="right"?line*4+3-i:dirName==="up"?i*4+line:(3-i)*4+line);
+      const vals=idx.map(i=>game.board[i]).filter(Boolean),merged=[];
+      for(let i=0;i<vals.length;i++){if(vals[i]===vals[i+1]){merged.push(vals[i]*2);gained+=vals[i]*2;i++}else merged.push(vals[i])}
+      while(merged.length<4)merged.push(0);idx.forEach((k,i)=>game.board[k]=merged[i]);
+    }
+    if(old.every((v,i)=>v===game.board[i]))return;
+    previousGame={board:old,score:oldScore,over:false};game.score+=gained;addTile();
+    saveData.best2048=Math.max(Number(saveData.best2048)||0,game.score);
+    const full=game.board.every(v=>v!==0),canMove=game.board.some((v,i,a)=>(i%4<3&&v===a[i+1])||(i<12&&v===a[i+4]));
+    game.over=full&&!canMove;saveData[GKEY]=game;render2048();saveArcade();
+    if(game.over)status.textContent="2048: no more moves — start a new game.";
+  }
+  $("s2048-new").addEventListener("click",new2048);
+  $("s2048-undo").addEventListener("click",()=>{if(!previousGame)return;game=previousGame;previousGame=null;saveData[GKEY]=game;render2048();saveArcade()});
+  document.addEventListener("keydown",e=>{
+    const map={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right"};
+    if(!map[e.key]||!$("arcade").contains(e.target)||!$("board-2048").contains(e.target))return;
+    e.preventDefault();move2048(map[e.key]);
+  });
+  let gameTouch=null;
+  $("board-2048").addEventListener("touchstart",e=>{const t=e.changedTouches[0];gameTouch={x:t.clientX,y:t.clientY}},{passive:true});
+  $("board-2048").addEventListener("touchend",e=>{if(!gameTouch)return;const t=e.changedTouches[0],dx=t.clientX-gameTouch.x,dy=t.clientY-gameTouch.y;gameTouch=null;if(Math.max(Math.abs(dx),Math.abs(dy))<20)return;move2048(Math.abs(dx)>Math.abs(dy)?(dx>0?"right":"left"):(dy>0?"down":"up"))},{passive:true});
+  if(!game||!Array.isArray(game.board)||game.board.length!==16){new2048()}else render2048();
 
-        let sparkIntervals = [];
-
-        function startIndividualSparks() {
-            sparkIntervals.forEach(clearInterval);
-            sparkIntervals = [];
-
-            const svg = document.getElementById('wires-canvas');
-
-            wireTips.forEach(pt => {
-                const randomTime = 2500 + Math.random() * 4500;
-
-                const interval = setInterval(() => {
-                    if (!isTabActive) return;
-
-                    for (let i = 0; i < 4; i++) {
-                        let spark = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                        spark.setAttribute('cx', pt.x);
-                        spark.setAttribute('cy', pt.y);
-                        spark.setAttribute('r', '2');
-                        spark.setAttribute('fill', '#ffffff');
-                        spark.setAttribute('style', 'filter: drop-shadow(0 0 6px #ffffff);');
-                        svg.appendChild(spark);
-
-                        let posX = pt.x;
-                        let posY = pt.y;
-                        let velX = (Math.random() - 0.5) * 6;
-                        let velY = -Math.random() * 3 - 1;
-                        let gravity = 0.5;
-                        let opacity = 1.0;
-
-                        function animateSpark() {
-                            if (!isTabActive) {
-                                spark.remove();
-                                return;
-                            }
-                            velY += gravity;
-                            posX += velX;
-                            posY += velY;
-                            opacity -= 0.04;
-
-                            if (opacity <= 0) {
-                                spark.remove();
-                            } else {
-                                spark.setAttribute('cx', posX);
-                                spark.setAttribute('cy', posY);
-                                spark.setAttribute('opacity', opacity);
-                                requestAnimationFrame(animateSpark);
-                            }
-                        }
-                        requestAnimationFrame(animateSpark);
-                    }
-                }, randomTime);
-
-                sparkIntervals.push(interval);
-            });
-        }
-
-        window.addEventListener('resize', initElectricWires);
-        initElectricWires();
-
-        // --- МОЛНИИ ИЗ ОБЛАКОВ В МЫШКУ ---
-        function strikeLightningFromClouds() {
-            if (!isTabActive) return;
-            const clouds = document.querySelectorAll('.cloud');
-            if (clouds.length === 0) return;
-
-            const randomCloud = clouds[Math.floor(Math.random() * clouds.length)];
-            const rect = randomCloud.getBoundingClientRect();
-            const cloudX = rect.left + rect.width / 2;
-            const cloudY = rect.top + rect.height / 2;
-
-            const targetX = mouseX || window.innerWidth / 2;
-            const targetY = mouseY || window.innerHeight / 2;
-
-            const svg = document.getElementById('lightning-canvas');
-            let points = `${cloudX},${cloudY} `;
-            let curX = cloudX, curY = cloudY;
-            const steps = 12;
-
-            for (let i = 1; i <= steps; i++) {
-                curX += (targetX - curX) / (steps - i + 1) + (Math.random() - 0.5) * 45;
-                curY += (targetY - curY) / (steps - i + 1) + (Math.random() - 0.5) * 45;
-                points += `${curX},${curY} `;
-            }
-
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-            path.setAttribute('points', points);
-            path.setAttribute('stroke', '#a7f3d0');
-            path.setAttribute('stroke-width', '3');
-            path.setAttribute('fill', 'none');
-            path.setAttribute('style', 'filter: drop-shadow(0 0 12px #34d399);');
-
-            svg.appendChild(path);
-
-            const flash = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            flash.setAttribute('cx', targetX);
-            flash.setAttribute('cy', targetY);
-            flash.setAttribute('r', '10');
-            flash.setAttribute('fill', '#ffffff');
-            flash.setAttribute('style', 'filter: drop-shadow(0 0 15px #ffffff);');
-            svg.appendChild(flash);
-
-            setTimeout(() => {
-                path.remove();
-                flash.remove();
-            }, 300);
-        }
-
-        setInterval(strikeLightningFromClouds, 8000);
-
-        // Курсор
-        const cursor = document.getElementById('cursor');
-        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isTabActive) return;
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
-
-            const trail = document.createElement('div');
-            trail.className = 'cursor-trail';
-            trail.style.left = mouseX + 'px';
-            trail.style.top = mouseY + 'px';
-            document.body.appendChild(trail);
-
-            setTimeout(() => {
-                trail.style.opacity = '0';
-                trail.style.transform = 'translate(-50%, -50%) scale(0.2)';
-            }, 50);
-
-            setTimeout(() => trail.remove(), 450);
-
-            const siteContainer = document.getElementById('siteContainer');
-            const moveY = (mouseY - window.innerHeight / 2) / 40;
-            const moveX = (mouseX - window.innerWidth / 2) / 40;
-            siteContainer.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        });
-
-        // 3D Tilt
-        const card = document.getElementById('tiltCard');
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -10;
-            const rotateY = ((x - centerX) / centerX) * 10;
-            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'rotateX(0deg) rotateY(0deg)';
-        });
-
-        // Печатающийся текст
-        let currentTextToType = "Yo 👋 Less words, more deeds 🚀";
-        let typedElement = document.getElementById('typed-text');
-        let charIndex = 0;
-        let typingTimeout;
-
-        function startTyping(text) {
-            clearTimeout(typingTimeout);
-            currentTextToType = text;
-            typedElement.textContent = "";
-            charIndex = 0;
-            typeWriter();
-        }
-
-        function typeWriter() {
-            if (!isTabActive) return;
-            if (charIndex < currentTextToType.length) {
-                typedElement.textContent += currentTextToType.charAt(charIndex);
-                charIndex++;
-                typingTimeout = setTimeout(typeWriter, 80);
-            }
-        }
-
-        // Часы
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('local-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
-
-        // Discord Lanyard API
-        const DISCORD_ID = '1142187822250471535';
-        const statusMap = { 'online': 'Online', 'idle': 'Inactive', 'dnd': 'Do Not Disturb', 'offline': 'Offline' };
-        let lastStatus = null;
-
-        async function loadDiscordData() {
-            if (!isTabActive) return;
-            try {
-                const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
-                const data = await res.json();
-                if (data.success) {
-                    const { discord_user, discord_status } = data.data;
-                    if (discord_user.avatar) {
-                        document.getElementById('discord-avatar').src = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
-                    }
-                    const avatarStatus = document.getElementById('discord-status');
-                    const statusDot = document.getElementById('status-dot');
-                    const statusText = document.getElementById('status-text');
-                    const currentStatus = (discord_status && statusMap[discord_status]) ? discord_status : 'offline';
-
-                    statusText.textContent = statusMap[currentStatus];
-                    avatarStatus.className = `status-indicator status-${currentStatus}`;
-                    statusDot.className = `status-dot-icon status-${currentStatus}`;
-
-                    if (lastStatus !== currentStatus) {
-                        lastStatus = currentStatus;
-                        if (currentStatus === 'online') {
-                            startTyping("Yo 👋 Less words, more deeds 🚀");
-                        } else {
-                            startTyping("Yo 👋 Recharging for new challenges. Back online soon 🎯");
-                        }
-                    }
-                }
-            } catch (e) {
-                if (lastStatus !== 'offline') {
-                    lastStatus = 'offline';
-                    startTyping("Yo 👋 Recharging for new challenges. Back online soon 🎯");
-                }
-            }
-        }
-
-        loadDiscordData();
-        setInterval(loadDiscordData, 10000);
-    </script>
+  // Clicker — energy, upgrades and passive income persist
+  const baseClicker={energy:0,power:1,auto:0,powerCost:25,autoCost:100};
+  let clicker={...baseClicker,...(saveData.clicker||{})},clickSaveTimer;
+  function renderClicker(){
+    $("clicker-energy").textContent=Math.floor(clicker.energy).toLocaleString();
+    $("clicker-power").textContent=clicker.power;$("clicker-auto").textContent=clicker.auto;
+    $("clicker-cost").textContent=clicker.powerCost.toLocaleString();$("clicker-auto-cost").textContent=clicker.autoCost.toLocaleString();
+    $("clicker-upgrade").disabled=clicker.energy<clicker.powerCost;$("clicker-auto-buy").disabled=clicker.energy<clicker.autoCost;
+  }
+  function saveClicker(){saveData.clicker=clicker;saveArcade()}
+  function scheduleClickSave(){clearTimeout(clickSaveTimer);clickSaveTimer=setTimeout(saveClicker,350)}
+  $("clicker-tap").addEventListener("click",()=>{clicker.energy+=clicker.power;renderClicker();scheduleClickSave()});
+  $("clicker-upgrade").addEventListener("click",()=>{if(clicker.energy<clicker.powerCost)return;clicker.energy-=clicker.powerCost;clicker.power++;clicker.powerCost=Math.ceil(clicker.powerCost*1.65);renderClicker();saveClicker()});
+  $("clicker-auto-buy").addEventListener("click",()=>{if(clicker.energy<clicker.autoCost)return;clicker.energy-=clicker.autoCost;clicker.auto++;clicker.autoCost=Math.ceil(clicker.autoCost*1.8);renderClicker();saveClicker()});
+  setInterval(()=>{if(clicker.auto){clicker.energy+=clicker.auto;renderClicker();scheduleClickSave()}},1000);
+  renderClicker();
+  addEventListener("pagehide",saveClicker);
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)saveClicker()});
+  setInterval(saveClicker,10000);
+})();
+</script>
 </body>
 </html>
