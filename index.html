@@ -140,7 +140,7 @@
         }
 
         .profile-card {
-            background: transparent !important; /* На 100% прозрачная */
+            background: transparent !important;
             border: 1px solid rgba(52, 211, 153, 0.3);
             border-radius: 24px;
             padding: 30px 24px;
@@ -177,17 +177,19 @@
             border: 2px solid rgba(52, 211, 153, 0.3);
         }
 
-        /* Маленький кружок статуса на аватаре */
+        /* ИКОНКА СТАТУСА НА АВАТАРЕ */
         .status-indicator {
             position: absolute;
             bottom: 2px;
             right: 2px;
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            border: 3px solid #020f07;
-            background-color: #80848e;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            border: 3.5px solid #020f07;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
 
         /* Никнейм */
@@ -249,30 +251,65 @@
         }
 
         .status-dot-icon {
-            width: 10px;
-            height: 10px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
         }
 
-        /* --- ЦВЕТА СТАТУСА (ЗЕЛЕНЫЙ ЕСЛИ В СЕТИ) --- */
+        /* --- СТИЛИ СТАТУСОВ DISCORD --- */
+        
+        /* Online */
         .status-online { 
             background-color: #23a55a !important; 
             box-shadow: 0 0 10px #23a55a !important; 
+            border: none !important;
+            mask: none;
+            -webkit-mask: none;
         }
+        .status-online::after { display: none !important; }
+
+        /* Idle (Форма Луны / Полумесяца) */
         .status-idle { 
             background-color: #f0b232 !important; 
             box-shadow: 0 0 8px #f0b232 !important;
+            border: none !important;
+            /* Вырез в форме луны как в Discord */
+            mask: radial-gradient(circle at 30% 30%, transparent 55%, #000 56%);
+            -webkit-mask: radial-gradient(circle at 30% 30%, transparent 55%, #000 56%);
         }
+        .status-idle::after { display: none !important; }
+
+        /* Do Not Disturb (Красный с чертой) */
         .status-dnd { 
             background-color: #f23f43 !important; 
             box-shadow: 0 0 8px #f23f43 !important; 
+            border: none !important;
+            mask: none;
+            -webkit-mask: none;
         }
+        .status-dnd::after {
+            content: '';
+            display: block;
+            width: 70%;
+            height: 3px;
+            background-color: #020f07;
+            border-radius: 2px;
+        }
+
+        /* Offline / Invisible (Серый ободок) */
         .status-offline { 
-            background-color: #80848e !important; 
+            background-color: #020f07 !important; 
+            border: 3px solid #80848e !important;
+            box-shadow: none !important;
+            mask: none;
+            -webkit-mask: none;
         }
+        .status-offline::after { display: none !important; }
 
         .stats-grid {
             display: grid;
@@ -464,7 +501,7 @@
 
                 <div class="status-pill">
                     <span class="status-dot-icon status-offline" id="status-dot"></span>
-                    <span id="status-text">offline</span>
+                    <span id="status-text">Offline</span>
                 </div>
 
                 <div class="stats-grid">
@@ -660,6 +697,13 @@
 
         const DISCORD_ID = '1142187822250471535';
 
+        const statusMap = {
+            'online': 'Online',
+            'idle': 'Idle',
+            'dnd': 'Do Not Disturb',
+            'offline': 'Offline'
+        };
+
         async function loadDiscordData() {
             try {
                 const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
@@ -668,19 +712,16 @@
                 if (data.success) {
                     const { discord_user, discord_status, activities } = data.data;
 
-                    // Аватар
                     if (discord_user.avatar) {
                         document.getElementById('discord-avatar').src = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
                     }
 
-                    // Обновление статусов
                     const avatarStatus = document.getElementById('discord-status');
                     const statusDot = document.getElementById('status-dot');
                     const statusText = document.getElementById('status-text');
 
-                    statusText.textContent = discord_status;
+                    statusText.textContent = statusMap[discord_status] || 'Offline';
 
-                    // Применяем зелёный (online), жёлтый (idle), красный (dnd) или серый (offline)
                     avatarStatus.className = `status-indicator status-${discord_status}`;
                     statusDot.className = `status-dot-icon status-${discord_status}`;
 
@@ -699,7 +740,6 @@
             }
         }
 
-        // Обновляем статус каждые 10 секунд
         loadDiscordData();
         setInterval(loadDiscordData, 10000);
     </script>
