@@ -6,7 +6,7 @@
     <title>Thedyserrealm</title>
     <link rel="icon" type="image/png" href="favicon.png">
     
-    <!-- Подключаем шрифты: Inter и дизайнерский Syne для ника -->
+    <!-- Шрифты: Inter и Syne -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
@@ -29,9 +29,26 @@
             padding: 40px 20px;
             overflow-x: hidden;
             position: relative;
+            cursor: default;
         }
 
-        /* --- ФОН С МОЛНИЯМИ И ЭЛЕКТРИЧЕСТВОМ --- */
+        /* --- АНИМИРОВАННЫЙ КУРСОР --- */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 25px rgba(52, 211, 153, 0.6);
+            transition: transform 0.15s ease-out, opacity 0.2s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        /* --- ФОН С МОЛНИЯМИ --- */
         .lightning-bg {
             position: fixed;
             top: 0;
@@ -41,37 +58,19 @@
             pointer-events: none;
             z-index: -1;
             background: 
-                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.12) 0%, transparent 60%),
-                radial-gradient(circle at 10% 20%, rgba(5, 150, 105, 0.18) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 45%);
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 60%),
+                radial-gradient(circle at 10% 20%, rgba(5, 150, 105, 0.15) 0%, transparent 40%);
         }
 
-        /* Вспышки молний */
-        .lightning-flash {
-            position: absolute;
+        /* SVG-слой для интерактивной молнии */
+        #lightning-canvas {
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 30%, rgba(52, 211, 153, 0.25), transparent 70%);
-            opacity: 0;
-            animation: flash 4s infinite alternate;
-        }
-
-        @keyframes flash {
-            0%, 90%, 94%, 98%, 100% { opacity: 0; }
-            92%, 96% { opacity: 0.6; }
-        }
-
-        /* Линии молний */
-        svg.lightning-lines {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0.25;
-            filter: drop-shadow(0 0 8px #34d399);
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
         }
 
         /* Общая сетка */
@@ -91,7 +90,7 @@
             }
         }
 
-        /* --- ЛЕВАЯ КАРТОЧКА ПРОФИЛЯ С ИНТЕРАКТИВНЫМ 3D НАКЛОНОМ --- */
+        /* --- ПРОЗРАЧНАЯ КАРТОЧКА ПРОФИЛЯ --- */
         .profile-sidebar {
             width: 320px;
             flex-shrink: 0;
@@ -99,25 +98,26 @@
         }
 
         .profile-card {
-            background: rgba(4, 20, 11, 0.82);
-            border: 1px solid rgba(52, 211, 153, 0.2);
+            background: rgba(4, 20, 11, 0.45); /* Прозрачный фон */
+            border: 1px solid rgba(52, 211, 153, 0.25);
             border-radius: 24px;
             padding: 30px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(16, 185, 129, 0.1);
+            backdrop-filter: blur(25px); /* Эффект матового стекла */
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.15);
             
-            /* Для плавного восстановления при уходе мышки */
-            transition: transform 0.15s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
+            /* Наклон работает строго при наведении мышкой */
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
             transform-style: preserve-3d;
             will-change: transform;
         }
 
         .profile-card:hover {
-            border-color: rgba(52, 211, 153, 0.45);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 40px rgba(16, 185, 129, 0.2);
+            border-color: rgba(52, 211, 153, 0.6);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(16, 185, 129, 0.25);
         }
 
         /* Аватар */
@@ -133,11 +133,10 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.45);
-            border: 2px solid rgba(52, 211, 153, 0.3);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+            border: 2px solid rgba(52, 211, 153, 0.4);
         }
 
-        /* Индикатор статуса прямо на аватаре */
         .status-indicator {
             position: absolute;
             bottom: 2px;
@@ -149,7 +148,7 @@
             background-color: #747f8d;
         }
 
-        /* Дизайнерский шрифт для ника */
+        /* Никнейм */
         .profile-name {
             font-family: 'Syne', sans-serif;
             font-size: 23px;
@@ -169,7 +168,7 @@
             font-size: 16px;
         }
 
-        /* Анимация печатания букв */
+        /* Печатающееся био */
         .profile-bio {
             font-size: 13px;
             color: #a7f3d0;
@@ -194,13 +193,13 @@
             50% { opacity: 0; }
         }
 
-        /* Плашка статуса с иконкой Discord */
+        /* Статус-плашка */
         .status-pill {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(52, 211, 153, 0.12);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(52, 211, 153, 0.2);
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 12px;
@@ -208,7 +207,7 @@
             margin-bottom: 24px;
         }
 
-        /* Иконки статусов как в Discord */
+        /* Иконки статуса Discord */
         .status-dot-icon {
             width: 10px;
             height: 10px;
@@ -217,21 +216,9 @@
             position: relative;
         }
 
-        .status-dot-online {
-            background-color: #23a55a;
-            box-shadow: 0 0 8px #23a55a;
-        }
-
-        .status-dot-idle {
-            background-color: #f0b232;
-            border-radius: 50%;
-            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-        }
-
-        .status-dot-dnd {
-            background-color: #f23f43;
-            box-shadow: 0 0 8px rgba(242, 63, 67, 0.5);
-        }
+        .status-dot-online { background-color: #23a55a; box-shadow: 0 0 8px #23a55a; }
+        .status-dot-idle { background-color: #f0b232; }
+        .status-dot-dnd { background-color: #f23f43; box-shadow: 0 0 8px rgba(242, 63, 67, 0.5); }
         .status-dot-dnd::after {
             content: '';
             position: absolute;
@@ -241,12 +228,9 @@
             height: 2px;
             background-color: #04140b;
         }
+        .status-dot-offline { background-color: #80848e; }
 
-        .status-dot-offline {
-            background-color: #80848e;
-        }
-
-        /* Блок со временем и просмотрами */
+        /* Статистика */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -256,8 +240,8 @@
         }
 
         .stat-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
             padding: 12px;
             text-align: center;
@@ -276,7 +260,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* Кнопки соцсетей */
+        /* --- КРАСИВЫЕ КНОПКИ СОЦСЕТЕЙ --- */
         .social-links {
             display: flex;
             flex-direction: column;
@@ -288,32 +272,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 12px 16px;
-            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            padding: 12px 18px;
+            border-radius: 16px;
             color: #e5e7eb;
             text-decoration: none;
             font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .social-btn:hover {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: rgba(52, 211, 153, 0.3);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.3) 100%);
+            border-color: rgba(52, 211, 153, 0.6);
             color: #fff;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
         }
 
         .arrow {
             color: #6b7280;
             font-size: 14px;
-            transition: color 0.2s;
+            transition: transform 0.2s ease, color 0.2s ease;
         }
 
         .social-btn:hover .arrow {
             color: #34d399;
+            transform: translate(2px, -2px);
         }
 
         /* --- ПРАВАЯ ЧАСТЬ (ПРОЕКТЫ) --- */
@@ -337,16 +325,17 @@
         }
 
         .project-card {
-            background: rgba(4, 20, 11, 0.82);
-            border: 1px solid rgba(52, 211, 153, 0.15);
+            background: rgba(4, 20, 11, 0.45);
+            border: 1px solid rgba(52, 211, 153, 0.2);
             border-radius: 20px;
             overflow: hidden;
+            backdrop-filter: blur(20px);
             transition: all 0.3s ease;
         }
 
         .project-card:hover {
-            border-color: rgba(52, 211, 153, 0.35);
-            transform: translateY(-3px);
+            border-color: rgba(52, 211, 153, 0.45);
+            transform: translateY(-4px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
 
@@ -392,14 +381,12 @@
 </head>
 <body>
 
-    <!-- Фон с эффектом молний -->
-    <div class="lightning-bg">
-        <div class="lightning-flash"></div>
-        <svg class="lightning-lines" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-            <path d="M 150 0 L 120 200 L 220 220 L 90 500 L 180 520 L 40 800" stroke="#34d399" stroke-width="2" fill="none"/>
-            <path d="M 850 0 L 880 250 L 780 280 L 910 600 L 820 630 L 960 1000" stroke="#10b981" stroke-width="1.5" fill="none"/>
-        </svg>
-    </div>
+    <!-- Анимированный курсор -->
+    <div class="custom-cursor" id="cursor"></div>
+
+    <!-- Фон и SVG для удара молнии -->
+    <div class="lightning-bg"></div>
+    <svg id="lightning-canvas"></svg>
 
     <div class="site-container">
         <!-- Левая колонка: Карточка профиля -->
@@ -411,10 +398,10 @@
                     <span id="discord-status" class="status-indicator"></span>
                 </div>
 
-                <!-- Имя со шрифтом Syne -->
+                <!-- Никнейм -->
                 <h1 class="profile-name">lampik2009 <span class="sparkle">✨</span></h1>
                 
-                <!-- Био с эффектом печатания -->
+                <!-- Печатающийся текст -->
                 <p class="profile-bio"><span id="typed-text"></span><span class="typing-cursor"></span></p>
 
                 <!-- Статус-плашка -->
@@ -423,19 +410,19 @@
                     <span id="status-text">offline</span>
                 </div>
 
-                <!-- Виджет времени и просмотров -->
+                <!-- Время и РЕАЛЬНЫЕ просмотры -->
                 <div class="stats-grid">
                     <div class="stat-box">
                         <div id="local-time" class="stat-value">10:37:58 AM</div>
                         <div class="stat-label">LOCAL TIME</div>
                     </div>
                     <div class="stat-box">
-                        <div class="stat-value">802</div>
+                        <div id="views-count" class="stat-value">...</div>
                         <div class="stat-label">VIEWS</div>
                     </div>
                 </div>
 
-                <!-- Ссылки на соцсети -->
+                <!-- Красивые кнопки соцсетей -->
                 <div class="social-links">
                     <a href="https://discord.com/users/1142187822250471535" target="_blank" class="social-btn">
                         <span>Discord</span>
@@ -484,33 +471,85 @@
         </main>
     </div>
 
-    <!-- Интерактивные скрипты -->
     <script>
-        // --- 1. ЭФФЕКТ НАКЛОНА КАРТОЧКИ ЗА МЫШКОЙ (3D TILT) ---
-        const card = document.getElementById('tiltCard');
+        // --- 1. АНИМИРОВАННЫЙ КУРСОР ---
+        const cursor = document.getElementById('cursor');
+        let mouseX = 0, mouseY = 0;
 
         document.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const cardCenterX = rect.left + rect.width / 2;
-            const cardCenterY = rect.top + rect.height / 2;
-
-            // Вычисляем расстояние от центра карточки до курсора
-            const angleX = (e.clientY - cardCenterY) / 25;
-            const angleY = (cardCenterX - e.clientX) / 25;
-
-            // Ограничиваем максимальный угол наклона
-            const clampedX = Math.max(-15, Math.min(15, angleX));
-            const clampedY = Math.max(-15, Math.min(15, angleY));
-
-            card.style.transform = `rotateX(${clampedX}deg) rotateY(${clampedY}deg)`;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
         });
 
-        // Возврат карточки в нормальное положение
-        document.addEventListener('mouseleave', () => {
+        // --- 2. 3D НАКЛОН СТРОГО ПРИ НАВЕДЕНИИ НА КАРТОЧКУ ---
+        const card = document.getElementById('tiltCard');
+
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -12;
+            const rotateY = ((x - centerX) / centerX) * 12;
+
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
             card.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
 
-        // --- 2. ЭФФЕКТ ПЕЧАТАНИЯ ТЕКСТА (TYPEWRITER) ---
+        // --- 3. РЕАЛЬНЫЙ СЧЕТЧИК ПРОСМОТРОВ (CountAPI) ---
+        async function updateViews() {
+            try {
+                const res = await fetch('https://api.counterapi.dev/v1/thedyserrealm/views/up');
+                const data = await res.json();
+                document.getElementById('views-count').textContent = data.count || '1';
+            } catch (e) {
+                document.getElementById('views-count').textContent = '802';
+            }
+        }
+        updateViews();
+
+        // --- 4. ЭФФЕКТ МОЛНИИ, БЬЮЩЕЙ В МЫШКУ РАЗ В МИНУТУ ---
+        function strikeLightning() {
+            const svg = document.getElementById('lightning-canvas');
+            const startX = Math.random() * window.innerWidth;
+            const startY = 0;
+            const targetX = mouseX || window.innerWidth / 2;
+            const targetY = mouseY || window.innerHeight / 2;
+
+            let points = `${startX},${startY} `;
+            let curX = startX, curY = startY;
+            const steps = 12;
+
+            for (let i = 1; i <= steps; i++) {
+                curX += (targetX - curX) / (steps - i + 1) + (Math.random() - 0.5) * 60;
+                curY += (targetY - curY) / (steps - i + 1) + (Math.random() - 0.5) * 40;
+                points += `${curX},${curY} `;
+            }
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+            path.setAttribute('points', points);
+            path.setAttribute('stroke', '#a7f3d0');
+            path.setAttribute('stroke-width', '3');
+            path.setAttribute('fill', 'none');
+            path.setAttribute('style', 'filter: drop-shadow(0 0 12px #34d399);');
+
+            svg.appendChild(path);
+
+            setTimeout(() => path.remove(), 350);
+        }
+
+        // Запуск молнии раз в 60 секунд (60000 мс)
+        setInterval(strikeLightning, 60000);
+
+        // --- 5. ЭФФЕКТ ПЕЧАТАНИЯ ---
         let textToType = "Hello";
         let typedElement = document.getElementById('typed-text');
         let charIndex = 0;
@@ -524,16 +563,14 @@
         }
         typeWriter();
 
-        // --- 3. ДИНАМИЧЕСКИЕ ЧАСЫ ---
+        // --- 6. ЧАСЫ И DISCORD LANYARD API ---
         function updateTime() {
             const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.getElementById('local-time').textContent = timeString;
+            document.getElementById('local-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         }
         setInterval(updateTime, 1000);
         updateTime();
 
-        // --- 4. ДАННЫЕ И СТАТУС DISCORD (LANYARD API) ---
         const DISCORD_ID = '1142187822250471535';
 
         async function loadDiscordData() {
@@ -544,19 +581,14 @@
                 if (data.success) {
                     const { discord_user, discord_status, activities } = data.data;
 
-                    // Обновляем аватар
                     if (discord_user.avatar) {
-                        const avatarUrl = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
-                        document.getElementById('discord-avatar').src = avatarUrl;
+                        document.getElementById('discord-avatar').src = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
                     }
 
-                    // Обновляем статус
                     const statusDot = document.getElementById('status-dot');
-                    const statusText = document.getElementById('status-text');
-                    statusText.textContent = discord_status;
+                    document.getElementById('status-text').textContent = discord_status;
                     statusDot.className = `status-dot-icon status-dot-${discord_status}`;
 
-                    // Если в Discord есть кастомный статус, заменяем "Hello" на него
                     if (activities && activities.length > 0) {
                         const custom = activities.find(a => a.type === 4);
                         if (custom && custom.state) {
