@@ -6,10 +6,10 @@
     <title>Thedyserrealm</title>
     <link rel="icon" type="image/png" href="favicon.png">
     
-    <!-- Подключение шрифтов Inter и Syne -->
+    <!-- Подключение шрифтов Inter, Syne и Space Grotesk -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
     <style>
         * {
@@ -20,13 +20,11 @@
         }
 
         body {
-            /* Временно используем загруженное изображение вместо прежнего градиента */
             background-color: #020f07;
-            background-image: url('images.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(5, 150, 105, 0.08) 0%, transparent 50%),
+                linear-gradient(135deg, #010a04 0%, #031c0c 50%, #010a04 100%);
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -265,8 +263,6 @@
         }
 
         /* --- СТИЛИ СТАТУСОВ DISCORD --- */
-        
-        /* Online */
         .status-online { 
             background-color: #23a55a !important; 
             box-shadow: 0 0 10px #23a55a !important; 
@@ -276,7 +272,6 @@
         }
         .status-online::after { display: none !important; }
 
-        /* Idle (Луна) */
         .status-idle { 
             background-color: #f0b232 !important; 
             box-shadow: 0 0 8px #f0b232 !important;
@@ -286,7 +281,6 @@
         }
         .status-idle::after { display: none !important; }
 
-        /* Do Not Disturb (Красный с полосой) */
         .status-dnd { 
             background-color: #f23f43 !important; 
             box-shadow: 0 0 8px #f23f43 !important; 
@@ -303,7 +297,6 @@
             border-radius: 2px;
         }
 
-        /* Offline / Invisible (Серый ободок) */
         .status-offline { 
             background-color: #020f07 !important; 
             border: 3px solid #80848e !important;
@@ -329,11 +322,18 @@
             text-align: center;
         }
 
+        /* ПОДСВЕТКА ВРЕМЕНИ */
         .stat-value {
             font-size: 13px;
             font-weight: 600;
             color: #fff;
             margin-bottom: 4px;
+        }
+
+        #local-time {
+            color: #a7f3d0;
+            text-shadow: 0 0 10px rgba(52, 211, 153, 0.6), 0 0 20px rgba(16, 185, 129, 0.3);
+            font-weight: 700;
         }
 
         .stat-label {
@@ -343,7 +343,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- КНОПКИ С ШРИФТОМ SYNE --- */
+        /* --- КНОПКИ С НОВЫМ ШРИФТОМ SPACE GROTESK --- */
         .social-links {
             display: flex;
             flex-direction: column;
@@ -362,10 +362,11 @@
             color: #e5e7eb;
             text-decoration: none;
             
-            font-family: 'Syne', sans-serif !important;
+            /* Измененный шрифт для кнопок */
+            font-family: 'Space Grotesk', sans-serif !important;
             font-size: 14px;
-            font-weight: 800;
-            letter-spacing: 1px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
             
             transition: all 0.25s ease;
@@ -471,7 +472,7 @@
 </head>
 <body>
 
-    <!-- Бегущие цифры 01 в обе стороны -->
+    <!-- Бегущие цифры 01 -->
     <div class="binary-rain-container">
         <div class="binary-col fall-down">0<br>1<br>0<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1</div>
         <div class="binary-col fall-up">1<br>0<br>1<br>1<br>0<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0</div>
@@ -597,7 +598,7 @@
             siteContainer.style.transform = `translate(${moveX}px, ${moveY}px)`;
         });
 
-        // 3D Tilt строго при наведении на карточку
+        // 3D Tilt при наведении
         const card = document.getElementById('tiltCard');
 
         card.addEventListener('mousemove', (e) => {
@@ -618,7 +619,7 @@
             card.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
 
-        // Счетчик просмотров (CountAPI)
+        // Счетчик просмотров
         async function updateViews() {
             try {
                 const res = await fetch('https://api.counterapi.dev/v1/thedyserrealm/views/up');
@@ -630,7 +631,7 @@
         }
         updateViews();
 
-        // Функция генерации одной молнии
+        // Генерация молний
         function generateSingleBolt(targetX, targetY) {
             const svg = document.getElementById('lightning-canvas');
             const startX = Math.random() * window.innerWidth;
@@ -658,7 +659,6 @@
             setTimeout(() => path.remove(), 350);
         }
 
-        // Логика молний каждые 30 секунд: 100% первая, 70% вторая, 40% третья
         function triggerLightningStrike() {
             const targetX = mouseX || window.innerWidth / 2;
             const targetY = mouseY || window.innerHeight / 2;
@@ -676,18 +676,26 @@
         setInterval(triggerLightningStrike, 30000);
 
         // Печатающийся текст
-        let textToType = "Hello";
+        let currentTextToType = "Yo 👋 Less words, more deeds 🚀";
         let typedElement = document.getElementById('typed-text');
         let charIndex = 0;
+        let typingTimeout;
+
+        function startTyping(text) {
+            clearTimeout(typingTimeout);
+            currentTextToType = text;
+            typedElement.textContent = "";
+            charIndex = 0;
+            typeWriter();
+        }
 
         function typeWriter() {
-            if (charIndex < textToType.length) {
-                typedElement.textContent += textToType.charAt(charIndex);
+            if (charIndex < currentTextToType.length) {
+                typedElement.textContent += currentTextToType.charAt(charIndex);
                 charIndex++;
-                setTimeout(typeWriter, 150);
+                typingTimeout = setTimeout(typeWriter, 100);
             }
         }
-        typeWriter();
 
         // Часы
         function updateTime() {
@@ -700,7 +708,6 @@
         // Discord Lanyard API
         const DISCORD_ID = '1142187822250471535';
 
-        // Сопоставление статусов с англоязычным названием "Inactive" для Idle
         const statusMap = {
             'online': 'Online',
             'idle': 'Inactive',
@@ -708,13 +715,15 @@
             'offline': 'Offline'
         };
 
+        let lastStatus = null;
+
         async function loadDiscordData() {
             try {
                 const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
                 const data = await res.json();
 
                 if (data.success) {
-                    const { discord_user, discord_status, activities } = data.data;
+                    const { discord_user, discord_status } = data.data;
 
                     if (discord_user.avatar) {
                         document.getElementById('discord-avatar').src = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
@@ -724,7 +733,6 @@
                     const statusDot = document.getElementById('status-dot');
                     const statusText = document.getElementById('status-text');
 
-                    // Если юзер офлайн или невидимый, гарантированно выставляем offline
                     const currentStatus = (discord_status && statusMap[discord_status]) ? discord_status : 'offline';
 
                     statusText.textContent = statusMap[currentStatus];
@@ -732,18 +740,22 @@
                     avatarStatus.className = `status-indicator status-${currentStatus}`;
                     statusDot.className = `status-dot-icon status-${currentStatus}`;
 
-                    if (activities && activities.length > 0) {
-                        const custom = activities.find(a => a.type === 4);
-                        if (custom && custom.state) {
-                            textToType = custom.state;
-                            typedElement.textContent = "";
-                            charIndex = 0;
-                            typeWriter();
+                    // Меняем текст био в зависимости от статуса
+                    if (lastStatus !== currentStatus) {
+                        lastStatus = currentStatus;
+                        if (currentStatus === 'online') {
+                            startTyping("Yo 👋 Less words, more deeds 🚀");
+                        } else {
+                            startTyping("Yo 👋 Recharging for new challenges. Back online soon 🎯");
                         }
                     }
                 }
             } catch (e) {
                 console.error("Ошибка Lanyard:", e);
+                if (lastStatus !== 'offline') {
+                    lastStatus = 'offline';
+                    startTyping("Yo 👋 Recharging for new challenges. Back online soon 🎯");
+                }
             }
         }
 
