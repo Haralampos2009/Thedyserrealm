@@ -83,7 +83,7 @@
 
       <section class="content-section arcade-section" id="arcade">
         <h2 class="section-title">mini arcade</h2>
-        <p class="arcade-subtitle">Three games. One realm. Progress saves on this device.</p>
+        <p class="arcade-subtitle">A growing arcade. One realm. Progress saves on this device.</p>
         <div class="arcade-grid">
           <article class="game-card">
             <div class="game-heading"><span class="game-icon">🐍</span><div><h3>Snake</h3><p>Eat, grow, survive.</p></div></div>
@@ -104,7 +104,18 @@
           <article class="game-card clicker-card">
             <div class="game-heading"><span class="game-icon">⚡</span><div><h3>Realm Clicker</h3><p>Collect energy and upgrade.</p></div></div>
             <div class="clicker-energy"><span id="clicker-energy">0</span><small>ENERGY</small></div>
-            <button class="clicker-core" id="clicker-tap" aria-label="Collect energy">⚡</button>
+            <div class="clicker-stage" id="clicker-stage">
+              <span class="orbit-shape orbit-a">✦</span><span class="orbit-shape orbit-b">⬡</span><span class="orbit-shape orbit-c">◆</span><span class="orbit-shape orbit-d">●</span>
+              <button class="clicker-core shape-star" id="clicker-tap" aria-label="Collect energy"><span id="clicker-core-symbol">✦</span></button>
+            </div>
+            <div class="shape-picker" aria-label="Choose energy core shape">
+              <button type="button" class="shape-choice selected" data-shape="star" data-symbol="✦" aria-label="Star shape">✦</button>
+              <button type="button" class="shape-choice" data-shape="diamond" data-symbol="◆" aria-label="Diamond shape">◆</button>
+              <button type="button" class="shape-choice" data-shape="hex" data-symbol="⬡" aria-label="Hexagon shape">⬡</button>
+              <button type="button" class="shape-choice" data-shape="triangle" data-symbol="▲" aria-label="Triangle shape">▲</button>
+              <button type="button" class="shape-choice" data-shape="circle" data-symbol="●" aria-label="Circle shape">●</button>
+              <button type="button" class="shape-choice" data-shape="bolt" data-symbol="ϟ" aria-label="Lightning shape">ϟ</button>
+            </div>
             <p class="clicker-power">Per click: <strong id="clicker-power">1</strong> · Per second: <strong id="clicker-auto">0</strong></p>
             <div class="upgrade-list">
               <button class="game-btn upgrade-btn" id="clicker-upgrade"><span>Upgrade click (+1)</span><span>Cost: <b id="clicker-cost">25</b></span></button>
@@ -121,12 +132,20 @@
             <div class="game-controls"><button class="game-btn" id="world-reset">Reset world</button><a class="game-btn classic-link" href="https://classic.minecraft.net/" target="_blank" rel="noopener noreferrer">Play Minecraft Classic ↗</a></div>
             <p class="game-hint">Your block world saves automatically in this browser on this device. Classic Minecraft opens separately.</p>
           </article>
-          <article class="game-card">
-            <div class="game-heading"><span class="game-icon">🟦</span><div><h3>Realm Drop</h3><p>A quick falling-block challenge.</p></div></div>
+          <article class="game-card drop-card">
+            <div class="game-heading"><span class="game-icon">🟦</span><div><h3>Realm Drop</h3><p>Neon tetrominoes, ghost landing and combo scoring.</p></div></div>
             <canvas id="drop-board" width="240" height="360" aria-label="Falling block game"></canvas>
             <div class="game-stats"><span>Score: <strong id="drop-score">0</strong></span><span>Best: <strong id="drop-best">0</strong></span></div>
             <div class="game-controls"><button class="game-btn" id="drop-start">Start / restart</button><button class="game-btn secondary" id="drop-pause">Pause</button></div>
-            <p class="game-hint">Arrow keys or A/D to move, Space to drop. Click the game first.</p>
+            <div class="drop-legend"><span><i class="legend-dot legend-mint"></i>Realm blocks</span><span><i class="legend-dot legend-ghost"></i>Landing preview</span></div>
+            <p class="game-hint">← → move · ↑ rotate · ↓ soft drop · Space hard drop · P pause</p>
+          </article>
+          <article class="game-card minecraft-embed-card">
+            <div class="game-heading"><span class="game-icon">⛏️</span><div><h3>Minecraft in browser</h3><p>Try launching the browser version right here.</p></div></div>
+            <div class="minecraft-frame-wrap"><iframe id="minecraft-frame" src="https://aquabeary.com/games/minecraft/" title="Minecraft browser game" loading="lazy" allow="fullscreen; gamepad; autoplay; clipboard-read; clipboard-write; pointer-lock" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+              <div class="minecraft-frame-fallback"><span>⛏️</span><p>If the game doesn't load inside the frame, open it directly.</p><a class="game-btn classic-link" href="https://aquabeary.com/games/minecraft/" target="_blank" rel="noopener noreferrer">Open browser Minecraft ↗</a></div>
+            </div>
+            <p class="game-hint">The game host may block embedding. If you see a blank frame, use the open button. The host controls its own saving system.</p>
           </article>
         </div>
         <p class="save-note" id="arcade-save-status" aria-live="polite">Progress saves automatically on this device.</p>
@@ -269,7 +288,7 @@
     ctx.strokeStyle="rgba(52,211,153,.07)";
     for(let i=0;i<=300;i+=CELL){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,300);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(300,i);ctx.stroke()}
     ctx.fillStyle="#fb7185";ctx.shadowColor="#fb7185";ctx.shadowBlur=12;ctx.beginPath();ctx.arc(food.x*CELL+7.5,food.y*CELL+7.5,5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-    snake.forEach((p,i)=>{ctx.fillStyle=i===0?"#a7f3d0":"#10b981";ctx.shadowColor="#10b981";ctx.shadowBlur=i===0?8:2;ctx.fillRect(p.x*CELL+1,p.y*CELL+1,13,13)});ctx.shadowBlur=0;
+    snake.forEach((p,i)=>{const g=ctx.createLinearGradient(p.x*CELL,p.y*CELL,(p.x+1)*CELL,(p.y+1)*CELL);g.addColorStop(0,i===0?"#ecfff5":"#35e69a");g.addColorStop(1,i===0?"#34d399":(i%2?"#087f50":"#10b981"));ctx.fillStyle=g;ctx.shadowColor=i===0?"#a7f3d0":"#10b981";ctx.shadowBlur=i===0?11:3;ctx.beginPath();ctx.roundRect(p.x*CELL+1,p.y*CELL+1,13,13,4);ctx.fill();if(i===0){ctx.shadowBlur=0;ctx.fillStyle="#032315";let eyes;if(dir.x===1)eyes=[[p.x*CELL+10,p.y*CELL+4],[p.x*CELL+10,p.y*CELL+10]];else if(dir.x===-1)eyes=[[p.x*CELL+5,p.y*CELL+4],[p.x*CELL+5,p.y*CELL+10]];else if(dir.y===1)eyes=[[p.x*CELL+4,p.y*CELL+10],[p.x*CELL+10,p.y*CELL+10]];else eyes=[[p.x*CELL+4,p.y*CELL+5],[p.x*CELL+10,p.y*CELL+5]];eyes.forEach(([ex,ey])=>{ctx.beginPath();ctx.arc(ex,ey,1.5,0,Math.PI*2);ctx.fill()})}});ctx.shadowBlur=0;
     $("snake-score").textContent=snakeScore;$("snake-best").textContent=snakeBest;
   }
   function stopSnake(text){clearInterval(snakeTimer);snakeTimer=null;snakeRunning=false;if(text)$("snake-start").textContent=text}
@@ -336,6 +355,8 @@
   // Clicker — energy, upgrades and passive income persist
   const baseClicker={energy:0,power:1,auto:0,powerCost:25,autoCost:100};
   let clicker={...baseClicker,...(saveData.clicker||{})},clickSaveTimer;
+  const shapeSymbols={star:"✦",diamond:"◆",hex:"⬡",triangle:"▲",circle:"●",bolt:"ϟ"};
+  let clickerShape=shapeSymbols[clicker.shape]?clicker.shape:"star";
   function renderClicker(){
     $("clicker-energy").textContent=Math.floor(clicker.energy).toLocaleString();
     $("clicker-power").textContent=clicker.power;$("clicker-auto").textContent=clicker.auto;
@@ -344,7 +365,10 @@
   }
   function saveClicker(){saveData.clicker=clicker;saveArcade()}
   function scheduleClickSave(){clearTimeout(clickSaveTimer);clickSaveTimer=setTimeout(saveClicker,350)}
-  $("clicker-tap").addEventListener("click",()=>{clicker.energy+=clicker.power;renderClicker();scheduleClickSave()});
+  function setClickerShape(shape){if(!shapeSymbols[shape])return;clickerShape=shape;clicker.shape=shape;$("clicker-tap").className="clicker-core shape-"+shape;$("clicker-core-symbol").textContent=shapeSymbols[shape];document.querySelectorAll(".shape-choice").forEach(b=>b.classList.toggle("selected",b.dataset.shape===shape));scheduleClickSave()}
+  document.querySelectorAll(".shape-choice").forEach(b=>b.addEventListener("click",()=>setClickerShape(b.dataset.shape)));
+  setClickerShape(clickerShape);
+  $("clicker-tap").addEventListener("click",()=>{clicker.energy+=clicker.power;const stage=$("clicker-stage"),float=document.createElement("span");float.className="energy-float";float.textContent="+"+clicker.power;float.style.left=(35+Math.random()*30)+"%";stage.appendChild(float);setTimeout(()=>float.remove(),850);stage.classList.remove("core-pulse");void stage.offsetWidth;stage.classList.add("core-pulse");renderClicker();scheduleClickSave()});
   $("clicker-upgrade").addEventListener("click",()=>{if(clicker.energy<clicker.powerCost)return;clicker.energy-=clicker.powerCost;clicker.power++;clicker.powerCost=Math.ceil(clicker.powerCost*1.65);renderClicker();saveClicker()});
   $("clicker-auto-buy").addEventListener("click",()=>{if(clicker.energy<clicker.autoCost)return;clicker.energy-=clicker.autoCost;clicker.auto++;clicker.autoCost=Math.ceil(clicker.autoCost*1.8);renderClicker();saveClicker()});
   setInterval(()=>{if(clicker.auto){clicker.energy+=clicker.auto;renderClicker();scheduleClickSave()}},1000);
@@ -364,17 +388,32 @@
   document.querySelectorAll(".block-tool").forEach(b=>b.addEventListener("click",()=>{selectedBlock=b.dataset.block;document.querySelectorAll(".block-tool").forEach(x=>x.classList.toggle("selected",x===b));}));
   $("world-reset").addEventListener("click",()=>{world=defaultWorld();saveWorld();drawWorld();});drawWorld();
 
-  // Realm Drop: falling-block arcade mini-game with persistent best score
+  // Realm Drop: polished tetromino arcade with ghost landing, rotation and line combos
   const dropCanvas=$("drop-board"), dropCtx=dropCanvas.getContext("2d"), cols=10, rows=15, cell=24;
-  let dropGrid, dropPiece, dropScore=0, dropBest=Number(saveData.dropBest)||0, dropTimer=null, dropRunning=false, dropPaused=false;
+  const tetrominoes=[
+    {shape:[[1,1,1,1]],color:"#48e0a4"},
+    {shape:[[1,1],[1,1]],color:"#ffd166"},
+    {shape:[[0,1,0],[1,1,1]],color:"#b99aff"},
+    {shape:[[1,0,0],[1,1,1]],color:"#64b5ff"},
+    {shape:[[0,0,1],[1,1,1]],color:"#ff9b71"},
+    {shape:[[0,1,1],[1,1,0]],color:"#ff6f91"},
+    {shape:[[1,1,0],[0,1,1]],color:"#63d8e8"}
+  ];
+  let dropGrid,dropPiece,dropScore=0,dropBest=Number(saveData.dropBest)||0,dropTimer=null,dropRunning=false,dropPaused=false,dropLines=0,dropCombo=0;
   $("drop-best").textContent=dropBest;
-  function resetDrop(){dropGrid=Array.from({length:rows},()=>Array(cols).fill(0));dropScore=0;dropPiece={x:4,y:0,shape:[[1,1],[1,1]],color:"#34d399"};dropRunning=true;dropPaused=false;$("drop-score").textContent="0";drawDrop();clearInterval(dropTimer);dropTimer=setInterval(stepDrop,420);}
-  function drawDrop(){dropCtx.fillStyle="#06150d";dropCtx.fillRect(0,0,dropCanvas.width,dropCanvas.height);for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){if(dropGrid[y][x]){dropCtx.fillStyle=dropGrid[y][x];dropCtx.fillRect(x*cell+1,y*cell+1,cell-2,cell-2)}}if(dropPiece)dropPiece.shape.forEach((r,dy)=>r.forEach((v,dx)=>{if(v){dropCtx.fillStyle=dropPiece.color;dropCtx.fillRect((dropPiece.x+dx)*cell+1,(dropPiece.y+dy)*cell+1,cell-2,cell-2)}}));}
+  function newDropPiece(){const t=tetrominoes[Math.floor(Math.random()*tetrominoes.length)];return {x:Math.floor((cols-t.shape[0].length)/2),y:0,shape:t.shape.map(r=>r.slice()),color:t.color}}
+  function resetDrop(){dropGrid=Array.from({length:rows},()=>Array(cols).fill(null));dropScore=0;dropLines=0;dropCombo=0;dropPiece=newDropPiece();dropRunning=true;dropPaused=false;$("drop-score").textContent="0";$("drop-pause").textContent="Pause";clearInterval(dropTimer);dropTimer=setInterval(stepDrop,480);drawDrop();}
+  function drawBlock(x,y,color,ghost=false){const px=x*cell,py=y*cell;if(y<0)return;dropCtx.globalAlpha=ghost?.28:1;dropCtx.fillStyle=color;dropCtx.fillRect(px+1,py+1,cell-2,cell-2);if(!ghost){const g=dropCtx.createLinearGradient(px,py,px+cell,py+cell);g.addColorStop(0,"rgba(255,255,255,.35)");g.addColorStop(.45,"rgba(255,255,255,.04)");g.addColorStop(1,"rgba(0,0,0,.25)");dropCtx.fillStyle=g;dropCtx.fillRect(px+2,py+2,cell-4,cell-4);dropCtx.strokeStyle="rgba(255,255,255,.35)";dropCtx.strokeRect(px+2.5,py+2.5,cell-5,cell-5);}dropCtx.globalAlpha=1;}
+  function drawDrop(){dropCtx.clearRect(0,0,dropCanvas.width,dropCanvas.height);const bg=dropCtx.createLinearGradient(0,0,0,dropCanvas.height);bg.addColorStop(0,"#0b2118");bg.addColorStop(1,"#030a07");dropCtx.fillStyle=bg;dropCtx.fillRect(0,0,dropCanvas.width,dropCanvas.height);dropCtx.strokeStyle="rgba(167,243,208,.08)";dropCtx.lineWidth=.6;for(let x=0;x<=cols;x++){dropCtx.beginPath();dropCtx.moveTo(x*cell,0);dropCtx.lineTo(x*cell,rows*cell);dropCtx.stroke()}for(let y=0;y<=rows;y++){dropCtx.beginPath();dropCtx.moveTo(0,y*cell);dropCtx.lineTo(cols*cell,y*cell);dropCtx.stroke()}for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)if(dropGrid[y][x])drawBlock(x,y,dropGrid[y][x]);if(dropPiece){let ghostY=dropPiece.y;while(!collides(dropPiece.x,ghostY+1,dropPiece.shape))ghostY++;dropPiece.shape.forEach((r,dy)=>r.forEach((v,dx)=>{if(v)drawBlock(dropPiece.x+dx,ghostY+dy,dropPiece.color,true)}));dropPiece.shape.forEach((r,dy)=>r.forEach((v,dx)=>{if(v)drawBlock(dropPiece.x+dx,dropPiece.y+dy,dropPiece.color)}));}if(dropPaused||!dropRunning){dropCtx.fillStyle="rgba(0,0,0,.58)";dropCtx.fillRect(0,0,dropCanvas.width,dropCanvas.height);dropCtx.fillStyle="#eafff2";dropCtx.textAlign="center";dropCtx.font="bold 17px Inter, sans-serif";dropCtx.fillText(dropPaused?"PAUSED":(dropScore?"REALM OVER":"REALM DROP"),dropCanvas.width/2,dropCanvas.height/2-3);dropCtx.font="11px Inter, sans-serif";dropCtx.fillStyle="#9de9c3";dropCtx.fillText(dropPaused?"Press P to resume":"Press Start to play",dropCanvas.width/2,dropCanvas.height/2+18);}}
   function collides(nx,ny,shape=dropPiece.shape){return shape.some((r,dy)=>r.some((v,dx)=>v&&(nx+dx<0||nx+dx>=cols||ny+dy>=rows||(ny+dy>=0&&dropGrid[ny+dy][nx+dx]))));}
-  function stepDrop(){if(!dropRunning||dropPaused)return;if(!collides(dropPiece.x,dropPiece.y+1)){dropPiece.y++;}else{dropPiece.shape.forEach((r,dy)=>r.forEach((v,dx)=>{if(v&&dropPiece.y+dy>=0)dropGrid[dropPiece.y+dy][dropPiece.x+dx]=dropPiece.color}));let kept=dropGrid.filter(r=>r.some(v=>!v));let cleared=rows-kept.length;while(kept.length<rows)kept.unshift(Array(cols).fill(0));dropGrid=kept;dropScore+=cleared*10+1;$("drop-score").textContent=dropScore;if(dropScore>dropBest){dropBest=dropScore;$("drop-best").textContent=dropBest;saveData.dropBest=dropBest;saveArcade();}dropPiece={x:Math.floor(Math.random()*8),y:0,shape:Math.random()>.5?[[1,1],[1,1]]:[[1,1,1]],color:["#34d399","#60a5fa","#fbbf24","#c084fc"][Math.floor(Math.random()*4)]};if(collides(dropPiece.x,dropPiece.y)){dropRunning=false;clearInterval(dropTimer);}}drawDrop();}
-  $("drop-start").addEventListener("click",resetDrop);$("drop-pause").addEventListener("click",()=>{dropPaused=!dropPaused;$("drop-pause").textContent=dropPaused?"Resume":"Pause";});
-  dropCanvas.addEventListener("click",()=>dropCanvas.focus());dropCanvas.tabIndex=0;dropCanvas.addEventListener("keydown",e=>{if(!dropRunning)return;if(["ArrowLeft","ArrowRight","ArrowDown"," "].includes(e.key))e.preventDefault();if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a"){if(!collides(dropPiece.x-1,dropPiece.y))dropPiece.x--;}else if(e.key==="ArrowRight"||e.key.toLowerCase()==="d"){if(!collides(dropPiece.x+1,dropPiece.y))dropPiece.x++;}else if(e.key==="ArrowDown"){stepDrop();}else if(e.key===" "){while(!collides(dropPiece.x,dropPiece.y+1))dropPiece.y++;stepDrop();}drawDrop();});
-  dropGrid=Array.from({length:rows},()=>Array(cols).fill(0));dropPiece={x:4,y:0,shape:[[1,1],[1,1]],color:"#34d399"};drawDrop();
+  function rotateDrop(){const rotated=dropPiece.shape[0].map((_,i)=>dropPiece.shape.map(r=>r[i]).reverse());for(const kick of [0,-1,1,-2,2])if(!collides(dropPiece.x+kick,dropPiece.y,rotated)){dropPiece.x+=kick;dropPiece.shape=rotated;break}}
+  function lockDrop(){dropPiece.shape.forEach((r,dy)=>r.forEach((v,dx)=>{if(v&&dropPiece.y+dy>=0)dropGrid[dropPiece.y+dy][dropPiece.x+dx]=dropPiece.color}));const kept=dropGrid.filter(r=>r.some(v=>!v));const cleared=rows-kept.length;if(cleared){dropLines+=cleared;dropCombo++;dropScore+=[0,100,300,500,800][cleared]||cleared*250;dropScore+=Math.max(0,dropCombo-1)*25}else dropCombo=0;while(kept.length<rows)kept.unshift(Array(cols).fill(null));dropGrid=kept;$("drop-score").textContent=dropScore;if(dropScore>dropBest){dropBest=dropScore;$("drop-best").textContent=dropBest;saveData.dropBest=dropBest;saveArcade()}dropPiece=newDropPiece();if(collides(dropPiece.x,dropPiece.y,dropPiece.shape)){dropRunning=false;clearInterval(dropTimer);dropTimer=null}}
+  function stepDrop(){if(!dropRunning||dropPaused)return;if(!collides(dropPiece.x,dropPiece.y+1,dropPiece.shape))dropPiece.y++;else lockDrop();drawDrop()}
+  function moveDrop(dx,dy=0){if(!dropRunning||dropPaused)return;if(!collides(dropPiece.x+dx,dropPiece.y+dy,dropPiece.shape)){dropPiece.x+=dx;dropPiece.y+=dy;if(dy)dropScore++;drawDrop()}}
+  function hardDrop(){if(!dropRunning||dropPaused)return;let distance=0;while(!collides(dropPiece.x,dropPiece.y+1,dropPiece.shape)){dropPiece.y++;distance++}dropScore+=distance*2;lockDrop();$("drop-score").textContent=dropScore;drawDrop()}
+  function toggleDropPause(){if(!dropRunning)return;dropPaused=!dropPaused;$("drop-pause").textContent=dropPaused?"Resume":"Pause";drawDrop()}
+  $("drop-start").addEventListener("click",resetDrop);$("drop-pause").addEventListener("click",toggleDropPause);dropCanvas.addEventListener("click",()=>dropCanvas.focus());dropCanvas.tabIndex=0;dropCanvas.addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight","ArrowDown","ArrowUp"," "].includes(e.key))e.preventDefault();if(e.key.toLowerCase()==="p"){toggleDropPause();return}if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a")moveDrop(-1);else if(e.key==="ArrowRight"||e.key.toLowerCase()==="d")moveDrop(1);else if(e.key==="ArrowDown"||e.key.toLowerCase()==="s")moveDrop(0,1);else if(e.key==="ArrowUp"||e.key.toLowerCase()==="w") {if(dropRunning&&!dropPaused){rotateDrop();drawDrop()}}else if(e.key===" ")hardDrop()});
+  dropGrid=Array.from({length:rows},()=>Array(cols).fill(null));dropPiece=newDropPiece();drawDrop();
 })();
 </script>
 </body>
