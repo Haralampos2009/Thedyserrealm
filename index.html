@@ -529,5 +529,40 @@
 })();
 </script>
 
+
+<script>
+/* REALM CLICKER SAFE PATCH */
+(() => {
+  const root = document.getElementById('realm-upgrade-shop');
+  if (!root) return;
+  const feedback = document.getElementById('realm-upgrade-feedback');
+  const buttons = [
+    {id:'realm-upgrade-power', cost:50, label:'Overcharge', effect:()=>{window.realmClickValue=(window.realmClickValue||1)+1;}},
+    {id:'realm-upgrade-auto', cost:150, label:'Auto pulse', effect:()=>{window.realmAutoPulse=(window.realmAutoPulse||0)+1;}},
+    {id:'realm-upgrade-aura', cost:250, label:'Prismatic aura', effect:()=>{root.classList.toggle('realm-aura-active');}}
+  ];
+  buttons.forEach(item => {
+    const button = document.getElementById(item.id);
+    if (!button || button.dataset.safeBound) return;
+    button.dataset.safeBound='1';
+    button.type='button';
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (item.id==='realm-upgrade-aura') {
+        item.effect();
+        if (feedback) feedback.textContent='Prismatic aura activated.';
+        return;
+      }
+      item.effect();
+      if (feedback) feedback.textContent=item.label+' upgrade activated.';
+      button.classList.add('is-owned');
+      const cost = button.querySelector('strong');
+      if (cost) cost.textContent='OWNED';
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
