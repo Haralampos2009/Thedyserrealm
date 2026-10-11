@@ -6,10 +6,10 @@
     <title>Thedyserrealm</title>
     <link rel="icon" type="image/png" href="favicon.png">
     
-    <!-- Шрифты: Inter и Syne -->
+    <!-- Подключаем шрифты Inter и Syne -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 
     <style>
         * {
@@ -20,7 +20,12 @@
         }
 
         body {
-            background-color: #020b05;
+            /* Возвращен прежний темно-зеленый фон */
+            background-color: #020f07;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(5, 150, 105, 0.08) 0%, transparent 50%),
+                linear-gradient(135deg, #010a04 0%, #031c0c 50%, #010a04 100%);
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -29,40 +34,36 @@
             padding: 40px 20px;
             overflow-x: hidden;
             position: relative;
-            cursor: default;
         }
 
-        /* --- АНИМИРОВАННЫЙ КУРСОР --- */
-        .custom-cursor {
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.85);
+        /* --- КУРСОР И ШЛЕЙФ ИЗ КРУЖКОВ --- */
+        .cursor-main {
+            width: 16px;
+            height: 16px;
+            background: #ffffff;
             border-radius: 50%;
             position: fixed;
             top: 0;
             left: 0;
             pointer-events: none;
             z-index: 9999;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 25px rgba(52, 211, 153, 0.6);
-            transition: transform 0.15s ease-out, opacity 0.2s ease;
+            box-shadow: 0 0 12px #34d399;
             transform: translate(-50%, -50%);
         }
 
-        /* --- ФОН С МОЛНИЯМИ --- */
-        .lightning-bg {
+        .cursor-trail {
+            width: 10px;
+            height: 10px;
+            background: rgba(52, 211, 153, 0.6);
+            border-radius: 50%;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
             pointer-events: none;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 60%),
-                radial-gradient(circle at 10% 20%, rgba(5, 150, 105, 0.15) 0%, transparent 40%);
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
-        /* SVG-слой для интерактивной молнии */
+        /* SVG для молнии */
         #lightning-canvas {
             position: fixed;
             top: 0;
@@ -73,7 +74,7 @@
             z-index: 999;
         }
 
-        /* Общая сетка */
+        /* --- КОНТЕЙНЕР ДЛЯ ЭФФЕКТА ДВИЖЕНИЯ ПО САЙТУ --- */
         .site-container {
             display: flex;
             gap: 40px;
@@ -81,6 +82,8 @@
             width: 100%;
             align-items: flex-start;
             z-index: 1;
+            transition: transform 0.15s cubic-bezier(0.1, 0.5, 0.1, 1); /* Плавное смещение страницы */
+            will-change: transform;
         }
 
         @media(max-width: 800px) {
@@ -90,7 +93,7 @@
             }
         }
 
-        /* --- ПРОЗРАЧНАЯ КАРТОЧКА ПРОФИЛЯ --- */
+        /* --- ПОЛНОСТЬЮ ПРОЗРАЧНАЯ КАРТОЧКА --- */
         .profile-sidebar {
             width: 320px;
             flex-shrink: 0;
@@ -98,26 +101,24 @@
         }
 
         .profile-card {
-            background: rgba(4, 20, 11, 0.45); /* Прозрачный фон */
-            border: 1px solid rgba(52, 211, 153, 0.25);
+            background: rgba(255, 255, 255, 0.02); /* Максимальная прозрачность */
+            border: 1px solid rgba(52, 211, 153, 0.18);
             border-radius: 24px;
             padding: 30px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            backdrop-filter: blur(25px); /* Эффект матового стекла */
-            -webkit-backdrop-filter: blur(25px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.15);
-            
-            /* Наклон работает строго при наведении мышкой */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
             transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
             transform-style: preserve-3d;
             will-change: transform;
         }
 
         .profile-card:hover {
-            border-color: rgba(52, 211, 153, 0.6);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(16, 185, 129, 0.25);
+            border-color: rgba(52, 211, 153, 0.45);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(16, 185, 129, 0.2);
         }
 
         /* Аватар */
@@ -133,8 +134,8 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
-            border: 2px solid rgba(52, 211, 153, 0.4);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+            border: 2px solid rgba(52, 211, 153, 0.3);
         }
 
         .status-indicator {
@@ -144,11 +145,11 @@
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            border: 3px solid #04140b;
+            border: 3px solid #020f07;
             background-color: #747f8d;
         }
 
-        /* Никнейм */
+        /* Ник с шрифтом Syne */
         .profile-name {
             font-family: 'Syne', sans-serif;
             font-size: 23px;
@@ -168,7 +169,7 @@
             font-size: 16px;
         }
 
-        /* Печатающееся био */
+        /* Био */
         .profile-bio {
             font-size: 13px;
             color: #a7f3d0;
@@ -193,13 +194,13 @@
             50% { opacity: 0; }
         }
 
-        /* Статус-плашка */
+        /* Статус плашка */
         .status-pill {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(52, 211, 153, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(52, 211, 153, 0.15);
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 12px;
@@ -207,8 +208,9 @@
             margin-bottom: 24px;
         }
 
-        /* Иконки статуса Discord */
         .status-dot-icon {
+            width: 100%;
+            height: 100%;
             width: 10px;
             height: 10px;
             border-radius: 50%;
@@ -226,7 +228,7 @@
             left: 2px;
             width: 6px;
             height: 2px;
-            background-color: #04140b;
+            background-color: #020f07;
         }
         .status-dot-offline { background-color: #80848e; }
 
@@ -240,8 +242,8 @@
         }
 
         .stat-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 14px;
             padding: 12px;
             text-align: center;
@@ -255,12 +257,13 @@
         }
 
         .stat-label {
+            font-family: 'Syne', sans-serif;
             font-size: 10px;
             color: #6b7280;
             letter-spacing: 0.5px;
         }
 
-        /* --- КРАСИВЫЕ КНОПКИ СОЦСЕТЕЙ --- */
+        /* --- ПОЛНОСТЬЮ ПРОЗРАЧНЫЕ КНОПКИ С ШРИФТОМ SYNE --- */
         .social-links {
             display: flex;
             flex-direction: column;
@@ -272,25 +275,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
-            border: 1px solid rgba(52, 211, 153, 0.2);
+            background: rgba(255, 255, 255, 0.02); /* Прозрачные */
+            border: 1px solid rgba(52, 211, 153, 0.15);
             padding: 12px 18px;
             border-radius: 16px;
             color: #e5e7eb;
             text-decoration: none;
+            font-family: 'Syne', sans-serif; /* Красивый шрифт */
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             transition: all 0.25s ease;
-            position: relative;
-            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .social-btn:hover {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.3) 100%);
-            border-color: rgba(52, 211, 153, 0.6);
-            color: #fff;
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(52, 211, 153, 0.5);
+            color: #ffffff;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.15);
         }
 
         .arrow {
@@ -311,8 +315,9 @@
         }
 
         .section-title {
+            font-family: 'Syne', sans-serif;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             color: #9ca3af;
             margin-bottom: 16px;
             font-style: italic;
@@ -325,18 +330,18 @@
         }
 
         .project-card {
-            background: rgba(4, 20, 11, 0.45);
-            border: 1px solid rgba(52, 211, 153, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(52, 211, 153, 0.15);
             border-radius: 20px;
             overflow: hidden;
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(15px);
             transition: all 0.3s ease;
         }
 
         .project-card:hover {
-            border-color: rgba(52, 211, 153, 0.45);
+            border-color: rgba(52, 211, 153, 0.4);
             transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .project-img-box {
@@ -355,8 +360,9 @@
         }
 
         .project-info h3 {
+            font-family: 'Syne', sans-serif;
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 4px;
             color: #fff;
         }
@@ -381,36 +387,30 @@
 </head>
 <body>
 
-    <!-- Анимированный курсор -->
-    <div class="custom-cursor" id="cursor"></div>
+    <!-- Курсор -->
+    <div class="cursor-main" id="cursor"></div>
 
-    <!-- Фон и SVG для удара молнии -->
-    <div class="lightning-bg"></div>
+    <!-- Молния SVG -->
     <svg id="lightning-canvas"></svg>
 
-    <div class="site-container">
-        <!-- Левая колонка: Карточка профиля -->
+    <!-- Основной сайт с эффектом парения -->
+    <div class="site-container" id="siteContainer">
+        <!-- Левая колонка: Карточка -->
         <aside class="profile-sidebar">
             <div class="profile-card" id="tiltCard">
-                <!-- Аватар и статус -->
                 <div class="avatar-container">
                     <img id="discord-avatar" src="favicon.png" alt="Avatar" class="avatar-img">
                     <span id="discord-status" class="status-indicator"></span>
                 </div>
 
-                <!-- Никнейм -->
                 <h1 class="profile-name">lampik2009 <span class="sparkle">✨</span></h1>
-                
-                <!-- Печатающийся текст -->
                 <p class="profile-bio"><span id="typed-text"></span><span class="typing-cursor"></span></p>
 
-                <!-- Статус-плашка -->
                 <div class="status-pill">
                     <span class="status-dot-icon status-dot-offline" id="status-dot"></span>
                     <span id="status-text">offline</span>
                 </div>
 
-                <!-- Время и РЕАЛЬНЫЕ просмотры -->
                 <div class="stats-grid">
                     <div class="stat-box">
                         <div id="local-time" class="stat-value">10:37:58 AM</div>
@@ -422,7 +422,6 @@
                     </div>
                 </div>
 
-                <!-- Красивые кнопки соцсетей -->
                 <div class="social-links">
                     <a href="https://discord.com/users/1142187822250471535" target="_blank" class="social-btn">
                         <span>Discord</span>
@@ -446,7 +445,7 @@
                 <h2 class="section-title">projects</h2>
                 <div class="projects-grid">
                     <div class="project-card">
-                        <div class="project-img-box" style="background: linear-gradient(135deg, #064e3b, #047857);">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(6,78,59,0.5), rgba(4,120,87,0.5));">
                             <span class="proj-emoji">⚡</span>
                         </div>
                         <div class="project-info">
@@ -457,7 +456,7 @@
                     </div>
 
                     <div class="project-card">
-                        <div class="project-img-box" style="background: linear-gradient(135deg, #022c22, #065f46);">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(2,44,34,0.5), rgba(6,95,70,0.5));">
                             <span class="proj-emoji">🎮</span>
                         </div>
                         <div class="project-info">
@@ -472,18 +471,40 @@
     </div>
 
     <script>
-        // --- 1. АНИМИРОВАННЫЙ КУРСОР ---
+        // --- 1. КУРСОР И ШЛЕЙФ ИЗ КРУЖКОВ ---
         const cursor = document.getElementById('cursor');
         let mouseX = 0, mouseY = 0;
 
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
+            
             cursor.style.left = mouseX + 'px';
             cursor.style.top = mouseY + 'px';
+
+            // Создаем кружок следа
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = mouseX + 'px';
+            trail.style.top = mouseY + 'px';
+            document.body.appendChild(trail);
+
+            // Анимация исчезновения
+            setTimeout(() => {
+                trail.style.opacity = '0';
+                trail.style.transform = 'translate(-50%, -50%) scale(0.2)';
+            }, 50);
+
+            setTimeout(() => trail.remove(), 450);
+
+            // --- 2. ЭФФЕКТ ДВИЖЕНИЯ ПО САЙТУ (ПАРАЛЛАКС) ---
+            const siteContainer = document.getElementById('siteContainer');
+            const moveY = (mouseY - window.innerHeight / 2) / 35;
+            const moveX = (mouseX - window.innerWidth / 2) / 35;
+            siteContainer.style.transform = `translate(${moveX}px, ${moveY}px)`;
         });
 
-        // --- 2. 3D НАКЛОН СТРОГО ПРИ НАВЕДЕНИИ НА КАРТОЧКУ ---
+        // --- 3. 3D НАКЛОН СТРОГО ПРИ НАВЕДЕНИИ НА КАРТОЧКУ ---
         const card = document.getElementById('tiltCard');
 
         card.addEventListener('mousemove', (e) => {
@@ -504,7 +525,7 @@
             card.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
 
-        // --- 3. РЕАЛЬНЫЙ СЧЕТЧИК ПРОСМОТРОВ (CountAPI) ---
+        // --- 4. РЕАЛЬНЫЙ СЧЕТЧИК ПРОСМОТРОВ ---
         async function updateViews() {
             try {
                 const res = await fetch('https://api.counterapi.dev/v1/thedyserrealm/views/up');
@@ -516,7 +537,7 @@
         }
         updateViews();
 
-        // --- 4. ЭФФЕКТ МОЛНИИ, БЬЮЩЕЙ В МЫШКУ РАЗ В МИНУТУ ---
+        // --- 5. УДАР МОЛНИИ В МЫШКУ КАЖДУЮ МИНУТУ ---
         function strikeLightning() {
             const svg = document.getElementById('lightning-canvas');
             const startX = Math.random() * window.innerWidth;
@@ -545,11 +566,9 @@
 
             setTimeout(() => path.remove(), 350);
         }
-
-        // Запуск молнии раз в 60 секунд (60000 мс)
         setInterval(strikeLightning, 60000);
 
-        // --- 5. ЭФФЕКТ ПЕЧАТАНИЯ ---
+        // --- 6. ЭФФЕКТ ПЕЧАТАНИЯ ---
         let textToType = "Hello";
         let typedElement = document.getElementById('typed-text');
         let charIndex = 0;
@@ -563,7 +582,7 @@
         }
         typeWriter();
 
-        // --- 6. ЧАСЫ И DISCORD LANYARD API ---
+        // --- 7. ЧАСЫ И DISCORD LANYARD API ---
         function updateTime() {
             const now = new Date();
             document.getElementById('local-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
