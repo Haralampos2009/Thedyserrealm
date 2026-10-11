@@ -2,51 +2,59 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 body {
-    background-color: #0d0d0d;
+    background-color: #070709;
     color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
     min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
 }
 
-/* Боковая панель */
-.sidebar {
-    width: 260px;
-    background-color: #111111;
-    padding: 25px 18px;
+/* Общий контейнер (сетка) */
+.site-container {
+    display: flex;
+    gap: 40px;
+    max-width: 1000px;
+    width: 100%;
+    align-items: flex-start;
+}
+
+@media(max-width: 850px) {
+    .site-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* --- Левая карточка профиля (Bento) --- */
+.profile-sidebar {
+    width: 320px;
+    flex-shrink: 0;
+}
+
+.profile-card {
+    background: rgba(20, 20, 25, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 30px 24px;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Красивая карточка профиля (aquabeary style) */
-.profile-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 16px;
-    display: flex;
     align-items: center;
-    gap: 14px;
-    margin-bottom: 30px;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
-.profile-card:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.15);
-    transform: translateY(-2px);
-}
-
-.profile-avatar-wrapper {
+/* Аватар с фиолетовым свечением */
+.avatar-container {
     position: relative;
-    width: 52px;
-    height: 52px;
-    flex-shrink: 0;
+    width: 90px;
+    height: 90px;
+    margin-bottom: 20px;
 }
 
 .avatar-img {
@@ -54,89 +62,199 @@ body {
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
+    box-shadow: 0 0 30px rgba(140, 60, 255, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .status-indicator {
     position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 13px;
-    height: 13px;
+    bottom: 2px;
+    right: 2px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    border: 2px solid #111111;
-    background-color: #80848e;
+    border: 3px solid #141419;
+    background-color: #747f8d;
 }
 
-/* Цвета статусов Discord */
-.status-online { background-color: #23a55a; }
-.status-idle { background-color: #f0b232; }
-.status-dnd { background-color: #f23f43; }
-.status-offline { background-color: #80848e; }
-
-/* Текст внутри карточки */
-.profile-info {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
+/* Имя и био */
 .profile-name {
-    font-size: 15px;
-    font-weight: 600;
-    color: #ffffff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.profile-subtext {
+.sparkle {
+    font-size: 14px;
+}
+
+.profile-bio {
+    font-size: 13px;
+    color: #8a8a93;
+    margin-bottom: 16px;
+}
+
+/* Плашка статуса offline/online */
+.status-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 6px 14px;
+    border-radius: 20px;
     font-size: 12px;
-    color: #888888;
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: #a0a0ab;
+    margin-bottom: 24px;
 }
 
-/* Навигация */
-.sidebar ul {
-    list-style: none;
+.status-pill span[class^="dot-"] {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #747f8d;
+}
+
+.status-dot-online { background-color: #23a55a !important; box-shadow: 0 0 8px #23a55a; }
+.status-dot-idle { background-color: #f0b232 !important; }
+.status-dot-dnd { background-color: #f23f43 !important; }
+.status-dot-offline { background-color: #747f8d !important; }
+
+/* Блок со временем и просмотрами */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.stat-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: #6e6e78;
+    letter-spacing: 0.5px;
+}
+
+/* Кнопки соцсетей */
+.social-links {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
+    width: 100%;
 }
 
-.sidebar a {
-    color: #888888;
+.social-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 12px 16px;
+    border-radius: 14px;
+    color: #d0d0dc;
     text-decoration: none;
-    font-size: 15px;
-    padding: 8px 12px;
-    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
     transition: all 0.2s ease;
 }
 
-.sidebar a:hover,
-.sidebar a.active {
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.05);
+.social-btn:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateY(-2px);
 }
 
-/* Контент */
-.content {
+.arrow {
+    color: #6e6e78;
+    font-size: 14px;
+}
+
+/* --- Правая колонка (Контент / Проекты) --- */
+.main-content {
     flex: 1;
-    padding: 50px;
+    width: 100%;
 }
 
-.section {
-    margin-bottom: 50px;
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #8a8a93;
+    margin-bottom: 16px;
+    text-transform: lowercase;
 }
 
-.section h1 {
-    font-size: 32px;
-    margin-bottom: 15px;
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
 }
 
-.section p {
-    color: #aaaaaa;
-    line-height: 1.6;
+.project-card {
+    background: rgba(20, 20, 25, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.project-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+.project-img-box {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.proj-emoji {
+    font-size: 36px;
+}
+
+.project-info {
+    padding: 16px;
+}
+
+.project-info h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #fff;
+}
+
+.project-info p {
+    font-size: 12px;
+    color: #8a8a93;
+    margin-bottom: 12px;
+}
+
+.project-link {
+    font-size: 11px;
+    color: #9c7cff;
+    text-decoration: none;
+}
+
+.project-link:hover {
+    text-decoration: underline;
 }
