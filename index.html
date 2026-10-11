@@ -90,7 +90,7 @@
             <canvas id="snake-board" width="300" height="300" aria-label="Snake game board"></canvas>
             <div class="game-stats"><span>Score: <strong id="snake-score">0</strong></span><span>Best: <strong id="snake-best">0</strong></span></div>
             <button class="game-btn full-btn" id="snake-start">Start game</button>
-            <p class="game-hint">Arrow keys / WASD. On mobile, swipe the board.</p>
+            <p class="game-hint">WASD or arrow keys · On mobile, swipe the board.</p>
           </article>
 
           <article class="game-card">
@@ -98,7 +98,7 @@
             <div class="game-2048-stats"><span>Score: <strong id="s2048-score">0</strong></span><span>Best: <strong id="s2048-best">0</strong></span></div>
             <div id="board-2048" class="board-2048" tabindex="0" role="group" aria-label="2048 board"></div>
             <div class="game-controls"><button class="game-btn" id="s2048-new">New game</button><button class="game-btn secondary" id="s2048-undo">Undo</button></div>
-            <p class="game-hint">Use arrow keys or swipe the board.</p>
+            <p class="game-hint">WASD or arrow keys · swipe on mobile.</p>
           </article>
 
           <article class="game-card clicker-card">
@@ -134,11 +134,52 @@
             <p class="game-hint">← → move · ↑ rotate · ↓ soft drop · Space hard drop · P pause</p>
           </article>
           <article class="game-card wire-puzzle-card">
-            <div class="game-heading"><span class="game-icon">💡</span><div><h3>Wire the Realm</h3><p>Rotate the wire pieces to connect the battery to the lamp.</p></div></div>
-            <div class="wire-puzzle-status" id="wire-status" aria-live="polite">Connect the circuit to light the bulb!</div>
-            <div class="wire-puzzle-grid" id="wire-grid" role="group" aria-label="Wire connection puzzle"></div>
-            <div class="game-controls"><button class="game-btn" id="wire-reset">New circuit</button><span class="wire-moves">Moves: <strong id="wire-moves">0</strong></span></div>
-            <p class="game-hint">Tap a wire to rotate it. Connect neighboring ends from 🔋 to 💡.</p>
+            <div class="game-heading"><span class="game-icon">💡</span><div><h3>Wire the Realm</h3><p>Pull the copper wire ends into the correct sockets, then flip the switch.</p></div></div>
+            <div class="wire-puzzle-status" id="wire-status" aria-live="polite">Drag each loose copper tip to its matching socket.</div>
+            <div class="wire-room">
+              <svg id="wire-room-svg" viewBox="0 0 600 330" role="img" aria-label="Electrical room with fuse box, wires, switch and lamp">
+                <defs>
+                  <linearGradient id="wallGlow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#18392d"/><stop offset="1" stop-color="#08150f"/></linearGradient>
+                  <linearGradient id="copper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe0a1"/><stop offset=".45" stop-color="#c97835"/><stop offset="1" stop-color="#7b3d1b"/></linearGradient>
+                  <radialGradient id="lampGlow"><stop stop-color="#fff5b0" stop-opacity=".9"/><stop offset="1" stop-color="#ffe66d" stop-opacity="0"/></radialGradient>
+                </defs>
+                <rect width="600" height="330" rx="14" fill="url(#wallGlow)"/>
+                <path d="M0 278H600M30 0V278M570 0V278" stroke="#315644" stroke-width="2" opacity=".65"/>
+                <rect x="34" y="34" width="175" height="218" rx="10" fill="#273b32" stroke="#8ca696" stroke-width="3"/>
+                <rect x="47" y="47" width="149" height="190" rx="5" fill="#101b16" stroke="#536e5d"/>
+                <text x="121" y="67" fill="#c7e7d2" font-size="12" text-anchor="middle" font-weight="bold">FUSE BOX</text>
+                <rect x="65" y="80" width="112" height="55" rx="5" fill="#293e32" stroke="#6d8c78"/>
+                <circle cx="83" cy="98" r="7" fill="#e4b65c"/><circle cx="83" cy="117" r="7" fill="#e45d5d"/>
+                <text x="125" y="102" fill="#c7e7d2" font-size="10">POWER</text><text x="125" y="120" fill="#c7e7d2" font-size="10">RETURN</text>
+                <rect x="65" y="150" width="112" height="65" rx="5" fill="#182a21" stroke="#526b5a"/>
+                <text x="121" y="166" fill="#a6cbb4" font-size="10" text-anchor="middle">COPPER WIRES</text>
+                <path d="M80 180h80M80 193h80M80 206h80" stroke="#c97d42" stroke-width="4" stroke-linecap="round"/>
+                <rect x="262" y="72" width="92" height="160" rx="9" fill="#263b30" stroke="#8ca696" stroke-width="3"/>
+                <text x="308" y="92" fill="#c7e7d2" font-size="11" text-anchor="middle">SWITCH</text>
+                <circle cx="286" cy="120" r="7" fill="#d6a15a" stroke="#ffe0a1"/><circle cx="330" cy="120" r="7" fill="#d6a15a" stroke="#ffe0a1"/>
+                <path id="switch-lever" d="M286 120L318 142" stroke="#d5e3d9" stroke-width="8" stroke-linecap="round"/>
+                <circle cx="286" cy="120" r="5" fill="#f4c77c"/>
+                <rect x="282" y="163" width="52" height="42" rx="5" fill="#101b16" stroke="#526b5a"/>
+                <text id="switch-label" x="308" y="188" fill="#ff9d8b" font-size="10" text-anchor="middle">OFF</text>
+                <path d="M460 110h80v45" stroke="#9ab4a2" stroke-width="5" fill="none"/>
+                <path d="M476 155h48l-7 19h-34z" fill="#7d927f" stroke="#c1d3c6" stroke-width="2"/>
+                <path id="lamp-bulb" d="M484 174h32l-5 15h-22z" fill="#9fb0a3" stroke="#d4e2d7" stroke-width="2"/>
+                <ellipse id="lamp-halo" cx="500" cy="155" rx="74" ry="72" fill="url(#lampGlow)" opacity="0"/>
+                <circle id="lamp-light" cx="500" cy="151" r="20" fill="#718579" stroke="#d4e2d7" stroke-width="3"/>
+                <path d="M490 172h20v10h-20z" fill="#a8b8ac" stroke="#d4e2d7"/>
+                <text x="500" y="220" fill="#c7e7d2" font-size="12" text-anchor="middle">CEILING LAMP</text>
+                <path d="M80 278h440" stroke="#526d5b" stroke-width="3"/>
+                <text x="300" y="310" fill="#92b5a0" font-size="11" text-anchor="middle">DRAG THE COPPER ENDS TO THE SOCKETS</text>
+                <path id="wire-a" d="M177 98 C205 130 210 150 224 177" fill="none" stroke="#c97835" stroke-width="7" stroke-linecap="round"/>
+                <path id="wire-b" d="M330 120 C360 160 385 200 404 225" fill="none" stroke="#5e9fe6" stroke-width="7" stroke-linecap="round"/>
+                <circle id="wire-a-tip" cx="224" cy="177" r="11" fill="url(#copper)" stroke="#ffe0a1" stroke-width="3" tabindex="0" role="button" aria-label="Drag copper wire to switch socket"/>
+                <circle id="wire-b-tip" cx="404" cy="225" r="11" fill="url(#copper)" stroke="#ffe0a1" stroke-width="3" tabindex="0" role="button" aria-label="Drag blue wire to lamp socket"/>
+                <circle cx="286" cy="120" r="4" fill="#fff0c8"/><circle cx="476" cy="155" r="4" fill="#fff0c8"/>
+                <rect id="switch-hit" x="268" y="100" width="66" height="62" rx="8" fill="transparent" style="cursor:pointer"/>
+              </svg>
+            </div>
+            <div class="game-controls"><button class="game-btn" id="wire-switch">Flip switch: OFF</button><button class="game-btn secondary" id="wire-reset">Reset wires</button><span class="wire-moves">Connections: <strong id="wire-moves">0/2</strong></span></div>
+            <p class="game-hint">Drag the copper tips with your mouse or finger. Both connections must be seated before the switch can turn the lamp on.</p>
           </article>
         </div>
         <p class="save-note" id="arcade-save-status" aria-live="polite">Progress saves automatically on this device.</p>
@@ -337,7 +378,7 @@
   $("s2048-new").addEventListener("click",new2048);
   $("s2048-undo").addEventListener("click",()=>{if(!previousGame)return;game=previousGame;previousGame=null;saveData[GKEY]=game;render2048();saveArcade()});
   document.addEventListener("keydown",e=>{
-    const map={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right"};
+    const map={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",w:"up",W:"up",s:"down",S:"down",a:"left",A:"left",d:"right",D:"right"};
     if(!map[e.key]||!$("arcade").contains(e.target)||!$("board-2048").contains(e.target))return;
     e.preventDefault();move2048(map[e.key]);
   });
@@ -373,46 +414,48 @@
 
 
 
-  // Wire the Realm: rotate pipe tiles until power can travel from battery to bulb.
-  const wireGridEl=$("wire-grid"), wireStatus=$("wire-status");
-  const wireDirs=["N","E","S","W"];
-  const wireGlyph={NS:"│",EW:"─",EN:"└",ES:"┌",SW:"┐",NW:"┘",ENS:"├",ESW:"┬",NSW:"┤",ENW:"┴",ENSW:"┼",N:"╵",E:"╶",S:"╷",W:"╴"};
-  let wireTiles=[],wireMoves=0,wireSolved=false;
-  function rotatePorts(ports){return ports.map(p=>wireDirs[(wireDirs.indexOf(p)+1)%4]);}
-  function makeCircuit(){
-    wireMoves=0;wireSolved=false;$("wire-moves").textContent="0";
-    // A guaranteed route: battery -> east, two elbows, straight, then bulb. Extra branches add a puzzle feel.
-    const route=[{r:1,c:0,p:["E"]},{r:1,c:1,p:["W","E"]},{r:1,c:2,p:["W","S"]},{r:2,c:2,p:["N","S"]},{r:3,c:2,p:["N","E"]},{r:3,c:3,p:["W"]}];
-    wireTiles=Array.from({length:16},(_,i)=>({ports:[["N","S"],["E","W"],["N","E"],["S","W"],["N","W"],["S","E"]][Math.floor(Math.random()*6)].slice(),special:""}));
-    route.forEach((t,idx)=>{const tile=wireTiles[t.r*4+t.c];tile.ports=t.p.slice();tile.special=idx===0?"battery":(idx===route.length-1?"bulb":"");});
-    // Shuffle each tile's orientation, preserving the shape.
-    wireTiles.forEach(t=>{const turns=Math.floor(Math.random()*4);for(let i=0;i<turns;i++)t.ports=rotatePorts(t.ports)});
-    // Keep endpoints facing into the board; players rotate all route pieces to solve.
-    wireTiles[1*4+0]={ports:["E"],special:"battery"};wireTiles[3*4+3]={ports:["W"],special:"bulb"};
-    renderCircuit();checkCircuit();
+  // Wire the Realm: drag loose wire tips into sockets, then operate the wall switch.
+  const wireSvg=$("wire-room-svg"), wireStatus=$("wire-status");
+  const wireState={a:false,b:false,on:false,drag:null};
+  const circuitTips={a:$("wire-a-tip"),b:$("wire-b-tip")};
+  const wirePaths={a:$("wire-a"),b:$("wire-b")};
+  const wireHomes={a:{x:224,y:177},b:{x:404,y:225}};
+  const wireTargets={a:{x:286,y:120,r:30},b:{x:476,y:155,r:30}};
+  function svgPoint(e){const p=wireSvg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(wireSvg.getScreenCTM().inverse())}
+  function setTip(key,x,y){circuitTips[key].setAttribute("cx",x);circuitTips[key].setAttribute("cy",y);if(key==="a")wirePaths[key].setAttribute("d",`M177 98 C220 50 248 70 ${x} ${y}`);else wirePaths[key].setAttribute("d",`M330 120 C385 82 425 112 ${x} ${y}`)}
+  function renderWires(){
+    $("wire-moves").textContent=(Number(wireState.a)+Number(wireState.b))+"/2";
+    $("wire-a").setAttribute("stroke",wireState.a?"#f0b45f":"#c97835");
+    $("wire-b").setAttribute("stroke",wireState.b?"#f0b45f":"#5e9fe6");
+    $("wire-a-tip").style.cursor=$("wire-b-tip").style.cursor="grab";
+    $("wire-switch").disabled=!(wireState.a&&wireState.b);
+    $("switch-label").textContent=wireState.on?"ON":"OFF";
+    $("switch-label").setAttribute("fill",wireState.on?"#78f0a9":"#ff9d8b");
+    $("switch-lever").setAttribute("d",wireState.on?"M286 120L318 100":"M286 120L318 142");
+    $("lamp-light").setAttribute("fill",wireState.on?"#fff2a1":"#718579");
+    $("lamp-light").setAttribute("stroke",wireState.on?"#fff8c9":"#d4e2d7");
+    $("lamp-halo").setAttribute("opacity",wireState.on?"1":"0");
+    $("lamp-bulb").setAttribute("fill",wireState.on?"#ffe98a":"#9fb0a3");
+    $("wire-switch").textContent="Flip switch: "+(wireState.on?"ON":"OFF");
+    if(wireState.on)wireStatus.textContent="⚡ Circuit live! The lamp is glowing.";
+    else if(wireState.a&&wireState.b)wireStatus.textContent="Both wires connected. Flip the switch to power the lamp!";
+    else wireStatus.textContent="Drag each copper tip onto its matching socket.";
   }
-  function portsKey(ports){return ports.slice().sort().join("");}
-  function renderCircuit(){
-    wireGridEl.innerHTML="";
-    wireTiles.forEach((t,i)=>{const b=document.createElement("button");b.type="button";b.className="wire-tile";b.dataset.index=i;
-      const glyph=t.special==="battery"?"🔋":t.special==="bulb"?(wireSolved?"💡":"⚪"): (wireGlyph[portsKey(t.ports)]||"┼");
-      b.textContent=glyph;b.setAttribute("aria-label",(t.special||"wire")+", rotate tile");if(t.powered)b.classList.add("powered");if(t.special==="bulb"&&wireSolved)b.classList.add("lit");
-      b.addEventListener("click",()=>{if(wireSolved)return;t.ports=rotatePorts(t.ports);wireMoves++;$("wire-moves").textContent=wireMoves;checkCircuit();});wireGridEl.appendChild(b);
+  ["a","b"].forEach(key=>{
+    const tip=circuitTips[key];
+    tip.addEventListener("pointerdown",e=>{e.preventDefault();wireState.drag=key;tip.setPointerCapture(e.pointerId);tip.style.cursor="grabbing"});
+    tip.addEventListener("pointermove",e=>{if(wireState.drag!==key)return;const p=svgPoint(e);setTip(key,Math.max(12,Math.min(588,p.x)),Math.max(12,Math.min(318,p.y)))});
+    tip.addEventListener("pointerup",e=>{
+      if(wireState.drag!==key)return;wireState.drag=null;const p=svgPoint(e),t=wireTargets[key];
+      if(Math.hypot(p.x-t.x,p.y-t.y)<=t.r){wireState[key]=true;setTip(key,t.x,t.y)}
+      else {wireState[key]=false;const h=wireHomes[key];setTip(key,h.x,h.y)}
+      wireState.on=false;renderWires();
     });
-  }
-  function checkCircuit(){
-    wireTiles.forEach(t=>t.powered=false);
-    const start=4, queue=[start], seen=new Set([start]);
-    while(queue.length){const i=queue.shift(),r=Math.floor(i/4),c=i%4,t=wireTiles[i];t.powered=true;
-      for(const [d,dr,dc,opposite] of [["N",-1,0,"S"],["E",0,1,"W"],["S",1,0,"N"],["W",0,-1,"E"]]){
-        if(!t.ports.includes(d))continue;const nr=r+dr,nc=c+dc;if(nr<0||nr>=4||nc<0||nc>=4)continue;const ni=nr*4+nc;
-        if(wireTiles[ni].ports.includes(opposite)&&!seen.has(ni)){seen.add(ni);queue.push(ni)}
-      }
-    }
-    wireSolved=seen.has(15);wireStatus.textContent=wireSolved?`⚡ Circuit complete! The lamp is on in ${wireMoves} moves.`:"Rotate the wires until power reaches the bulb.";
-    wireStatus.classList.toggle("solved",wireSolved);renderCircuit();
-  }
-  $("wire-reset").addEventListener("click",makeCircuit);makeCircuit();
+    tip.addEventListener("pointercancel",()=>{wireState.drag=null});
+  });
+  $("wire-switch").addEventListener("click",()=>{if(!(wireState.a&&wireState.b))return;wireState.on=!wireState.on;renderWires()});
+  $("wire-reset").addEventListener("click",()=>{wireState.a=false;wireState.b=false;wireState.on=false;setTip("a",wireHomes.a.x,wireHomes.a.y);setTip("b",wireHomes.b.x,wireHomes.b.y);renderWires()});
+  renderWires();
 
   // Realm Drop: polished tetromino arcade with ghost landing, rotation and line combos
   const dropCanvas=$("drop-board"), dropCtx=dropCanvas.getContext("2d"), cols=10, rows=15, cell=24;
