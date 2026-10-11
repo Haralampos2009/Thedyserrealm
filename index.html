@@ -20,13 +20,36 @@
         }
 
         body {
-            background-color: #070709;
+            /* Профессиональный темно-зеленый фон с эффектом электричества и молний */
+            background-color: #020f07;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(5, 150, 105, 0.08) 0%, transparent 50%),
+                linear-gradient(135deg, #010a04 0%, #031c0c 50%, #010a04 100%);
             color: #ffffff;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 40px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Декоративные световые линии (молнии/энергия на фоне) */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(90deg, transparent 98%, rgba(52, 211, 153, 0.03) 100%),
+                linear-gradient(0deg, transparent 98%, rgba(52, 211, 153, 0.03) 100%);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: -1;
         }
 
         /* Общая сетка */
@@ -45,25 +68,36 @@
             }
         }
 
-        /* --- ЛЕВАЯ КАРТОЧКА ПРОФИЛЯ --- */
+        /* --- ЛЕВАЯ КАРТОЧКА ПРОФИЛЯ С НАКЛОНОМ --- */
         .profile-sidebar {
             width: 320px;
             flex-shrink: 0;
+            perspective: 1000px; /* Важно для 3D наклона */
         }
 
         .profile-card {
-            background: rgba(20, 20, 25, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(6, 26, 14, 0.75);
+            border: 1px solid rgba(52, 211, 153, 0.15);
             border-radius: 24px;
             padding: 30px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
             backdrop-filter: blur(20px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(16, 185, 129, 0.05);
+            
+            /* Настройки анимации наклона при наведении вправо */
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+            transform-style: preserve-3d;
         }
 
-        /* Аватар с фиолетовым свечением */
+        .profile-card:hover {
+            transform: rotateY(8deg) translateY(-6px);
+            border-color: rgba(52, 211, 153, 0.35);
+            box-shadow: -10px 20px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(16, 185, 129, 0.15);
+        }
+
+        /* Аватар с зеленовато-неоновым свечением */
         .avatar-container {
             position: relative;
             width: 90px;
@@ -76,8 +110,8 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 0 30px rgba(140, 60, 255, 0.45);
-            border: 2px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+            border: 2px solid rgba(52, 211, 153, 0.25);
         }
 
         .status-indicator {
@@ -87,7 +121,7 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            border: 3px solid #141419;
+            border: 3px solid #061a0e;
             background-color: #747f8d;
         }
 
@@ -107,7 +141,7 @@
 
         .profile-bio {
             font-size: 13px;
-            color: #8a8a93;
+            color: #9ca3af;
             margin-bottom: 16px;
             font-style: italic;
             text-align: center;
@@ -123,7 +157,7 @@
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 12px;
-            color: #a0a0ab;
+            color: #9ca3af;
             margin-bottom: 24px;
         }
 
@@ -134,10 +168,10 @@
             background-color: #747f8d;
         }
 
-        .status-dot-online { background-color: #23a55a !important; box-shadow: 0 0 8px #23a55a; }
-        .status-dot-idle { background-color: #f0b232 !important; }
-        .status-dot-dnd { background-color: #f23f43 !important; }
-        .status-dot-offline { background-color: #747f8d !important; }
+        .status-dot-online { background-color: #10b981 !important; box-shadow: 0 0 8px #10b981; }
+        .status-dot-idle { background-color: #f59e0b !important; }
+        .status-dot-dnd { background-color: #ef4444 !important; }
+        .status-dot-offline { background-color: #6b7280 !important; }
 
         /* Блок со временем и просмотрами */
         .stats-grid {
@@ -165,11 +199,11 @@
 
         .stat-label {
             font-size: 10px;
-            color: #6e6e78;
+            color: #6b7280;
             letter-spacing: 0.5px;
         }
 
-        /* Кнопки соцсетей */
+        /* Кнопки соцсетей (чистые, без никнеймов) */
         .social-links {
             display: flex;
             flex-direction: column;
@@ -185,7 +219,7 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             padding: 12px 16px;
             border-radius: 14px;
-            color: #d0d0dc;
+            color: #e5e7eb;
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
@@ -193,20 +227,20 @@
         }
 
         .social-btn:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(52, 211, 153, 0.25);
             color: #fff;
             transform: translateY(-2px);
         }
 
-        .social-sub {
-            font-size: 12px;
-            color: #8a8a93;
+        .arrow {
+            color: #6b7280;
+            font-size: 14px;
+            transition: color 0.2s;
         }
 
-        .arrow {
-            color: #6e6e78;
-            font-size: 14px;
+        .social-btn:hover .arrow {
+            color: #34d399;
         }
 
         /* --- ПРАВАЯ ЧАСТЬ (ПРОЕКТЫ) --- */
@@ -218,7 +252,7 @@
         .section-title {
             font-size: 16px;
             font-weight: 600;
-            color: #8a8a93;
+            color: #9ca3af;
             margin-bottom: 16px;
             font-style: italic;
         }
@@ -230,16 +264,17 @@
         }
 
         .project-card {
-            background: rgba(20, 20, 25, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(6, 26, 14, 0.75);
+            border: 1px solid rgba(52, 211, 153, 0.12);
             border-radius: 20px;
             overflow: hidden;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .project-card:hover {
-            border-color: rgba(255, 255, 255, 0.2);
+            border-color: rgba(52, 211, 153, 0.3);
             transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .project-img-box {
@@ -266,19 +301,18 @@
 
         .project-info p {
             font-size: 12px;
-            color: #8a8a93;
+            color: #9ca3af;
             margin-bottom: 12px;
             font-style: italic;
         }
 
         .project-link {
             font-size: 11px;
-            color: #a0a0ab;
+            color: #34d399;
             text-decoration: none;
         }
 
         .project-link:hover {
-            color: #fff;
             text-decoration: underline;
         }
     </style>
@@ -317,19 +351,19 @@
                     </div>
                 </div>
 
-                <!-- Ссылки на соцсети -->
+                <!-- Ссылки на соцсети (без лишних никнеймов) -->
                 <div class="social-links">
                     <a href="https://discord.com/users/1142187822250471535" target="_blank" class="social-btn">
                         <span>Discord</span>
-                        <span class="social-sub">lampik2009 <span class="arrow">↗</span></span>
+                        <span class="arrow">↗</span>
                     </a>
                     <a href="https://github.com/Haralampos2009" target="_blank" class="social-btn">
                         <span>GitHub</span>
-                        <span class="social-sub">Haralampos2009 <span class="arrow">↗</span></span>
+                        <span class="arrow">↗</span>
                     </a>
                     <a href="https://www.youtube.com/@Dyser_l" target="_blank" class="social-btn">
                         <span>YouTube</span>
-                        <span class="social-sub">@Dyser_l <span class="arrow">↗</span></span>
+                        <span class="arrow">↗</span>
                     </a>
                 </div>
             </div>
@@ -342,8 +376,8 @@
                 <div class="projects-grid">
                     <!-- Карточка проекта 1 -->
                     <div class="project-card">
-                        <div class="project-img-box" style="background: linear-gradient(135deg, #2b1055, #7597de);">
-                            <span class="proj-emoji">🌌</span>
+                        <div class="project-img-box" style="background: linear-gradient(135deg, #064e3b, #047857);">
+                            <span class="proj-emoji">⚡</span>
                         </div>
                         <div class="project-info">
                             <h3>Thedyserrealm</h3>
@@ -354,7 +388,7 @@
 
                     <!-- Карточка проекта 2 -->
                     <div class="project-card">
-                        <div class="project-img-box" style="background: linear-gradient(135deg, #1f4068, #162447);">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, #022c22, #065f46);">
                             <span class="proj-emoji">🎮</span>
                         </div>
                         <div class="project-info">
