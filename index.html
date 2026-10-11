@@ -35,7 +35,7 @@
             position: relative;
         }
 
-        /* --- БЕГУЩИЕ ЦИФРЫ 01 (ДВИЖЕНИЕ В ОБЕ СТОРОНЫ) --- */
+        /* --- БЕГУЩИЕ ЦИФРЫ 01 --- */
         .binary-rain-container {
             position: fixed;
             top: 0;
@@ -60,15 +60,8 @@
             white-space: nowrap;
         }
 
-        /* Движение сверху вниз */
-        .fall-down {
-            animation: fallDown 10s linear infinite;
-        }
-
-        /* Движение снизу вверх */
-        .fall-up {
-            animation: fallUp 10s linear infinite;
-        }
+        .fall-down { animation: fallDown 10s linear infinite; }
+        .fall-up { animation: fallUp 10s linear infinite; }
 
         .binary-col:nth-child(2n) { animation-duration: 7s; animation-delay: -2s; color: #10b981; }
         .binary-col:nth-child(3n) { animation-duration: 14s; animation-delay: -5s; opacity: 0.6; }
@@ -139,7 +132,7 @@
             }
         }
 
-        /* --- ПОЛНОСТЬЮ ПРОЗРАЧНАЯ КАРТОЧКА И КНОПКИ --- */
+        /* --- 100% ПРОЗРАЧНАЯ КАРТОЧКА --- */
         .profile-sidebar {
             width: 320px;
             flex-shrink: 0;
@@ -147,24 +140,24 @@
         }
 
         .profile-card {
-            background: rgba(2, 15, 7, 0.15) !important; /* Ультрапрозрачный слой */
-            border: 1px solid rgba(52, 211, 153, 0.25);
+            background: transparent !important; /* На 100% прозрачная */
+            border: 1px solid rgba(52, 211, 153, 0.3);
             border-radius: 24px;
             padding: 30px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
             transform-style: preserve-3d;
             will-change: transform;
         }
 
         .profile-card:hover {
-            border-color: rgba(52, 211, 153, 0.5);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.2);
+            border-color: rgba(52, 211, 153, 0.6);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(16, 185, 129, 0.25);
         }
 
         /* Аватар */
@@ -184,6 +177,7 @@
             border: 2px solid rgba(52, 211, 153, 0.3);
         }
 
+        /* Маленький кружок статуса на аватаре */
         .status-indicator {
             position: absolute;
             bottom: 2px;
@@ -192,7 +186,8 @@
             height: 18px;
             border-radius: 50%;
             border: 3px solid #020f07;
-            background-color: #747f8d;
+            background-color: #80848e;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         /* Никнейм */
@@ -239,12 +234,13 @@
             50% { opacity: 0; }
         }
 
+        /* Плашка статуса */
         .status-pill {
             display: flex;
             align-items: center;
             gap: 8px;
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(52, 211, 153, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.2);
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 12px;
@@ -258,21 +254,25 @@
             border-radius: 50%;
             display: inline-block;
             position: relative;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .status-dot-online { background-color: #23a55a; box-shadow: 0 0 8px #23a55a; }
-        .status-dot-idle { background-color: #f0b232; }
-        .status-dot-dnd { background-color: #f23f43; box-shadow: 0 0 8px rgba(242, 63, 67, 0.5); }
-        .status-dot-dnd::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 2px;
-            width: 6px;
-            height: 2px;
-            background-color: #020f07;
+        /* --- ЦВЕТА СТАТУСА (ЗЕЛЕНЫЙ ЕСЛИ В СЕТИ) --- */
+        .status-online { 
+            background-color: #23a55a !important; 
+            box-shadow: 0 0 10px #23a55a !important; 
         }
-        .status-dot-offline { background-color: #80848e; }
+        .status-idle { 
+            background-color: #f0b232 !important; 
+            box-shadow: 0 0 8px #f0b232 !important;
+        }
+        .status-dnd { 
+            background-color: #f23f43 !important; 
+            box-shadow: 0 0 8px #f23f43 !important; 
+        }
+        .status-offline { 
+            background-color: #80848e !important; 
+        }
 
         .stats-grid {
             display: grid;
@@ -283,8 +283,8 @@
         }
 
         .stat-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
             padding: 12px;
             text-align: center;
@@ -304,7 +304,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- КНОПКИ С ШРИФТОМ SYNE --- */
+        /* --- КНОПКИ --- */
         .social-links {
             display: flex;
             flex-direction: column;
@@ -316,8 +316,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(52, 211, 153, 0.2);
+            background: transparent;
+            border: 1px solid rgba(52, 211, 153, 0.25);
             padding: 12px 18px;
             border-radius: 16px;
             color: #e5e7eb;
@@ -330,7 +330,7 @@
             text-transform: uppercase;
             
             transition: all 0.25s ease;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(5px);
         }
 
         .social-btn:hover {
@@ -353,7 +353,7 @@
             transform: translate(2px, -2px);
         }
 
-        /* Секция проектов */
+        /* Проекты */
         .main-content {
             flex: 1;
             width: 100%;
@@ -375,18 +375,18 @@
         }
 
         .project-card {
-            background: rgba(2, 15, 7, 0.15);
-            border: 1px solid rgba(52, 211, 153, 0.18);
+            background: transparent;
+            border: 1px solid rgba(52, 211, 153, 0.2);
             border-radius: 20px;
             overflow: hidden;
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(5px);
             transition: all 0.3s ease;
         }
 
         .project-card:hover {
-            border-color: rgba(52, 211, 153, 0.45);
+            border-color: rgba(52, 211, 153, 0.5);
             transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
         .project-img-box {
@@ -432,7 +432,7 @@
 </head>
 <body>
 
-    <!-- Двунаправленный цифровой дождь (сверху-вниз и снизу-вверх) -->
+    <!-- Бегущие 01 -->
     <div class="binary-rain-container">
         <div class="binary-col fall-down">0<br>1<br>0<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1</div>
         <div class="binary-col fall-up">1<br>0<br>1<br>1<br>0<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0</div>
@@ -449,21 +449,21 @@
     <!-- Canvas для рисующихся молний -->
     <svg id="lightning-canvas"></svg>
 
-    <!-- Основной контейнер -->
+    <!-- Основной интерфейс -->
     <div class="site-container" id="siteContainer">
         <!-- Карточка профиля -->
         <aside class="profile-sidebar">
             <div class="profile-card" id="tiltCard">
                 <div class="avatar-container">
                     <img id="discord-avatar" src="favicon.png" alt="Avatar" class="avatar-img">
-                    <span id="discord-status" class="status-indicator"></span>
+                    <span id="discord-status" class="status-indicator status-offline"></span>
                 </div>
 
                 <h1 class="profile-name">lampik2009 <span class="sparkle">✨</span></h1>
                 <p class="profile-bio"><span id="typed-text"></span><span class="typing-cursor"></span></p>
 
                 <div class="status-pill">
-                    <span class="status-dot-icon status-dot-offline" id="status-dot"></span>
+                    <span class="status-dot-icon status-offline" id="status-dot"></span>
                     <span id="status-text">offline</span>
                 </div>
 
@@ -501,7 +501,7 @@
                 <h2 class="section-title">projects</h2>
                 <div class="projects-grid">
                     <div class="project-card">
-                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(6,78,59,0.4), rgba(4,120,87,0.4));">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(6,78,59,0.3), rgba(4,120,87,0.3));">
                             <span class="proj-emoji">⚡</span>
                         </div>
                         <div class="project-info">
@@ -512,7 +512,7 @@
                     </div>
 
                     <div class="project-card">
-                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(2,44,34,0.4), rgba(6,95,70,0.4));">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(2,44,34,0.3), rgba(6,95,70,0.3));">
                             <span class="proj-emoji">🎮</span>
                         </div>
                         <div class="project-info">
@@ -591,7 +591,7 @@
         }
         updateViews();
 
-        // Функция отрисовки отдельной молнии
+        // Отрисовка одной молнии
         function generateSingleBolt(targetX, targetY) {
             const svg = document.getElementById('lightning-canvas');
             const startX = Math.random() * window.innerWidth;
@@ -619,29 +619,24 @@
             setTimeout(() => path.remove(), 350);
         }
 
-        // Логика молний каждые 30 секунд (100% - 1 молния, 70% - 2, 40% - 3)
+        // Молнии (30 секунд, 100%, 70%, 40%)
         function triggerLightningStrike() {
             const targetX = mouseX || window.innerWidth / 2;
             const targetY = mouseY || window.innerHeight / 2;
 
-            // 1-я молния (100%)
             generateSingleBolt(targetX, targetY);
 
-            // 2-я молния (70%)
             if (Math.random() <= 0.70) {
                 setTimeout(() => generateSingleBolt(targetX, targetY), 80);
             }
 
-            // 3-я молния (40%)
             if (Math.random() <= 0.40) {
                 setTimeout(() => generateSingleBolt(targetX, targetY), 160);
             }
         }
-
-        // Запуск раз в 30 секунд
         setInterval(triggerLightningStrike, 30000);
 
-        // Печатающийся текст
+        // Эффект печати
         let textToType = "Hello";
         let typedElement = document.getElementById('typed-text');
         let charIndex = 0;
@@ -673,13 +668,21 @@
                 if (data.success) {
                     const { discord_user, discord_status, activities } = data.data;
 
+                    // Аватар
                     if (discord_user.avatar) {
                         document.getElementById('discord-avatar').src = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
                     }
 
+                    // Обновление статусов
+                    const avatarStatus = document.getElementById('discord-status');
                     const statusDot = document.getElementById('status-dot');
-                    document.getElementById('status-text').textContent = discord_status;
-                    statusDot.className = `status-dot-icon status-dot-${discord_status}`;
+                    const statusText = document.getElementById('status-text');
+
+                    statusText.textContent = discord_status;
+
+                    // Применяем зелёный (online), жёлтый (idle), красный (dnd) или серый (offline)
+                    avatarStatus.className = `status-indicator status-${discord_status}`;
+                    statusDot.className = `status-dot-icon status-${discord_status}`;
 
                     if (activities && activities.length > 0) {
                         const custom = activities.find(a => a.type === 4);
@@ -695,7 +698,10 @@
                 console.error("Ошибка Lanyard:", e);
             }
         }
+
+        // Обновляем статус каждые 10 секунд
         loadDiscordData();
+        setInterval(loadDiscordData, 10000);
     </script>
 </body>
 </html>
