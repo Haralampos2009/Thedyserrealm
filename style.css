@@ -172,3 +172,25 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 .realm-upgrade.is-owned { color:#b4fff6; box-shadow:inset 0 0 22px rgba(82,244,221,.08); }
 .realm-upgrade-shop.realm-aura-active { border-color:rgba(169,136,255,.65); box-shadow:0 0 28px rgba(140,95,255,.18),inset 0 0 40px rgba(140,95,255,.08); }
 .realm-upgrade-shop.realm-aura-active .realm-shop-icon { background:linear-gradient(135deg,#e0c8ff,#77f9ee); box-shadow:0 0 32px rgba(174,128,255,.55); }
+
+
+/* VIEWS WHITE COUNTER PATCH */
+#views, #view-count, #views-count, .views, .views-count, .view-count,
+.statcounter, .statcounter a, .statcounter img + span,
+[id*="view"], [class*="view-count"], [class*="views-count"] {
+  color:#fff !important;
+}
+.views, .views-count, .view-count, #views, #view-count, #views-count {
+  text-shadow:0 0 8px rgba(255,255,255,.18);
+}
+
+
+/* REALM DROP TOUCH CONTROLS STYLE */
+.realm-drop-touch-controls { display:flex; flex-direction:column; align-items:center; gap:8px; margin:12px auto 4px; touch-action:manipulation; }
+.drop-touch-row { display:flex; justify-content:center; gap:9px; }
+.realm-drop-touch-controls button { width:54px; height:48px; border-radius:13px; border:1px solid rgba(113,245,231,.35);
+  color:#eaffff; background:linear-gradient(180deg,rgba(34,59,74,.96),rgba(10,19,30,.98));
+  box-shadow:inset 0 1px rgba(255,255,255,.08),0 5px 14px rgba(0,0,0,.25); font-size:1.35rem; font-weight:700;
+  cursor:pointer; user-select:none; -webkit-user-select:none; touch-action:manipulation; }
+.realm-drop-touch-controls button:active { transform:translateY(2px); border-color:#79fff0; box-shadow:0 0 18px rgba(113,245,231,.24); }
+@media (hover:hover) and (pointer:fine) { .realm-drop-touch-controls { opacity:.72; } }
