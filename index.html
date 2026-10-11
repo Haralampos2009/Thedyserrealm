@@ -20,7 +20,7 @@
         }
 
         body {
-            background-color: #020a05;
+            background-color: #03140a; /* Чистый глубокий тёмно-зелёный фон */
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -32,23 +32,25 @@
             cursor: default;
         }
 
-        /* --- ПЛЫВУЩИЕ ОБЛАКА НА ФОНЕ --- */
+        /* --- ЗАМЕТНЫЕ ПЛЫВУЩИЕ ОБЛАКА --- */
         .cloud {
             position: fixed;
-            background: rgba(16, 185, 129, 0.04);
-            border-radius: 100px;
-            filter: blur(25px);
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            border-radius: 50px;
+            filter: blur(8px);
             pointer-events: none;
             z-index: 0;
             animation: driftCloud linear infinite;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
         }
 
         @keyframes driftCloud {
-            0% { transform: translateX(-250px); }
-            100% { transform: translateX(calc(100vw + 250px)); }
+            0% { transform: translateX(-300px); }
+            100% { transform: translateX(calc(100vw + 300px)); }
         }
 
-        /* --- КОРОТКИЕ ЭЛЕКТРИЧЕСКИЕ ПРОВОДА И ИСКРЫ --- */
+        /* --- РАЗВЕТВЛЁННЫЕ ЭЛЕКТРИЧЕСКИЕ ПРОВОДА --- */
         #wires-canvas {
             position: fixed;
             top: 0;
@@ -59,36 +61,19 @@
             z-index: 0;
         }
 
-        /* --- ЗЕЛЁНО-ЧЁРНЫЙ НЕОНОВЫЙ ФОН С ПЛАВНЫМ СВЕЧЕНИЕМ --- */
-        body::before, body::after {
+        /* --- ЧИСТОЕ ЗЕЛЁНОЕ СВЕЧЕНИЕ НА ФОНЕ --- */
+        body::before {
             content: "";
             position: fixed;
-            width: 450px;
-            height: 450px;
+            width: 600px;
+            height: 600px;
             border-radius: 50%;
-            filter: blur(140px);
-            opacity: 0.25;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 0;
             pointer-events: none;
-            animation: pulseGlow 9s ease-in-out infinite alternate;
-        }
-
-        body::before {
-            background: #10b981;
-            top: -120px;
-            left: -120px;
-        }
-
-        body::after {
-            background: #059669;
-            bottom: -120px;
-            right: -120px;
-            animation-delay: -4.5s;
-        }
-
-        @keyframes pulseGlow {
-            0% { transform: scale(1) translate(0, 0); opacity: 0.2; }
-            100% { transform: scale(1.35) translate(35px, -25px); opacity: 0.35; }
         }
 
         /* --- БЕГУЩИЕ ЦИФРЫ --- */
@@ -102,7 +87,7 @@
             z-index: 0;
             display: flex;
             justify-content: space-around;
-            opacity: 0.18;
+            opacity: 0.15;
             overflow: hidden;
             font-family: monospace;
             font-weight: 700;
@@ -198,7 +183,7 @@
         }
 
         .profile-card {
-            background: rgba(8, 20, 12, 0.2); /* 80% прозрачности */
+            background: rgba(3, 20, 10, 0.2); /* 80% прозрачности */
             border: 1px solid rgba(52, 211, 153, 0.25);
             border-radius: 24px;
             padding: 30px 24px;
@@ -242,7 +227,7 @@
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            border: 3px solid #08140c;
+            border: 3px solid #03140a;
             transition: all 0.3s ease;
         }
 
@@ -427,7 +412,7 @@
         }
 
         .project-card {
-            background: rgba(8, 20, 12, 0.8);
+            background: rgba(3, 20, 10, 0.8);
             border: 1px solid rgba(52, 211, 153, 0.15);
             border-radius: 20px;
             overflow: hidden;
@@ -498,11 +483,12 @@
 </head>
 <body>
 
-    <!-- Облака на фоне -->
-    <div class="cloud" style="width: 220px; height: 70px; top: 15%; animation-duration: 30s; animation-delay: -5s;"></div>
-    <div class="cloud" style="width: 300px; height: 90px; top: 60%; animation-duration: 40s; animation-delay: -15s;"></div>
+    <!-- Заметные облака на фоне -->
+    <div class="cloud" style="width: 260px; height: 80px; top: 12%; animation-duration: 25s; animation-delay: -2s;"></div>
+    <div class="cloud" style="width: 340px; height: 100px; top: 55%; animation-duration: 35s; animation-delay: -12s;"></div>
+    <div class="cloud" style="width: 220px; height: 70px; top: 80%; animation-duration: 28s; animation-delay: -8s;"></div>
 
-    <!-- Короткие электрические провода на фоне -->
+    <!-- Разветвлённые электрические провода на фоне -->
     <svg id="wires-canvas"></svg>
 
     <!-- Бегущие цифры -->
@@ -591,7 +577,7 @@
                 <h2 class="section-title">projects</h2>
                 <div class="projects-grid">
                     
-                    <!-- Карточка 1: Сайт (Использует website-banner.png) -->
+                    <!-- Карточка 1: Сайт -->
                     <a href="https://haralampos2009.github.io/Thedyserrealm/" target="_blank" rel="noopener noreferrer" class="project-card">
                         <div class="project-img-box">
                             <img src="website-banner.png" alt="Site Cover" class="project-banner-img">
@@ -603,7 +589,7 @@
                         </div>
                     </a>
 
-                    <!-- Карточка 2: Discord Server (Использует discord-banner.jpg) -->
+                    <!-- Карточка 2: Discord Server -->
                     <a href="https://discord.gg/wy4BwVb8DC" target="_blank" rel="noopener noreferrer" class="project-card">
                         <div class="project-img-box">
                             <img src="discord-banner.jpg" alt="Discord Server Cover" class="project-banner-img">
@@ -633,7 +619,7 @@
     </div>
 
     <script>
-        // --- 1. КОРОТКИЕ ПРОВОДА И ИСКРЫ ---
+        // --- МНОГО ПРОВОДОВ И ИСКРЫ ---
         let sparkEndPoints = [];
 
         function initElectricWires() {
@@ -646,10 +632,21 @@
 
             sparkEndPoints = [];
 
+            // Расширенная сеть проводов по всем углам
             const wires = [
-                { color: '#ef4444', d: `M 10,15 L 70,15 L 85,35`, end: { x: 85, y: 35 } },
-                { color: '#3b82f6', d: `M ${w-10},15 L ${w-70},15 L ${w-85},35`, end: { x: w-85, y: 35 } },
-                { color: '#84cc16', stripe: true, d: `M 10,${h-15} L 70,${h-15} L 85,${h-35}`, end: { x: 85, y: h-35 } }
+                // Левый верхний угол
+                { color: '#ef4444', d: `M 0,20 L 100,20 L 140,50`, end: { x: 140, y: 50 } },
+                { color: '#3b82f6', d: `M 0,40 L 80,40 L 120,80`, end: { x: 120, y: 80 } },
+                { color: '#84cc16', stripe: true, d: `M 0,60 L 60,60 L 100,110`, end: { x: 100, y: 110 } },
+
+                // Правый верхний угол
+                { color: '#ef4444', d: `M ${w},20 L ${w-100},20 L ${w-140},50`, end: { x: w-140, y: 50 } },
+                { color: '#3b82f6', d: `M ${w},40 L ${w-80},40 L ${w-120},80`, end: { x: w-120, y: 80 } },
+                { color: '#84cc16', stripe: true, d: `M ${w},60 L ${w-60},60 L ${w-100},110`, end: { x: w-100, y: 110 } },
+
+                // Левый нижний угол
+                { color: '#3b82f6', d: `M 0,${h-30} L 90,${h-30} L 130,${h-70}`, end: { x: 130, y: h-70 } },
+                { color: '#ef4444', d: `M 0,${h-50} L 70,${h-50} L 110,${h-100}`, end: { x: 110, y: h-100 } }
             ];
 
             wires.forEach(wire => {
@@ -659,7 +656,7 @@
                 path.setAttribute('stroke-width', '4');
                 path.setAttribute('fill', 'none');
                 path.setAttribute('stroke-linecap', 'round');
-                path.setAttribute('style', 'filter: drop-shadow(0 0 5px ' + wire.color + ');');
+                path.setAttribute('style', 'filter: drop-shadow(0 0 6px ' + wire.color + ');');
                 
                 if (wire.stripe) {
                     path.setAttribute('stroke-dasharray', '8 6');
@@ -708,7 +705,7 @@
         setTimeout(throwWhiteSparks, 1000);
         setInterval(throwWhiteSparks, 20000);
 
-        // --- 2. МОЛНИИ ИЗ ОБЛАКОВ ПРЯМО В МЫШКУ ---
+        // --- МОЛНИИ ИЗ ОБЛАКОВ ПРПЯМО В МЫШКУ ---
         function strikeLightningFromClouds() {
             const clouds = document.querySelectorAll('.cloud');
             if (clouds.length === 0) return;
@@ -755,7 +752,7 @@
             }, 300);
         }
 
-        setInterval(strikeLightningFromClouds, 9000);
+        setInterval(strikeLightningFromClouds, 8000);
 
         // Курсор и шлейф
         const cursor = document.getElementById('cursor');
