@@ -16,6 +16,9 @@
   <svg id="wires-canvas" aria-hidden="true"></svg>
   <div class="binary-rain-container" aria-hidden="true">
     <div class="binary-col fall-down">0<br>1<br>0<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>0<br>1</div>
+    <div class="binary-col fall-up">1<br>0<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>1<br>0<br>1</div>
+    <div class="binary-col fall-down">0<br>1<br>1<br>0<br>0<br>1<br>0<br>1<br>1<br>0<br>1<br>0</div>
+    <div class="binary-col fall-up">1<br>1<br>0<br>1<br>0<br>1<br>0<br>0<br>1<br>0<br>1<br>1</div>
     <div class="binary-col fall-up">1<br>0<br>1<br>1<br>0<br>0<br>1<br>0<br>1<br>0<br>1<br>0</div>
     <div class="binary-col fall-down">0<br>0<br>1<br>0<br>1<br>1<br>0<br>1<br>0<br>0<br>1<br>1</div>
     <div class="binary-col fall-up">1<br>1<br>0<br>1<br>0<br>0<br>1<br>1<br>1<br>0<br>0<br>1</div>
@@ -108,6 +111,22 @@
               <button class="game-btn upgrade-btn" id="clicker-auto-buy"><span>Auto generator (+1/sec)</span><span>Cost: <b id="clicker-auto-cost">100</b></span></button>
             </div>
             <p class="game-hint">Energy and upgrades save automatically.</p>
+          </article>
+        </div>
+        <div class="arcade-grid extra-games">
+          <article class="game-card minicraft-card">
+            <div class="game-heading"><span class="game-icon">🧱</span><div><h3>MiniCraft World</h3><p>Build a tiny block world. Tap a tile to change it.</p></div></div>
+            <div class="block-tools"><button class="game-btn block-tool selected" data-block="🌿">Grass</button><button class="game-btn block-tool" data-block="🪨">Stone</button><button class="game-btn block-tool" data-block="💧">Water</button><button class="game-btn block-tool" data-block="🪵">Wood</button><button class="game-btn block-tool" data-block="🟨">Gold</button></div>
+            <div id="mini-world" class="mini-world" aria-label="MiniCraft world grid"></div>
+            <div class="game-controls"><button class="game-btn" id="world-reset">Reset world</button><a class="game-btn classic-link" href="https://classic.minecraft.net/" target="_blank" rel="noopener noreferrer">Play Minecraft Classic ↗</a></div>
+            <p class="game-hint">Your block world saves automatically in this browser on this device. Classic Minecraft opens separately.</p>
+          </article>
+          <article class="game-card">
+            <div class="game-heading"><span class="game-icon">🟦</span><div><h3>Realm Drop</h3><p>A quick falling-block challenge.</p></div></div>
+            <canvas id="drop-board" width="240" height="360" aria-label="Falling block game"></canvas>
+            <div class="game-stats"><span>Score: <strong id="drop-score">0</strong></span><span>Best: <strong id="drop-best">0</strong></span></div>
+            <div class="game-controls"><button class="game-btn" id="drop-start">Start / restart</button><button class="game-btn secondary" id="drop-pause">Pause</button></div>
+            <p class="game-hint">Arrow keys or A/D to move, Space to drop. Click the game first.</p>
           </article>
         </div>
         <p class="save-note" id="arcade-save-status" aria-live="polite">Progress saves automatically on this device.</p>
@@ -333,6 +352,29 @@
   addEventListener("pagehide",saveClicker);
   document.addEventListener("visibilitychange",()=>{if(document.hidden)saveClicker()});
   setInterval(saveClicker,10000);
+
+  // MiniCraft: locally saved editable 8x8 block world
+  const WORLD_KEY="thedyserrealm_minicraft_world_v1", worldEl=$("mini-world");
+  const defaultWorld=()=>Array.from({length:64},(_,i)=>i>39?"🌿":(i%13===0?"🪵":"🌿"));
+  let world; try { world=JSON.parse(localStorage.getItem(WORLD_KEY)) || defaultWorld(); } catch(_) { world=defaultWorld(); }
+  if(!Array.isArray(world)||world.length!==64) world=defaultWorld();
+  let selectedBlock="🌿";
+  function saveWorld(){try{localStorage.setItem(WORLD_KEY,JSON.stringify(world));}catch(_){}}
+  function drawWorld(){worldEl.innerHTML="";world.forEach((block,i)=>{const b=document.createElement("button");b.type="button";b.className="world-tile";b.textContent=block;b.setAttribute("aria-label","Block "+(i+1)+": "+block);b.addEventListener("click",()=>{world[i]=selectedBlock; b.textContent=selectedBlock;saveWorld();});worldEl.appendChild(b);});}
+  document.querySelectorAll(".block-tool").forEach(b=>b.addEventListener("click",()=>{selectedBlock=b.dataset.block;document.querySelectorAll(".block-tool").forEach(x=>x.classList.toggle("selected",x===b));}));
+  $("world-reset").addEventListener("click",()=>{world=defaultWorld();saveWorld();drawWorld();});drawWorld();
+
+  // Realm Drop: falling-block arcade mini-game with persistent best score
+  const dropCanvas=$("drop-board"), dropCtx=dropCanvas.getContext("2d"), cols=10, rows=15, cell=24;
+  let dropGrid, dropPiece, dropScore=0, dropBest=Number(saveData.dropBest)||0, dropTimer=null, dropRunning=false, dropPaused=false;
+  $("drop-best").textContent=dropBest;
+  function resetDrop(){dropGrid=Array.from({length:rows},()=>Array(cols).fill(0));dropScore=0;dropPiece={x:4,y:0,shape:[[1,1],[1,1]],color:"#34d399"};dropRunning=true;dropPaused=false;$("drop-score").textContent="0";drawDrop();clearInterval(dropTimer);dropTimer=setInterval(stepDrop,420);}
+  function drawDrop(){dropCtx.fillStyle="#06150d";dropCtx.fillRect(0,0,dropCanvas.width,dropCanvas.height);for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){if(dropGrid[y][x]){dropCtx.fillStyle=dropGrid[y][x];dropCtx.fillRect(x*cell+1,y*cell+1,cell-2,cell-2)}}if(dropPiece)dropPiece.shape.forEach((r,dy)=>r.forEach((v,dx)=>{if(v){dropCtx.fillStyle=dropPiece.color;dropCtx.fillRect((dropPiece.x+dx)*cell+1,(dropPiece.y+dy)*cell+1,cell-2,cell-2)}}));}
+  function collides(nx,ny,shape=dropPiece.shape){return shape.some((r,dy)=>r.some((v,dx)=>v&&(nx+dx<0||nx+dx>=cols||ny+dy>=rows||(ny+dy>=0&&dropGrid[ny+dy][nx+dx]))));}
+  function stepDrop(){if(!dropRunning||dropPaused)return;if(!collides(dropPiece.x,dropPiece.y+1)){dropPiece.y++;}else{dropPiece.shape.forEach((r,dy)=>r.forEach((v,dx)=>{if(v&&dropPiece.y+dy>=0)dropGrid[dropPiece.y+dy][dropPiece.x+dx]=dropPiece.color}));let kept=dropGrid.filter(r=>r.some(v=>!v));let cleared=rows-kept.length;while(kept.length<rows)kept.unshift(Array(cols).fill(0));dropGrid=kept;dropScore+=cleared*10+1;$("drop-score").textContent=dropScore;if(dropScore>dropBest){dropBest=dropScore;$("drop-best").textContent=dropBest;saveData.dropBest=dropBest;saveArcade();}dropPiece={x:Math.floor(Math.random()*8),y:0,shape:Math.random()>.5?[[1,1],[1,1]]:[[1,1,1]],color:["#34d399","#60a5fa","#fbbf24","#c084fc"][Math.floor(Math.random()*4)]};if(collides(dropPiece.x,dropPiece.y)){dropRunning=false;clearInterval(dropTimer);}}drawDrop();}
+  $("drop-start").addEventListener("click",resetDrop);$("drop-pause").addEventListener("click",()=>{dropPaused=!dropPaused;$("drop-pause").textContent=dropPaused?"Resume":"Pause";});
+  dropCanvas.addEventListener("click",()=>dropCanvas.focus());dropCanvas.tabIndex=0;dropCanvas.addEventListener("keydown",e=>{if(!dropRunning)return;if(["ArrowLeft","ArrowRight","ArrowDown"," "].includes(e.key))e.preventDefault();if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a"){if(!collides(dropPiece.x-1,dropPiece.y))dropPiece.x--;}else if(e.key==="ArrowRight"||e.key.toLowerCase()==="d"){if(!collides(dropPiece.x+1,dropPiece.y))dropPiece.x++;}else if(e.key==="ArrowDown"){stepDrop();}else if(e.key===" "){while(!collides(dropPiece.x,dropPiece.y+1))dropPiece.y++;stepDrop();}drawDrop();});
+  dropGrid=Array.from({length:rows},()=>Array(cols).fill(0));dropPiece={x:4,y:0,shape:[[1,1],[1,1]],color:"#34d399"};drawDrop();
 })();
 </script>
 </body>
