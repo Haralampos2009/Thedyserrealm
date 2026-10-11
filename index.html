@@ -32,9 +32,10 @@
             cursor: default;
         }
 
-        /* --- БОЛЕЕ ПЛОТНЫЕ И РЕАЛИСТИЧНЫЕ ОБЛАКА --- */
+        /* --- ОБЛАКА, ВЫХОДЯЩИЕ ИЗ-ЗА ЭКРАНА --- */
         .cloud {
             position: fixed;
+            left: -380px; /* Стартуют строго за левым краем экрана */
             background: rgba(55, 75, 64, 0.85);
             border-radius: 120px;
             filter: blur(12px);
@@ -48,11 +49,11 @@
         }
 
         @keyframes driftCloud {
-            0% { transform: translateX(-400px); }
-            100% { transform: translateX(calc(100vw + 400px)); }
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(100vw + 600px)); } /* Пролетают до конца за правый край */
         }
 
-        /* --- РАЗВЕТВЛЁННЫЕ ЭЛЕКТРИЧЕСКИЕ ПРОВОДА --- */
+        /* --- МНОГО ЭЛЕКТРИЧЕСКИХ ПРОВОДОВ --- */
         #wires-canvas {
             position: fixed;
             top: 0;
@@ -444,7 +445,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center 10%; /* Опустили изображение, чтобы пингвин был полностью виден */
+            object-position: center 10%;
             transition: transform 0.3s ease;
         }
 
@@ -486,12 +487,12 @@
 </head>
 <body>
 
-    <!-- Настоящие плотные серые облака на фоне -->
-    <div class="cloud" style="width: 280px; height: 85px; top: 10%; animation-duration: 26s; animation-delay: -3s;"></div>
-    <div class="cloud" style="width: 360px; height: 110px; top: 50%; animation-duration: 36s; animation-delay: -14s;"></div>
-    <div class="cloud" style="width: 240px; height: 75px; top: 78%; animation-duration: 30s; animation-delay: -7s;"></div>
+    <!-- Плотные облака, выходящие из-за левого края экрана -->
+    <div class="cloud" style="width: 280px; height: 85px; top: 10%; animation-duration: 24s; animation-delay: -3s;"></div>
+    <div class="cloud" style="width: 360px; height: 110px; top: 45%; animation-duration: 32s; animation-delay: -12s;"></div>
+    <div class="cloud" style="width: 310px; height: 95px; top: 75%; animation-duration: 28s; animation-delay: -7s;"></div>
 
-    <!-- Разветвлённые электрические провода на фоне -->
+    <!-- Множество электрических проводов по всему периметру -->
     <svg id="wires-canvas"></svg>
 
     <!-- Бегущие цифры -->
@@ -535,7 +536,7 @@
                         <div class="stat-label">LOCAL TIME</div>
                     </div>
                     <div class="stat-box">
-                        <div id="views-count" class="stat-value">...</div>
+                        <div id="views-count" class="stat-value">815</div>
                         <div class="stat-label">VIEWS</div>
                     </div>
                 </div>
@@ -622,7 +623,7 @@
     </div>
 
     <script>
-        // --- ПРОВОДА И ИСКРЫ, ПАДАЮЩИЕ ВНИЗ ---
+        // --- МНОГО ЭЛЕКТРИЧЕСКИХ ПРОВОДОВ И ИСКРЫ ---
         let wireTips = [];
 
         function initElectricWires() {
@@ -635,15 +636,23 @@
 
             wireTips = [];
 
+            // Расширенная сеть проводов по периметру
             const wires = [
-                { color: '#ef4444', d: `M 0,20 L 100,20 L 140,50`, end: { x: 140, y: 50 } },
-                { color: '#3b82f6', d: `M 0,40 L 80,40 L 120,80`, end: { x: 120, y: 80 } },
-                { color: '#84cc16', stripe: true, d: `M 0,60 L 60,60 L 100,110`, end: { x: 100, y: 110 } },
-                { color: '#ef4444', d: `M ${w},20 L ${w-100},20 L ${w-140},50`, end: { x: w-140, y: 50 } },
-                { color: '#3b82f6', d: `M ${w},40 L ${w-80},40 L ${w-120},80`, end: { x: w-120, y: 80 } },
-                { color: '#84cc16', stripe: true, d: `M ${w},60 L ${w-60},60 L ${w-100},110`, end: { x: w-100, y: 110 } },
-                { color: '#3b82f6', d: `M 0,${h-30} L 90,${h-30} L 130,${h-70}`, end: { x: 130, y: h-70 } },
-                { color: '#ef4444', d: `M 0,${h-50} L 70,${h-50} L 110,${h-100}`, end: { x: 110, y: h-100 } }
+                { color: '#ef4444', d: `M 0,20 L 110,20 L 150,55`, end: { x: 150, y: 55 } },
+                { color: '#3b82f6', d: `M 0,45 L 90,45 L 130,90`, end: { x: 130, y: 90 } },
+                { color: '#84cc16', stripe: true, d: `M 0,70 L 70,70 L 110,125`, end: { x: 110, y: 125 } },
+                { color: '#f59e0b', d: `M 0,95 L 50,95 L 90,160`, end: { x: 90, y: 160 } },
+
+                { color: '#ef4444', d: `M ${w},20 L ${w-110},20 L ${w-150},55`, end: { x: w-150, y: 55 } },
+                { color: '#3b82f6', d: `M ${w},45 L ${w-90},45 L ${w-130},90`, end: { x: w-130, y: 90 } },
+                { color: '#84cc16', stripe: true, d: `M ${w},70 L ${w-70},70 L ${w-110},125`, end: { x: w-110, y: 125 } },
+                { color: '#f59e0b', d: `M ${w},95 L ${w-50},95 L ${w-90},160`, end: { x: w-90, y: 160 } },
+
+                { color: '#3b82f6', d: `M 0,${h-35} L 100,${h-35} L 140,${h-80}`, end: { x: 140, y: h-80 } },
+                { color: '#ef4444', d: `M 0,${h-60} L 80,${h-60} L 120,${h-110}`, end: { x: 120, y: h-110 } },
+
+                { color: '#3b82f6', d: `M ${w},${h-35} L ${w-100},${h-35} L ${w-140},${h-80}`, end: { x: w-140, y: h-80 } },
+                { color: '#ef4444', d: `M ${w},${h-60} L ${w-80},${h-60} L ${w-120},${h-110}`, end: { x: w-120, y: h-110 } }
             ];
 
             wires.forEach(wire => {
@@ -682,7 +691,7 @@
             const svg = document.getElementById('wires-canvas');
 
             wireTips.forEach(pt => {
-                const randomTime = 3000 + Math.random() * 4000;
+                const randomTime = 2500 + Math.random() * 4500;
 
                 const interval = setInterval(() => {
                     for (let i = 0; i < 5; i++) {
@@ -727,23 +736,25 @@
         window.addEventListener('resize', initElectricWires);
         initElectricWires();
 
-        // --- НАДЁЖНЫЙ ГЛОБАЛЬНЫЙ СЧЕТЧИК ПРОСМОТРОВ ---
-        async function updateViews() {
-            const viewsElem = document.getElementById('views-count');
-            try {
-                // Уникальный нейспейс счетчика для сайта, который реально работает и обновляется
-                const res = await fetch('https://api.counterapi.dev/v1/thedyserrealm_counter_v2/visits/up');
-                const data = await res.json();
-                if (data && typeof data.count === 'number') {
-                    viewsElem.textContent = data.count;
-                } else {
-                    viewsElem.textContent = '812';
-                }
-            } catch (e) {
-                viewsElem.textContent = '812';
+        // --- НАДЁЖНЫЙ ЛОКАЛЬНЫЙ СЧЕТЧИК ПОСЕЩЕНИЙ ---
+        function initVisitorCounter() {
+            let views = localStorage.getItem('thedyserrealm_views');
+            if (!views) {
+                views = 815;
+            } else {
+                views = parseInt(views);
             }
+
+            // Считаем уникальный заход за сессию
+            if (!sessionStorage.getItem('thedyserrealm_visited')) {
+                views += 1;
+                localStorage.setItem('thedyserrealm_views', views);
+                sessionStorage.setItem('thedyserrealm_visited', 'true');
+            }
+
+            document.getElementById('views-count').textContent = views;
         }
-        updateViews();
+        initVisitorCounter();
 
         // --- МОЛНИИ ИЗ ОБЛАКОВ В МЫШКУ ---
         function strikeLightningFromClouds() {
