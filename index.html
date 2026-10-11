@@ -10,10 +10,16 @@
 <body>
 
     <nav class="sidebar">
-        <!-- Аватарка и статус Discord -->
-        <div class="profile-avatar-container">
-            <img id="discord-avatar" src="favicon.png" alt="Discord Avatar" class="avatar-img">
-            <span id="discord-status" class="status-indicator"></span>
+        <!-- Карточка профиля в стиле aquabeary -->
+        <div class="profile-card">
+            <div class="profile-avatar-wrapper">
+                <img id="discord-avatar" src="favicon.png" alt="Discord Avatar" class="avatar-img">
+                <span id="discord-status" class="status-indicator"></span>
+            </div>
+            <div class="profile-info">
+                <h3 id="discord-username" class="profile-name">lampik2009</h3>
+                <span id="discord-custom-status" class="profile-subtext">Discord Profile</span>
+            </div>
         </div>
 
         <ul>
@@ -50,17 +56,31 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    const { discord_user, discord_status } = data.data;
+                    const { discord_user, discord_status, activities } = data.data;
 
+                    // Загружаем аватар
                     const avatarUrl = discord_user.avatar 
                         ? `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`
                         : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
                     const avatarElement = document.getElementById('discord-avatar');
                     const statusElement = document.getElementById('discord-status');
+                    const nameElement = document.getElementById('discord-username');
+                    const subtextElement = document.getElementById('discord-custom-status');
 
                     if (avatarElement) avatarElement.src = avatarUrl;
                     if (statusElement) statusElement.className = `status-indicator status-${discord_status}`;
+                    if (nameElement) nameElement.textContent = discord_user.global_name || discord_user.username;
+
+                    // Если есть кастомный статус или игра в Discord — показываем ее
+                    if (activities && activities.length > 0) {
+                        const customActivity = activities.find(a => a.type === 4); // Custom Status
+                        if (customActivity && customActivity.state) {
+                            subtextElement.textContent = customActivity.state;
+                        } else if (activities[0].name) {
+                            subtextElement.textContent = `Играет в ${activities[0].name}`;
+                        }
+                    }
                 }
             } catch (err) {
                 console.error("Ошибка при загрузке аватара:", err);
