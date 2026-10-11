@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Сайт</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Привет! Я Haralampos</h1>
+        <p>Добро пожаловать на мой сайт!</p>
+    </header>
+
+    <main>
+        <h2>Мои проекты</h2>
+        <p>Здесь скоро будут мои игры и приложения.</p>
+    </main>
+</body>
+</html>
