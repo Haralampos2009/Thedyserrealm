@@ -94,3 +94,81 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 
 /* Wire the Realm: hands-on electrical room */
 .wire-room{width:100%;margin:12px 0;border:1px solid rgba(145,205,166,.25);border-radius:14px;overflow:hidden;background:#08150f;box-shadow:inset 0 0 30px rgba(38,111,70,.12)}
+.wire-room svg{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+#wire-a-tip,#wire-b-tip{filter:drop-shadow(0 0 5px rgba(255,190,100,.7));touch-action:none;cursor:grab}
+#wire-a-tip:focus,#wire-b-tip:focus{outline:none;stroke:#fff;stroke-width:5}
+#wire-switch:disabled{opacity:.45;cursor:not-allowed;filter:saturate(.4)}
+.wire-puzzle-card .wire-puzzle-status{min-height:2.7em;display:flex;align-items:center}
+@media(max-width:520px){.wire-room{margin:8px 0}.wire-room svg{min-height:180px}.wire-puzzle-card .game-controls{flex-wrap:wrap}}
+
+
+/* REALM POLISH PACK */
+:root { --realm-cyan: #71f5e7; --realm-violet: #a48bff; --realm-red: #ff405b; }
+.wire-level-tag, .realm-shop-status {
+  display:inline-flex; align-items:center; margin-left:.65rem; padding:.25rem .55rem;
+  border:1px solid rgba(113,245,231,.35); border-radius:999px; color:var(--realm-cyan);
+  background:rgba(22,66,69,.38); font-size:.62rem; letter-spacing:.12em; vertical-align:middle;
+}
+#wire-room-svg { width:100%; min-height:260px; border-radius:16px; background:
+  radial-gradient(ellipse at 50% 15%,rgba(48,93,111,.28),transparent 55%),
+  linear-gradient(145deg,#111b29,#080d16 72%); border:1px solid rgba(129,190,215,.22);
+  box-shadow:inset 0 0 36px rgba(0,0,0,.48),0 12px 34px rgba(0,0,0,.22); }
+.wire-room, .wire-game, .wire-panel { position:relative; }
+.wire-room::before { content:""; position:absolute; inset:8px; border:1px solid rgba(171,206,220,.08); border-radius:12px; pointer-events:none; }
+.wire-terminal, .wire-endpoint { filter:drop-shadow(0 0 4px rgba(255,177,87,.45)); }
+.wire-spark, .spark, .cable-spark { filter:drop-shadow(0 0 5px #ff4c4c) drop-shadow(0 0 12px #ff2424); }
+.realm-upgrade-shop { margin:18px 0; padding:20px; border:1px solid rgba(129,190,215,.22); border-radius:20px;
+  background:linear-gradient(135deg,rgba(18,30,46,.68),rgba(7,12,22,.72)); box-shadow:0 16px 42px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.035); backdrop-filter:blur(16px); }
+.realm-upgrade-heading { display:flex; align-items:center; gap:12px; }
+.realm-upgrade-heading h3 { margin:2px 0 0; font-size:1.1rem; letter-spacing:.02em; }
+.realm-upgrade-heading small { color:#80a8bd; font-size:.64rem; letter-spacing:.15em; }
+.realm-shop-icon { display:grid; place-items:center; width:44px; height:44px; border-radius:13px; color:#111522;
+  background:linear-gradient(135deg,#83fff0,#9b8aff); font-size:1.6rem; box-shadow:0 0 24px rgba(113,245,231,.2); }
+.realm-shop-status { margin-left:auto; }
+.realm-upgrade-shop p { color:#9caec2; font-size:.88rem; }
+.realm-upgrade-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.realm-upgrade { display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; text-align:left; padding:13px;
+  color:#e8f3ff; background:rgba(255,255,255,.035); border:1px solid rgba(146,179,205,.16); border-radius:13px; cursor:pointer; transition:.2s ease; }
+.realm-upgrade:hover { transform:translateY(-3px); border-color:rgba(113,245,231,.55); background:rgba(65,135,144,.12); box-shadow:0 9px 24px rgba(0,0,0,.2); }
+.realm-upgrade .upgrade-glyph { grid-row:span 2; display:grid; place-items:center; width:35px; height:35px; border-radius:10px; color:#8dfff1; background:rgba(113,245,231,.1); font-size:1.3rem; }
+.realm-upgrade b, .realm-upgrade small { display:block; }
+.realm-upgrade small { margin-top:3px; color:#92a8bb; font-size:.72rem; }
+.realm-upgrade strong { grid-column:2; color:#9af9ec; font-size:.72rem; }
+.realm-upgrade-feedback { margin-top:12px; color:#9af9ec; font-size:.78rem; min-height:1em; }
+.realm-upgrade.is-owned { border-color:rgba(113,245,231,.45); background:rgba(49,135,126,.13); }
+@media(max-width:680px) { .realm-upgrade-grid { grid-template-columns:1fr; } .realm-shop-status { display:none; } }
+
+/* More visible drifting binary rain, layered cloud banks and timed mouse-seeking storm bolts. */
+.binary-rain, .binary-column, .binary-digit { text-shadow:0 0 8px rgba(91,255,229,.85),0 0 20px rgba(53,217,222,.45); }
+.cloud, .storm-cloud, .floating-cloud { opacity:.72; filter:drop-shadow(0 12px 20px rgba(0,0,0,.22)); }
+.storm-cloud { background:radial-gradient(ellipse at 35% 40%,rgba(210,239,255,.23),rgba(89,135,172,.12) 48%,rgba(18,32,53,.02) 75%); }
+.realm-lightning-flash { position:fixed; inset:0; z-index:9998; pointer-events:none; opacity:0; background:rgba(142,222,255,.06); }
+.realm-lightning-flash.flash { animation:realm-flash .22s ease-out; }
+@keyframes realm-flash { 0%{opacity:0} 18%{opacity:.9} 42%{opacity:.12} 60%{opacity:.7} 100%{opacity:0} }
+.realm-lightning-bolt { position:fixed; z-index:9999; pointer-events:none; overflow:visible; filter:drop-shadow(0 0 5px #c7f8ff) drop-shadow(0 0 15px #69cfff); }
+.realm-lightning-bolt path { stroke:#d9fbff; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+.realm-lightning-bolt .bolt-core { stroke:#fff; stroke-width:1.1; }
+
+
+/* WIRE LAB REALISM PATCH */
+.wire-level-tag { display:inline-flex; align-items:center; padding:5px 9px; margin-left:8px;
+  border-radius:5px; border:1px solid rgba(95,224,238,.34); color:#8ef5f4;
+  background:linear-gradient(180deg,rgba(24,68,82,.7),rgba(10,25,38,.85));
+  font:600 10px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing:.16em;
+  box-shadow:inset 0 1px rgba(255,255,255,.07),0 0 16px rgba(49,213,225,.08); }
+#wire-room-svg { position:relative; display:block; overflow:hidden; border:1px solid rgba(130,177,199,.35);
+  background:
+    linear-gradient(rgba(116,159,180,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(116,159,180,.045) 1px,transparent 1px),
+    radial-gradient(ellipse at 50% 30%,rgba(36,89,109,.34),transparent 58%),
+    linear-gradient(145deg,#18212d,#070c13 74%);
+  background-size:24px 24px,24px 24px,auto,auto;
+  box-shadow:inset 0 0 50px #03070b,0 18px 42px rgba(0,0,0,.3); }
+#wire-room-svg .copper, #wire-room-svg [stroke="#b87333"], #wire-room-svg [stroke="#B87333"] {
+  filter:drop-shadow(0 0 3px rgba(255,151,66,.72)); }
+#wire-room-svg .spark, #wire-room-svg .wire-spark, #wire-room-svg .cable-spark {
+  filter:drop-shadow(0 0 3px #ff8a4c) drop-shadow(0 0 9px #ff3030) drop-shadow(0 0 17px rgba(255,25,43,.8)); }
+.realm-upgrade-shop { border-color:rgba(114,222,232,.25); }
+.realm-upgrade.is-owned { color:#b4fff6; box-shadow:inset 0 0 22px rgba(82,244,221,.08); }
+.realm-upgrade-shop.realm-aura-active { border-color:rgba(169,136,255,.65); box-shadow:0 0 28px rgba(140,95,255,.18),inset 0 0 40px rgba(140,95,255,.08); }
+.realm-upgrade-shop.realm-aura-active .realm-shop-icon { background:linear-gradient(135deg,#e0c8ff,#77f9ee); box-shadow:0 0 32px rgba(174,128,255,.55); }
