@@ -20,11 +20,13 @@
         }
 
         body {
+            /* Временно используем загруженное изображение вместо прежнего градиента */
             background-color: #020f07;
-            background-image: 
-                radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 85% 80%, rgba(5, 150, 105, 0.08) 0%, transparent 50%),
-                linear-gradient(135deg, #010a04 0%, #031c0c 50%, #010a04 100%);
+            background-image: url('images.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -698,9 +700,10 @@
         // Discord Lanyard API
         const DISCORD_ID = '1142187822250471535';
 
+        // Сопоставление статусов с англоязычным названием "Inactive" для Idle
         const statusMap = {
             'online': 'Online',
-            'idle': 'Idle',
+            'idle': 'Inactive',
             'dnd': 'Do Not Disturb',
             'offline': 'Offline'
         };
