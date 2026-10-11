@@ -321,7 +321,7 @@
         .stat-value {
             font-size: 13px;
             font-weight: 600;
-            color: #fff;
+            color: #ffffff;
             margin-bottom: 4px;
         }
 
@@ -336,10 +336,19 @@
             letter-spacing: 0.5px;
         }
 
-        /* Адаптация внешнего вида Statcounter под стиль */
-        .statcounter {
-            display: inline-block;
+        /* --- БЕЛЫЙ ЦВЕТ ТЕКСТА ДЛЯ STATCOUNTER --- */
+        #views-count, 
+        #views-count *, 
+        .statcounter, 
+        .statcounter a, 
+        .statcounter span {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            font-size: 13px !important;
+            text-decoration: none !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
         }
+
         .statcounter img {
             vertical-align: middle;
             filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.8));
@@ -544,7 +553,7 @@
                     </div>
                     <div class="stat-box">
                         <div id="views-count" class="stat-value">
-                            <!-- STATCOUNTER ВСТРОЕН СЮДА -->
+                            <!-- STATCOUNTER -->
                             <script type="text/javascript">
                             var sc_project=13359308; 
                             var sc_invisible=0; 
