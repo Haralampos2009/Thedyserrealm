@@ -9,48 +9,102 @@
 </head>
 <body>
 
-    <nav class="sidebar">
-        <!-- Карточка профиля в стиле aquabeary -->
-        <div class="profile-card">
-            <div class="profile-avatar-wrapper">
-                <img id="discord-avatar" src="favicon.png" alt="Discord Avatar" class="avatar-img">
-                <span id="discord-status" class="status-indicator"></span>
+    <div class="site-container">
+        <!-- Левая колонка: Карточка профиля в стиле bento -->
+        <aside class="profile-sidebar">
+            <div class="profile-card">
+                <!-- Аватар и статус -->
+                <div class="avatar-container">
+                    <img id="discord-avatar" src="favicon.png" alt="Avatar" class="avatar-img">
+                    <span id="discord-status" class="status-indicator"></span>
+                </div>
+
+                <!-- Имя и био -->
+                <h1 class="profile-name">lampik2009 <span class="sparkle">✨</span></h1>
+                <p id="profile-bio" class="profile-bio">i do stuff</p>
+                <div class="status-pill">
+                    <span class="dot-offline" id="status-dot"></span>
+                    <span id="status-text">offline</span>
+                </div>
+
+                <!-- Виджет времени и просмотров -->
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div id="local-time" class="stat-value">10:37:58 AM</div>
+                        <div class="stat-label">LOCAL TIME</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">802</div>
+                        <div class="stat-label">VIEWS</div>
+                    </div>
+                </div>
+
+                <!-- Ссылки на соцсети -->
+                <div class="social-links">
+                    <a href="https://discord.com" target="_blank" class="social-btn">
+                        <span>Discord</span>
+                        <span class="arrow">↗</span>
+                    </a>
+                    <a href="https://github.com/Haralampos2009" target="_blank" class="social-btn">
+                        <span>GitHub</span>
+                        <span class="arrow">↗</span>
+                    </a>
+                    <a href="https://youtube.com" target="_blank" class="social-btn">
+                        <span>YouTube</span>
+                        <span class="arrow">↗</span>
+                    </a>
+                </div>
             </div>
-            <div class="profile-info">
-                <h3 id="discord-username" class="profile-name">lampik2009</h3>
-                <span id="discord-custom-status" class="profile-subtext">Discord Profile</span>
-            </div>
-        </div>
+        </aside>
 
-        <ul>
-            <li><a href="#about" class="active">O nas</a></li>
-            <li><a href="#projects">Проекты</a></li>
-            <li><a href="#socials">Соцсети</a></li>
-        </ul>
-    </nav>
+        <!-- Правая колонка: Основной контент (Проекты) -->
+        <main class="main-content">
+            <section class="content-section">
+                <h2 class="section-title">projects</h2>
+                <div class="projects-grid">
+                    <!-- Карточка проекта 1 -->
+                    <div class="project-card">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, #2b1055, #7597de);">
+                            <span class="proj-emoji">🌌</span>
+                        </div>
+                        <div class="project-info">
+                            <h3>Thedyserrealm</h3>
+                            <p>the site you're on</p>
+                            <a href="#" class="project-link">thedyserrealm.github.io ↗</a>
+                        </div>
+                    </div>
 
-    <main class="content">
-        <section id="about" class="section">
-            <h1>O nas</h1>
-            <p>Добро пожаловать в Thedyserrealm.</p>
-        </section>
+                    <!-- Карточка проекта 2 -->
+                    <div class="project-card">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, #1f4068, #162447);">
+                            <span class="proj-emoji">🎮</span>
+                        </div>
+                        <div class="project-info">
+                            <h3>My Project</h3>
+                            <p>cool web application</p>
+                            <a href="#" class="project-link">github.com/Haralampos2009 ↗</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
-        <section id="projects" class="section">
-            <h1>Проекты</h1>
-            <p>Здесь будут отображаться ваши проекты.</p>
-        </section>
-
-        <section id="socials" class="section">
-            <h1>Соцсети</h1>
-            <p>Ссылки на ваши социальные сети.</p>
-        </section>
-    </main>
-
-    <!-- Скрипт подгрузки профиля Discord -->
+    <!-- Скрипты: Часы + Discord Lanyard API -->
     <script>
-        const DISCORD_ID = '1142187822250471535'; 
+        // Обновление локального времени
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('local-time').textContent = timeString;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
 
-        async function loadDiscordAvatar() {
+        // Загрузка данных из Discord через Lanyard
+        const DISCORD_ID = '1142187822250471535';
+
+        async function loadDiscordData() {
             try {
                 const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
                 const data = await res.json();
@@ -58,36 +112,32 @@
                 if (data.success) {
                     const { discord_user, discord_status, activities } = data.data;
 
-                    // Загружаем аватар
-                    const avatarUrl = discord_user.avatar 
-                        ? `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`
-                        : `https://cdn.discordapp.com/embed/avatars/0.png`;
+                    // Аватар
+                    if (discord_user.avatar) {
+                        const avatarUrl = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
+                        document.getElementById('discord-avatar').src = avatarUrl;
+                    }
 
-                    const avatarElement = document.getElementById('discord-avatar');
-                    const statusElement = document.getElementById('discord-status');
-                    const nameElement = document.getElementById('discord-username');
-                    const subtextElement = document.getElementById('discord-custom-status');
+                    // Статус (online, idle, dnd, offline)
+                    const statusDot = document.getElementById('status-dot');
+                    const statusText = document.getElementById('status-text');
+                    statusText.textContent = discord_status;
+                    
+                    statusDot.className = `status-dot-${discord_status}`;
 
-                    if (avatarElement) avatarElement.src = avatarUrl;
-                    if (statusElement) statusElement.className = `status-indicator status-${discord_status}`;
-                    if (nameElement) nameElement.textContent = discord_user.global_name || discord_user.username;
-
-                    // Если есть кастомный статус или игра в Discord — показываем ее
+                    // Кастомный статус или активность
                     if (activities && activities.length > 0) {
-                        const customActivity = activities.find(a => a.type === 4); // Custom Status
-                        if (customActivity && customActivity.state) {
-                            subtextElement.textContent = customActivity.state;
-                        } else if (activities[0].name) {
-                            subtextElement.textContent = `Играет в ${activities[0].name}`;
+                        const custom = activities.find(a => a.type === 4);
+                        if (custom && custom.state) {
+                            document.getElementById('profile-bio').textContent = custom.state;
                         }
                     }
                 }
-            } catch (err) {
-                console.error("Ошибка при загрузке аватара:", err);
+            } catch (e) {
+                console.error("Ошибка Lanyard:", e);
             }
         }
-
-        loadDiscordAvatar();
+        loadDiscordData();
     </script>
 </body>
 </html>
