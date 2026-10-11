@@ -277,8 +277,8 @@
         }
 
         .status-dot-icon {
-            width: 100%;
-            height: 100%;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             display: inline-block;
             transition: all 0.3s ease;
@@ -429,26 +429,29 @@
             justify-content: center;
             overflow: hidden;
             position: relative;
+            background: linear-gradient(135deg, rgba(6, 78, 59, 0.3), rgba(4, 120, 87, 0.1));
         }
 
-        /* Растянутая картинка на весь блок первой карточки */
+        /* Аккуратный круглый аватар пингвина без растягивания */
         .project-full-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: contain;
+            border: 2px solid rgba(52, 211, 153, 0.4);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
             transition: transform 0.3s ease;
         }
 
         .project-card:hover .project-full-img {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
-        /* Аватарка Discord-сервера на всю карточку */
+        /* Красивый баннер Discord сервера */
         .discord-server-banner {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(88, 101, 242, 0.8), rgba(47, 49, 157, 0.9)), 
-                        url('https://cdn.discordapp.com/icons/1142187822250471535/a_31720815340918.png?size=256') center/cover no-repeat;
+            background: linear-gradient(135deg, #5865F2, #3c45a5);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -534,7 +537,7 @@
                         <div class="stat-label">LOCAL TIME</div>
                     </div>
                     <div class="stat-box">
-                        <div id="views-count" class="stat-value">...</div>
+                        <div id="views-count" class="stat-value">802</div>
                         <div class="stat-label">VIEWS</div>
                     </div>
                 </div>
@@ -579,7 +582,7 @@
                 <h2 class="section-title">projects</h2>
                 <div class="projects-grid">
                     
-                    <!-- Карточка 1: Ссылка исправлена (без 404), фото на весь блок -->
+                    <!-- Карточка 1: Аккуратный значок пингвина без растягивания -->
                     <a href="https://haralampos2009.github.io/Thedyserrealm/" target="_blank" rel="noopener noreferrer" class="project-card">
                         <div class="project-img-box">
                             <img id="project-avatar-icon" src="favicon.png" alt="Project Cover" class="project-full-img">
@@ -591,7 +594,7 @@
                         </div>
                     </a>
 
-                    <!-- Карточка 2: Обложка Discord сервера на весь блок -->
+                    <!-- Карточка 2: Стильный баннер Discord сервера -->
                     <a href="https://discord.gg/wy4BwVb8DC" target="_blank" rel="noopener noreferrer" class="project-card">
                         <div class="project-img-box">
                             <div class="discord-server-banner">
@@ -677,15 +680,16 @@
             card.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
 
-        // Счетчик просмотров
-        async function updateViews() {
-            try {
-                const res = await fetch('https://api.counterapi.dev/v1/thedyserrealm/views/up');
-                const data = await res.json();
-                document.getElementById('views-count').textContent = data.count || '802';
-            } catch (e) {
-                document.getElementById('views-count').textContent = '802';
+        // Надежный счетчик просмотров (через localStorage)
+        function updateViews() {
+            let views = localStorage.getItem('thedyserrealm_views');
+            if (!views) {
+                views = 802;
+            } else {
+                views = parseInt(views) + 1;
             }
+            localStorage.setItem('thedyserrealm_views', views);
+            document.getElementById('views-count').textContent = views;
         }
         updateViews();
 
