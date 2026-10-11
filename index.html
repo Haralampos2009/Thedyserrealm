@@ -125,13 +125,6 @@
           </article>
         </div>
         <div class="arcade-grid extra-games">
-          <article class="game-card minicraft-card">
-            <div class="game-heading"><span class="game-icon">🧱</span><div><h3>MiniCraft World</h3><p>Build a tiny block world. Tap a tile to change it.</p></div></div>
-            <div class="block-tools"><button class="game-btn block-tool selected" data-block="🌿">Grass</button><button class="game-btn block-tool" data-block="🪨">Stone</button><button class="game-btn block-tool" data-block="💧">Water</button><button class="game-btn block-tool" data-block="🪵">Wood</button><button class="game-btn block-tool" data-block="🟨">Gold</button></div>
-            <div id="mini-world" class="mini-world" aria-label="MiniCraft world grid"></div>
-            <div class="game-controls"><button class="game-btn" id="world-reset">Reset world</button><a class="game-btn classic-link" href="https://classic.minecraft.net/" target="_blank" rel="noopener noreferrer">Play Minecraft Classic ↗</a></div>
-            <p class="game-hint">Your block world saves automatically in this browser on this device. Classic Minecraft opens separately.</p>
-          </article>
           <article class="game-card drop-card">
             <div class="game-heading"><span class="game-icon">🟦</span><div><h3>Realm Drop</h3><p>Neon tetrominoes, ghost landing and combo scoring.</p></div></div>
             <canvas id="drop-board" width="240" height="360" aria-label="Falling block game"></canvas>
@@ -140,12 +133,12 @@
             <div class="drop-legend"><span><i class="legend-dot legend-mint"></i>Realm blocks</span><span><i class="legend-dot legend-ghost"></i>Landing preview</span></div>
             <p class="game-hint">← → move · ↑ rotate · ↓ soft drop · Space hard drop · P pause</p>
           </article>
-          <article class="game-card minecraft-embed-card">
-            <div class="game-heading"><span class="game-icon">⛏️</span><div><h3>Minecraft in browser</h3><p>Try launching the browser version right here.</p></div></div>
-            <div class="minecraft-frame-wrap"><iframe id="minecraft-frame" src="https://aquabeary.com/games/minecraft/" title="Minecraft browser game" loading="lazy" allow="fullscreen; gamepad; autoplay; clipboard-read; clipboard-write; pointer-lock" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-              <div class="minecraft-frame-fallback"><span>⛏️</span><p>If the game doesn't load inside the frame, open it directly.</p><a class="game-btn classic-link" href="https://aquabeary.com/games/minecraft/" target="_blank" rel="noopener noreferrer">Open browser Minecraft ↗</a></div>
-            </div>
-            <p class="game-hint">The game host may block embedding. If you see a blank frame, use the open button. The host controls its own saving system.</p>
+          <article class="game-card wire-puzzle-card">
+            <div class="game-heading"><span class="game-icon">💡</span><div><h3>Wire the Realm</h3><p>Rotate the wire pieces to connect the battery to the lamp.</p></div></div>
+            <div class="wire-puzzle-status" id="wire-status" aria-live="polite">Connect the circuit to light the bulb!</div>
+            <div class="wire-puzzle-grid" id="wire-grid" role="group" aria-label="Wire connection puzzle"></div>
+            <div class="game-controls"><button class="game-btn" id="wire-reset">New circuit</button><span class="wire-moves">Moves: <strong id="wire-moves">0</strong></span></div>
+            <p class="game-hint">Tap a wire to rotate it. Connect neighboring ends from 🔋 to 💡.</p>
           </article>
         </div>
         <p class="save-note" id="arcade-save-status" aria-live="polite">Progress saves automatically on this device.</p>
@@ -287,7 +280,8 @@
     ctx.fillStyle="#071810";ctx.fillRect(0,0,300,300);
     ctx.strokeStyle="rgba(52,211,153,.07)";
     for(let i=0;i<=300;i+=CELL){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,300);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(300,i);ctx.stroke()}
-    ctx.fillStyle="#fb7185";ctx.shadowColor="#fb7185";ctx.shadowBlur=12;ctx.beginPath();ctx.arc(food.x*CELL+7.5,food.y*CELL+7.5,5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    // A tiny apple replaces the old plain food dot.
+    ctx.save();ctx.translate(food.x*CELL+7.5,food.y*CELL+7.5);ctx.shadowColor="#fb7185";ctx.shadowBlur=10;ctx.fillStyle="#ef4444";ctx.beginPath();ctx.ellipse(-2,1,4.2,5.2,-.25,0,Math.PI*2);ctx.ellipse(2,1,4.2,5.2,.25,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle="#8b5e34";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,-3);ctx.lineTo(1,-6);ctx.stroke();ctx.fillStyle="#4ade80";ctx.beginPath();ctx.ellipse(3,-5,3,1.5,-.45,0,Math.PI*2);ctx.fill();ctx.restore();
     snake.forEach((p,i)=>{const g=ctx.createLinearGradient(p.x*CELL,p.y*CELL,(p.x+1)*CELL,(p.y+1)*CELL);g.addColorStop(0,i===0?"#ecfff5":"#35e69a");g.addColorStop(1,i===0?"#34d399":(i%2?"#087f50":"#10b981"));ctx.fillStyle=g;ctx.shadowColor=i===0?"#a7f3d0":"#10b981";ctx.shadowBlur=i===0?11:3;ctx.beginPath();ctx.roundRect(p.x*CELL+1,p.y*CELL+1,13,13,4);ctx.fill();if(i===0){ctx.shadowBlur=0;ctx.fillStyle="#032315";let eyes;if(dir.x===1)eyes=[[p.x*CELL+10,p.y*CELL+4],[p.x*CELL+10,p.y*CELL+10]];else if(dir.x===-1)eyes=[[p.x*CELL+5,p.y*CELL+4],[p.x*CELL+5,p.y*CELL+10]];else if(dir.y===1)eyes=[[p.x*CELL+4,p.y*CELL+10],[p.x*CELL+10,p.y*CELL+10]];else eyes=[[p.x*CELL+4,p.y*CELL+5],[p.x*CELL+10,p.y*CELL+5]];eyes.forEach(([ex,ey])=>{ctx.beginPath();ctx.arc(ex,ey,1.5,0,Math.PI*2);ctx.fill()})}});ctx.shadowBlur=0;
     $("snake-score").textContent=snakeScore;$("snake-best").textContent=snakeBest;
   }
@@ -377,16 +371,48 @@
   document.addEventListener("visibilitychange",()=>{if(document.hidden)saveClicker()});
   setInterval(saveClicker,10000);
 
-  // MiniCraft: locally saved editable 8x8 block world
-  const WORLD_KEY="thedyserrealm_minicraft_world_v1", worldEl=$("mini-world");
-  const defaultWorld=()=>Array.from({length:64},(_,i)=>i>39?"🌿":(i%13===0?"🪵":"🌿"));
-  let world; try { world=JSON.parse(localStorage.getItem(WORLD_KEY)) || defaultWorld(); } catch(_) { world=defaultWorld(); }
-  if(!Array.isArray(world)||world.length!==64) world=defaultWorld();
-  let selectedBlock="🌿";
-  function saveWorld(){try{localStorage.setItem(WORLD_KEY,JSON.stringify(world));}catch(_){}}
-  function drawWorld(){worldEl.innerHTML="";world.forEach((block,i)=>{const b=document.createElement("button");b.type="button";b.className="world-tile";b.textContent=block;b.setAttribute("aria-label","Block "+(i+1)+": "+block);b.addEventListener("click",()=>{world[i]=selectedBlock; b.textContent=selectedBlock;saveWorld();});worldEl.appendChild(b);});}
-  document.querySelectorAll(".block-tool").forEach(b=>b.addEventListener("click",()=>{selectedBlock=b.dataset.block;document.querySelectorAll(".block-tool").forEach(x=>x.classList.toggle("selected",x===b));}));
-  $("world-reset").addEventListener("click",()=>{world=defaultWorld();saveWorld();drawWorld();});drawWorld();
+
+
+  // Wire the Realm: rotate pipe tiles until power can travel from battery to bulb.
+  const wireGridEl=$("wire-grid"), wireStatus=$("wire-status");
+  const wireDirs=["N","E","S","W"];
+  const wireGlyph={NS:"│",EW:"─",EN:"└",ES:"┌",SW:"┐",NW:"┘",ENS:"├",ESW:"┬",NSW:"┤",ENW:"┴",ENSW:"┼",N:"╵",E:"╶",S:"╷",W:"╴"};
+  let wireTiles=[],wireMoves=0,wireSolved=false;
+  function rotatePorts(ports){return ports.map(p=>wireDirs[(wireDirs.indexOf(p)+1)%4]);}
+  function makeCircuit(){
+    wireMoves=0;wireSolved=false;$("wire-moves").textContent="0";
+    // A guaranteed route: battery -> east, two elbows, straight, then bulb. Extra branches add a puzzle feel.
+    const route=[{r:1,c:0,p:["E"]},{r:1,c:1,p:["W","E"]},{r:1,c:2,p:["W","S"]},{r:2,c:2,p:["N","S"]},{r:3,c:2,p:["N","E"]},{r:3,c:3,p:["W"]}];
+    wireTiles=Array.from({length:16},(_,i)=>({ports:[["N","S"],["E","W"],["N","E"],["S","W"],["N","W"],["S","E"]][Math.floor(Math.random()*6)].slice(),special:""}));
+    route.forEach((t,idx)=>{const tile=wireTiles[t.r*4+t.c];tile.ports=t.p.slice();tile.special=idx===0?"battery":(idx===route.length-1?"bulb":"");});
+    // Shuffle each tile's orientation, preserving the shape.
+    wireTiles.forEach(t=>{const turns=Math.floor(Math.random()*4);for(let i=0;i<turns;i++)t.ports=rotatePorts(t.ports)});
+    // Keep endpoints facing into the board; players rotate all route pieces to solve.
+    wireTiles[1*4+0]={ports:["E"],special:"battery"};wireTiles[3*4+3]={ports:["W"],special:"bulb"};
+    renderCircuit();checkCircuit();
+  }
+  function portsKey(ports){return ports.slice().sort().join("");}
+  function renderCircuit(){
+    wireGridEl.innerHTML="";
+    wireTiles.forEach((t,i)=>{const b=document.createElement("button");b.type="button";b.className="wire-tile";b.dataset.index=i;
+      const glyph=t.special==="battery"?"🔋":t.special==="bulb"?(wireSolved?"💡":"⚪"): (wireGlyph[portsKey(t.ports)]||"┼");
+      b.textContent=glyph;b.setAttribute("aria-label",(t.special||"wire")+", rotate tile");if(t.powered)b.classList.add("powered");if(t.special==="bulb"&&wireSolved)b.classList.add("lit");
+      b.addEventListener("click",()=>{if(wireSolved)return;t.ports=rotatePorts(t.ports);wireMoves++;$("wire-moves").textContent=wireMoves;checkCircuit();});wireGridEl.appendChild(b);
+    });
+  }
+  function checkCircuit(){
+    wireTiles.forEach(t=>t.powered=false);
+    const start=4, queue=[start], seen=new Set([start]);
+    while(queue.length){const i=queue.shift(),r=Math.floor(i/4),c=i%4,t=wireTiles[i];t.powered=true;
+      for(const [d,dr,dc,opposite] of [["N",-1,0,"S"],["E",0,1,"W"],["S",1,0,"N"],["W",0,-1,"E"]]){
+        if(!t.ports.includes(d))continue;const nr=r+dr,nc=c+dc;if(nr<0||nr>=4||nc<0||nc>=4)continue;const ni=nr*4+nc;
+        if(wireTiles[ni].ports.includes(opposite)&&!seen.has(ni)){seen.add(ni);queue.push(ni)}
+      }
+    }
+    wireSolved=seen.has(15);wireStatus.textContent=wireSolved?`⚡ Circuit complete! The lamp is on in ${wireMoves} moves.`:"Rotate the wires until power reaches the bulb.";
+    wireStatus.classList.toggle("solved",wireSolved);renderCircuit();
+  }
+  $("wire-reset").addEventListener("click",makeCircuit);makeCircuit();
 
   // Realm Drop: polished tetromino arcade with ghost landing, rotation and line combos
   const dropCanvas=$("drop-board"), dropCtx=dropCanvas.getContext("2d"), cols=10, rows=15, cell=24;
