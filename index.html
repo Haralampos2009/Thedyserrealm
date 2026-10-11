@@ -52,7 +52,7 @@
             100% { transform: translateX(calc(100vw + 350px)); }
         }
 
-        /* --- МНОГО ЭЛЕКТРИЧЕСКИХ ПРОВОДОВ --- */
+        /* --- ЭЛЕКТРИЧЕСКИЕ ПРОВОДА --- */
         #wires-canvas {
             position: fixed;
             top: 0;
@@ -63,7 +63,7 @@
             z-index: 0;
         }
 
-        /* --- ЧИСТОЕ ЗЕЛЁНОЕ СВЕЧЕНИЕ НА ФОНЕ --- */
+        /* --- ЗЕЛЁНОЕ СВЕЧЕНИЕ НА ФОНЕ --- */
         body::before {
             content: "";
             position: fixed;
@@ -177,7 +177,7 @@
             }
         }
 
-        /* --- ЛЕВАЯ КАРТОЧКА ПРОФИЛЯ (80% ПРОЗРАЧНАЯ) --- */
+        /* --- ЛЕВАЯ КАРТОЧКА ПРОФИЛЯ --- */
         .profile-sidebar {
             width: 320px;
             flex-shrink: 0;
@@ -185,7 +185,7 @@
         }
 
         .profile-card {
-            background: rgba(3, 20, 10, 0.2); /* 80% прозрачности */
+            background: rgba(3, 20, 10, 0.2);
             border: 1px solid rgba(52, 211, 153, 0.25);
             border-radius: 24px;
             padding: 30px 24px;
@@ -292,7 +292,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Цвета статусов Discord */
         .status-online { background-color: #23a55a !important; box-shadow: 0 0 8px #23a55a; }
         .status-idle { background-color: #f0b232 !important; box-shadow: 0 0 8px #f0b232; }
         .status-dnd { background-color: #f23f43 !important; box-shadow: 0 0 8px #f23f43; }
@@ -313,6 +312,10 @@
             border-radius: 14px;
             padding: 12px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .stat-value {
@@ -322,7 +325,6 @@
             margin-bottom: 4px;
         }
 
-        /* ВРЕМЯ - БЕЛОЕ */
         #local-time {
             color: #ffffff !important;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
@@ -332,6 +334,15 @@
             font-size: 10px;
             color: #6e6e78;
             letter-spacing: 0.5px;
+        }
+
+        /* Адаптация внешнего вида Statcounter под стиль */
+        .statcounter {
+            display: inline-block;
+        }
+        .statcounter img {
+            vertical-align: middle;
+            filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.8));
         }
 
         /* Кнопки */
@@ -428,7 +439,7 @@
             transform: translateY(-3px);
         }
 
-        /* БЛОКИ ИЗОБРАЖЕНИЙ ПРОЕКТОВ */
+        /* ИЗОБРАЖЕНИЯ ПРОЕКТОВ (ПИНГВИН ПОЛНОСТЬЮ ВИДЕН) */
         .project-img-box {
             height: 135px;
             width: 100%;
@@ -486,12 +497,12 @@
 </head>
 <body>
 
-    <!-- Маленькие аккуратные облака строго вверху экрана, выходящие из-за левого края -->
+    <!-- Маленькие облака строго вверху экрана -->
     <div class="cloud" style="width: 140px; height: 35px; top: 12px; animation-duration: 25s; animation-delay: -2s;"></div>
     <div class="cloud" style="width: 170px; height: 40px; top: 22px; animation-duration: 32s; animation-delay: -12s;"></div>
     <div class="cloud" style="width: 130px; height: 32px; top: 8px; animation-duration: 28s; animation-delay: -7s;"></div>
 
-    <!-- Множество электрических проводов по всему периметру -->
+    <!-- Электрические провода -->
     <svg id="wires-canvas"></svg>
 
     <!-- Бегущие цифры -->
@@ -507,13 +518,10 @@
 
     <!-- Анимированный курсор -->
     <div class="cursor-main" id="cursor"></div>
-
-    <!-- Canvas для молний из облаков в мышку -->
     <svg id="lightning-canvas"></svg>
 
     <!-- Основной сайт -->
     <div class="site-container" id="siteContainer">
-        <!-- Карточка профиля -->
         <aside class="profile-sidebar">
             <div class="profile-card" id="tiltCard">
                 <div class="avatar-container">
@@ -535,7 +543,21 @@
                         <div class="stat-label">LOCAL TIME</div>
                     </div>
                     <div class="stat-box">
-                        <div id="views-count" class="stat-value">815</div>
+                        <div id="views-count" class="stat-value">
+                            <!-- STATCOUNTER ВСТРОЕН СЮДА -->
+                            <script type="text/javascript">
+                            var sc_project=13359308; 
+                            var sc_invisible=0; 
+                            var sc_security="baef770d"; 
+                            var scJsHost = "https://";
+                            document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
+                            "statcounter.com/counter/counter.js'></"+"script>");
+                            </script>
+                            <noscript><div class="statcounter"><a title="Web Analytics"
+                            href="https://statcounter.com/" target="_blank"><img class="statcounter"
+                            src="https://c.statcounter.com/13359308/0/baef770d/0/" alt="Web Analytics"
+                            referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+                        </div>
                         <div class="stat-label">VIEWS</div>
                     </div>
                 </div>
@@ -574,13 +596,10 @@
             </div>
         </aside>
 
-        <!-- Раздел проектов -->
         <main class="main-content">
             <section class="content-section">
                 <h2 class="section-title">projects</h2>
                 <div class="projects-grid">
-                    
-                    <!-- Карточка 1: Сайт -->
                     <a href="https://haralampos2009.github.io/Thedyserrealm/" target="_blank" rel="noopener noreferrer" class="project-card">
                         <div class="project-img-box">
                             <img src="website-banner.png" alt="Site Cover" class="project-banner-img">
@@ -592,7 +611,6 @@
                         </div>
                     </a>
 
-                    <!-- Карточка 2: Discord Server -->
                     <a href="https://discord.gg/wy4BwVb8DC" target="_blank" rel="noopener noreferrer" class="project-card">
                         <div class="project-img-box">
                             <img src="discord-banner.jpg" alt="Discord Server Cover" class="project-banner-img">
@@ -604,7 +622,6 @@
                         </div>
                     </a>
 
-                    <!-- Карточка 3: Игра Smash Blast -->
                     <a href="https://github.com/Haralampos2009" target="_blank" rel="noopener noreferrer" class="project-card">
                         <div class="project-img-box" style="background: rgba(16, 185, 129, 0.1);">
                             <span class="proj-emoji">🎮</span>
@@ -615,20 +632,19 @@
                             <span class="project-link">github.com/Haralampos2009 ↗</span>
                         </div>
                     </a>
-
                 </div>
             </section>
         </main>
     </div>
 
     <script>
-        // Проверка активности вкладки, чтобы сайт не лагал при переключении
+        // Защита от лагов при переключении вкладок
         let isTabActive = true;
         document.addEventListener('visibilitychange', () => {
             isTabActive = !document.hidden;
         });
 
-        // --- МНОГО ЭЛЕКТРИЧЕСКИХ ПРОВОДОВ И ИСКРЫ ---
+        // --- ЭЛЕКТРИЧЕСКИЕ ПРОВОДА И ИСКРЫ ---
         let wireTips = [];
 
         function initElectricWires() {
@@ -646,15 +662,12 @@
                 { color: '#3b82f6', d: `M 0,45 L 90,45 L 130,90`, end: { x: 130, y: 90 } },
                 { color: '#84cc16', stripe: true, d: `M 0,70 L 70,70 L 110,125`, end: { x: 110, y: 125 } },
                 { color: '#f59e0b', d: `M 0,95 L 50,95 L 90,160`, end: { x: 90, y: 160 } },
-
                 { color: '#ef4444', d: `M ${w},20 L ${w-110},20 L ${w-150},55`, end: { x: w-150, y: 55 } },
                 { color: '#3b82f6', d: `M ${w},45 L ${w-90},45 L ${w-130},90`, end: { x: w-130, y: 90 } },
                 { color: '#84cc16', stripe: true, d: `M ${w},70 L ${w-70},70 L ${w-110},125`, end: { x: w-110, y: 125 } },
                 { color: '#f59e0b', d: `M ${w},95 L ${w-50},95 L ${w-90},160`, end: { x: w-90, y: 160 } },
-
                 { color: '#3b82f6', d: `M 0,${h-35} L 100,${h-35} L 140,${h-80}`, end: { x: 140, y: h-80 } },
                 { color: '#ef4444', d: `M 0,${h-60} L 80,${h-60} L 120,${h-110}`, end: { x: 120, y: h-110 } },
-
                 { color: '#3b82f6', d: `M ${w},${h-35} L ${w-100},${h-35} L ${w-140},${h-80}`, end: { x: w-140, y: h-80 } },
                 { color: '#ef4444', d: `M ${w},${h-60} L ${w-80},${h-60} L ${w-120},${h-110}`, end: { x: w-120, y: h-110 } }
             ];
@@ -698,7 +711,7 @@
                 const randomTime = 2500 + Math.random() * 4500;
 
                 const interval = setInterval(() => {
-                    if (!isTabActive) return; // Не спавним искры, если вкладка неактивна
+                    if (!isTabActive) return;
 
                     for (let i = 0; i < 4; i++) {
                         let spark = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -745,25 +758,6 @@
 
         window.addEventListener('resize', initElectricWires);
         initElectricWires();
-
-        // --- ЛОКАЛЬНЫЙ СЧЕТЧИК ПОСЕЩЕНИЙ ---
-        function initVisitorCounter() {
-            let views = localStorage.getItem('thedyserrealm_views');
-            if (!views) {
-                views = 815;
-            } else {
-                views = parseInt(views);
-            }
-
-            if (!sessionStorage.getItem('thedyserrealm_visited')) {
-                views += 1;
-                localStorage.setItem('thedyserrealm_views', views);
-                sessionStorage.setItem('thedyserrealm_visited', 'true');
-            }
-
-            document.getElementById('views-count').textContent = views;
-        }
-        initVisitorCounter();
 
         // --- МОЛНИИ ИЗ ОБЛАКОВ В МЫШКУ ---
         function strikeLightningFromClouds() {
@@ -815,7 +809,7 @@
 
         setInterval(strikeLightningFromClouds, 8000);
 
-        // Курсор и шлейф
+        // Курсор
         const cursor = document.getElementById('cursor');
         let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
 
@@ -848,18 +842,14 @@
 
         // 3D Tilt
         const card = document.getElementById('tiltCard');
-
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-
             const rotateX = ((y - centerY) / centerY) * -10;
             const rotateY = ((x - centerX) / centerX) * 10;
-
             card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
 
@@ -900,14 +890,7 @@
 
         // Discord Lanyard API
         const DISCORD_ID = '1142187822250471535';
-
-        const statusMap = {
-            'online': 'Online',
-            'idle': 'Inactive',
-            'dnd': 'Do Not Disturb',
-            'offline': 'Offline'
-        };
-
+        const statusMap = { 'online': 'Online', 'idle': 'Inactive', 'dnd': 'Do Not Disturb', 'offline': 'Offline' };
         let lastStatus = null;
 
         async function loadDiscordData() {
@@ -915,23 +898,17 @@
             try {
                 const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
                 const data = await res.json();
-
                 if (data.success) {
                     const { discord_user, discord_status } = data.data;
-
                     if (discord_user.avatar) {
-                        const avatarUrl = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
-                        document.getElementById('discord-avatar').src = avatarUrl;
+                        document.getElementById('discord-avatar').src = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
                     }
-
                     const avatarStatus = document.getElementById('discord-status');
                     const statusDot = document.getElementById('status-dot');
                     const statusText = document.getElementById('status-text');
-
                     const currentStatus = (discord_status && statusMap[discord_status]) ? discord_status : 'offline';
 
                     statusText.textContent = statusMap[currentStatus];
-
                     avatarStatus.className = `status-indicator status-${currentStatus}`;
                     statusDot.className = `status-dot-icon status-${currentStatus}`;
 
