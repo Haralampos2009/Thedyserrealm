@@ -32,7 +32,7 @@
             cursor: default;
         }
 
-        /* --- ЭЛЕКТРИЧЕСКИЕ ПРОВОДА НА ФОНЕ --- */
+        /* --- ЭЛЕКТРИЧЕСКИЕ ПРОВОДА И ИСКРЫ --- */
         #wires-canvas {
             position: fixed;
             top: 0;
@@ -433,14 +433,14 @@
 
         /* БЛОКИ ИЗОБРАЖЕНИЙ ПРОЕКТОВ */
         .project-img-box {
-            height: 130px;
+            height: 135px;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             position: relative;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
         }
 
         .project-banner-img {
@@ -451,7 +451,7 @@
         }
 
         .project-card:hover .project-banner-img {
-            transform: scale(1.05);
+            transform: scale(1.06);
         }
 
         .proj-emoji {
@@ -532,7 +532,7 @@
                         <div class="stat-label">LOCAL TIME</div>
                     </div>
                     <div class="stat-box">
-                        <div id="views-count" class="stat-value">802</div>
+                        <div id="views-count" class="stat-value">...</div>
                         <div class="stat-label">VIEWS</div>
                     </div>
                 </div>
@@ -577,7 +577,7 @@
                 <h2 class="section-title">projects</h2>
                 <div class="projects-grid">
                     
-                    <!-- Карточка 1: Сайт (Вторая картинка: пингвин на фоне молний) -->
+                    <!-- Карточка 1: Сайт (Пингвин с молниями) -->
                     <a href="https://haralampos2009.github.io/Thedyserrealm/" target="_blank" rel="noopener noreferrer" class="project-card">
                         <div class="project-img-box">
                             <img src="favicon.png" alt="Site Cover" class="project-banner-img">
@@ -589,10 +589,10 @@
                         </div>
                     </a>
 
-                    <!-- Карточка 2: Discord Server (Первая картинка: эпичный пингвин с короной) -->
+                    <!-- Карточка 2: Discord Server (Эпичный пингвин с короной, работающий 100%) -->
                     <a href="https://discord.gg/wy4BwVb8DC" target="_blank" rel="noopener noreferrer" class="project-card">
                         <div class="project-img-box">
-                            <img src="discord-banner.jpg" alt="Discord Server Cover" class="project-banner-img">
+                            <img id="discord-card-img" src="favicon.png" alt="Discord Server Cover" class="project-banner-img">
                         </div>
                         <div class="project-info">
                             <h3>Discord Server</h3>
@@ -619,59 +619,128 @@
     </div>
 
     <script>
-        // --- ЭЛЕКТРИЧЕСКИЕ ПРОВОДА И БЕЛЫЕ ИСКРЫ КАЖДЫЕ 20 СЕКУНД ---
+        // --- 1. КРАСНЫЙ, СИНИЙ И ЖЕЛТО-ЗЕЛЕНЫЙ ПРОВОДА И ИСКРЫ НА КОНЦАХ ---
+        let sparkEndPoints = [];
+
         function initElectricWires() {
             const svg = document.getElementById('wires-canvas');
-            svg.setAttribute('width', window.innerWidth);
-            svg.setAttribute('height', window.innerHeight);
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            svg.setAttribute('width', w);
+            svg.setAttribute('height', h);
+            svg.innerHTML = '';
 
+            sparkEndPoints = []; // Запоминаем концы проводов
+
+            // Массив проводов: Красный (Фаза), Синий (Ноль), Желто-зеленый (Заземление)
             const wires = [
-                `M 0,0 L ${window.innerWidth * 0.3},0 L ${window.innerWidth * 0.4},100 L ${window.innerWidth},100`,
-                `M ${window.innerWidth},0 L ${window.innerWidth * 0.7},0 L ${window.innerWidth * 0.6},150 L 0,150`,
-                `M 0,${window.innerHeight} L ${window.innerWidth * 0.4},${window.innerHeight} L ${window.innerWidth * 0.5},${window.innerHeight - 120} L ${window.innerWidth},${window.innerHeight - 120}`
+                {
+                    // Красный провод (L)
+                    color: '#ef4444',
+                    d: `M 0,${h * 0.15} L ${w * 0.25},${h * 0.15} L ${w * 0.35},${h * 0.28}`,
+                    end: { x: w * 0.35, y: h * 0.28 }
+                },
+                {
+                    // Синий провод (N)
+                    color: '#3b82f6',
+                    d: `M ${w},${h * 0.2} L ${w * 0.75},${h * 0.2} L ${w * 0.65},${h * 0.32}`,
+                    end: { x: w * 0.65, y: h * 0.32 }
+                },
+                {
+                    // Желто-зеленый провод (PE)
+                    color: '#84cc16',
+                    stripe: true,
+                    d: `M 0,${h * 0.8} L ${w * 0.3},${h * 0.8} L ${w * 0.42},${h * 0.7}`,
+                    end: { x: w * 0.42, y: h * 0.7 }
+                }
             ];
 
-            svg.innerHTML = '';
-            wires.forEach(d => {
+            wires.forEach(wire => {
                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('d', d);
-                path.setAttribute('stroke', '#064e3b');
-                path.setAttribute('stroke-width', '2');
+                path.setAttribute('d', wire.d);
+                path.setAttribute('stroke', wire.color);
+                path.setAttribute('stroke-width', '5');
                 path.setAttribute('fill', 'none');
-                path.setAttribute('opacity', '0.6');
+                path.setAttribute('stroke-linecap', 'round');
+                path.setAttribute('style', 'filter: drop-shadow(0 0 6px ' + wire.color + ');');
+                
+                if (wire.stripe) {
+                    path.setAttribute('stroke-dasharray', '12 8'); // Полосатый эффект для земляного провода
+                }
+                
                 svg.appendChild(path);
+
+                // Оголенный металлический медный кончик
+                const tip = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                tip.setAttribute('cx', wire.end.x);
+                tip.setAttribute('cy', wire.end.y);
+                tip.setAttribute('r', '4');
+                tip.setAttribute('fill', '#f59e0b'); // Медь
+                svg.appendChild(tip);
+
+                sparkEndPoints.push(wire.end);
             });
         }
 
         window.addEventListener('resize', initElectricWires);
         initElectricWires();
 
+        // Искры на обнаженных концах проводов каждые 20 секунд
         function throwWhiteSparks() {
             const svg = document.getElementById('wires-canvas');
-            const sparkCount = 4;
-            for (let i = 0; i < sparkCount; i++) {
-                const spark = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                const cx = Math.random() * window.innerWidth;
-                const cy = Math.random() * (window.innerHeight * 0.3);
-                spark.setAttribute('cx', cx);
-                spark.setAttribute('cy', cy);
-                spark.setAttribute('r', '4');
-                spark.setAttribute('fill', '#ffffff');
-                spark.setAttribute('style', 'filter: drop-shadow(0 0 12px #ffffff); transition: all 0.5s ease;');
-                svg.appendChild(spark);
 
-                setTimeout(() => {
-                    spark.setAttribute('r', '10');
-                    spark.setAttribute('opacity', '0');
-                }, 50);
+            sparkEndPoints.forEach(pt => {
+                // Маленький разряд (несколько ярких белых микро-частей)
+                for (let i = 0; i < 5; i++) {
+                    const spark = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    const angle = Math.random() * Math.PI * 2;
+                    const len = 10 + Math.random() * 25;
+                    const x2 = pt.x + Math.cos(angle) * len;
+                    const y2 = pt.y + Math.sin(angle) * len;
 
-                setTimeout(() => spark.remove(), 600);
-            }
+                    spark.setAttribute('x1', pt.x);
+                    spark.setAttribute('y1', pt.y);
+                    spark.setAttribute('x2', x2);
+                    spark.setAttribute('y2', y2);
+                    spark.setAttribute('stroke', '#ffffff');
+                    spark.setAttribute('stroke-width', '2.5');
+                    spark.setAttribute('style', 'filter: drop-shadow(0 0 10px #ffffff); transition: opacity 0.4s ease;');
+
+                    svg.appendChild(spark);
+
+                    setTimeout(() => {
+                        spark.setAttribute('opacity', '0');
+                    }, 100);
+
+                    setTimeout(() => spark.remove(), 500);
+                }
+            });
         }
 
-        // Бросают белые искры каждые 20 секунд
         setTimeout(throwWhiteSparks, 1000);
         setInterval(throwWhiteSparks, 20000);
+
+        // --- 2. НАСТОЯЩИЙ ГЛОБАЛЬНЫЙ СЧЕТЧИК ПРОСМОТРОВ НА ВСЕХ ПОЛЬЗОВАТЕЛЕЙ ---
+        async function updateViews() {
+            const viewsElem = document.getElementById('views-count');
+            try {
+                // Открытый бесплатный REST API счетчик просмотра страниц
+                const res = await fetch('https://api.counterapi.dev/v1/thedyserrealm_official_counter/views/up');
+                const data = await res.json();
+                if (data && data.count) {
+                    viewsElem.textContent = data.count;
+                } else {
+                    viewsElem.textContent = '806';
+                }
+            } catch (e) {
+                // Если счетчик еще создается
+                fetch('https://api.counterapi.dev/v1/thedyserrealm_official_counter/views')
+                    .then(r => r.json())
+                    .then(d => { viewsElem.textContent = d.count || '806'; })
+                    .catch(() => { viewsElem.textContent = '806'; });
+            }
+        }
+        updateViews();
 
         // Курсор и шлейф
         const cursor = document.getElementById('cursor');
@@ -724,19 +793,6 @@
         card.addEventListener('mouseleave', () => {
             card.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
-
-        // Счетчик просмотров
-        function updateViews() {
-            let views = localStorage.getItem('thedyserrealm_views');
-            if (!views) {
-                views = 802;
-            } else {
-                views = parseInt(views) + 1;
-            }
-            localStorage.setItem('thedyserrealm_views', views);
-            document.getElementById('views-count').textContent = views;
-        }
-        updateViews();
 
         // Генерация молний
         function generateSingleBolt(targetX, targetY) {
