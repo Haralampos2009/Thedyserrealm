@@ -140,6 +140,18 @@
           <article class="game-card drop-card">
             <div class="game-heading"><span class="game-icon">🟦</span><div><h3>Realm Drop</h3><p>Neon tetrominoes, ghost landing and combo scoring.</p></div></div>
             <canvas id="drop-board" width="240" height="360" aria-label="Falling block game"></canvas>
+<div class="realm-drop-touch-controls" id="realm-drop-touch-controls" aria-label="Realm Drop touch controls">
+  <div class="drop-touch-row">
+    <button type="button" data-drop-action="rotate" aria-label="Rotate piece">↻</button>
+    <button type="button" data-drop-action="drop" aria-label="Hard drop">⇊</button>
+  </div>
+  <div class="drop-touch-row">
+    <button type="button" data-drop-action="left" aria-label="Move left">←</button>
+    <button type="button" data-drop-action="down" aria-label="Move down">↓</button>
+    <button type="button" data-drop-action="right" aria-label="Move right">→</button>
+  </div>
+</div>
+
             <div class="game-stats"><span>Score: <strong id="drop-score">0</strong></span><span>Best: <strong id="drop-best">0</strong></span></div>
             <div class="game-controls"><button class="game-btn" id="drop-start">Start / restart</button><button class="game-btn secondary" id="drop-pause">Pause</button></div>
             <div class="drop-legend"><span><i class="legend-dot legend-mint"></i>Realm blocks</span><span><i class="legend-dot legend-ghost"></i>Landing preview</span></div>
@@ -559,6 +571,29 @@
       button.classList.add('is-owned');
       const cost = button.querySelector('strong');
       if (cost) cost.textContent='OWNED';
+    });
+  });
+})();
+</script>
+
+
+<script>
+/* REALM DROP TOUCH HANDLERS */
+(() => {
+  const controls = document.getElementById('realm-drop-touch-controls');
+  if (!controls) return;
+  const keyMap = {left:'ArrowLeft',right:'ArrowRight',down:'ArrowDown',rotate:'ArrowUp',drop:' '};
+  controls.querySelectorAll('[data-drop-action]').forEach(btn => {
+    btn.addEventListener('click', ev => {
+      ev.preventDefault();
+      const action=btn.dataset.dropAction;
+      const key=keyMap[action];
+      if (!key) return;
+      const target=document.getElementById('tetris-canvas') ||
+                   document.getElementById('realm-drop-canvas') ||
+                   document.getElementById('tBoard') || controls;
+      target.dispatchEvent(new KeyboardEvent('keydown',{key,bubbles:true,cancelable:true}));
+      target.dispatchEvent(new KeyboardEvent('keyup',{key,bubbles:true,cancelable:true}));
     });
   });
 })();
