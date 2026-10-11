@@ -6,7 +6,7 @@
     <title>Thedyserrealm</title>
     <link rel="icon" type="image/png" href="favicon.png">
     
-    <!-- Подключение стильных шрифтов: Inter и Syne -->
+    <!-- Подключаем дизайнерские шрифты Inter и Syne -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
@@ -20,7 +20,6 @@
         }
 
         body {
-            /* Темно-зеленый градиентный фон */
             background-color: #020f07;
             background-image: 
                 radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
@@ -36,7 +35,7 @@
             position: relative;
         }
 
-        /* --- БЕГУЩИЕ ЦИФРЫ 01 НА ФОНЕ --- */
+        /* Бегущие цифры 01 на фоне */
         .binary-rain-container {
             position: fixed;
             top: 0;
@@ -62,21 +61,16 @@
             animation: fallRain 12s linear infinite;
         }
 
-        /* Скорость и задержка для разных колонок */
         .binary-col:nth-child(2n) { animation-duration: 8s; animation-delay: -2s; color: #10b981; }
         .binary-col:nth-child(3n) { animation-duration: 15s; animation-delay: -5s; opacity: 0.6; }
         .binary-col:nth-child(5n) { animation-duration: 10s; animation-delay: -7s; }
 
         @keyframes fallRain {
-            0% {
-                transform: translateY(-100%);
-            }
-            100% {
-                transform: translateY(100vh);
-            }
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
         }
 
-        /* --- КУРСОР И ШЛЕЙФ --- */
+        /* Курсор и шлейф */
         .cursor-main {
             width: 16px;
             height: 16px;
@@ -113,7 +107,6 @@
             z-index: 999;
         }
 
-        /* --- КОНТЕЙНЕР С ВЕРТИКАЛЬНЫМ ЭФФЕКТОМ --- */
         .site-container {
             display: flex;
             gap: 40px;
@@ -140,24 +133,24 @@
         }
 
         .profile-card {
-            background: rgba(255, 255, 255, 0.015); /* Полная прозрачность */
-            border: 1px solid rgba(52, 211, 153, 0.2);
+            background: rgba(255, 255, 255, 0.008) !important; /* Ультра-прозрачность */
+            border: 1px solid rgba(52, 211, 153, 0.22);
             border-radius: 24px;
             padding: 30px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px) saturate(140%);
+            -webkit-backdrop-filter: blur(25px) saturate(140%);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35), 0 0 20px rgba(16, 185, 129, 0.1);
             transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
             transform-style: preserve-3d;
             will-change: transform;
         }
 
         .profile-card:hover {
-            border-color: rgba(52, 211, 153, 0.5);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(16, 185, 129, 0.2);
+            border-color: rgba(52, 211, 153, 0.55);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 35px rgba(16, 185, 129, 0.25);
         }
 
         /* Аватар */
@@ -208,7 +201,6 @@
             font-size: 16px;
         }
 
-        /* Био */
         .profile-bio {
             font-size: 13px;
             color: #a7f3d0;
@@ -233,12 +225,11 @@
             50% { opacity: 0; }
         }
 
-        /* Статус */
         .status-pill {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(52, 211, 153, 0.15);
             padding: 6px 14px;
             border-radius: 20px;
@@ -269,7 +260,6 @@
         }
         .status-dot-offline { background-color: #80848e; }
 
-        /* Статистика */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -300,7 +290,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- КНОПКИ С ШРИФТОМ SYNE И ПРОЗРАЧНОСТЬЮ --- */
+        /* --- КРАСИВЫЙ ШРИФТ SYNE ДЛЯ ПРОЗРАЧНЫХ КНОПОК --- */
         .social-links {
             display: flex;
             flex-direction: column;
@@ -312,34 +302,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(52, 211, 153, 0.18);
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(52, 211, 153, 0.2);
             padding: 12px 18px;
             border-radius: 16px;
             color: #e5e7eb;
             text-decoration: none;
             
-            /* Дизайнерский шрифт Syne для кнопок */
-            font-family: 'Syne', sans-serif;
+            /* Дизайнерский шрифт Syne для текста кнопок */
+            font-family: 'Syne', sans-serif !important;
             font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 0.8px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             
             transition: all 0.25s ease;
             backdrop-filter: blur(10px);
         }
 
         .social-btn:hover {
-            background: rgba(16, 185, 129, 0.15);
-            border-color: rgba(52, 211, 153, 0.5);
+            background: rgba(16, 185, 129, 0.18);
+            border-color: rgba(52, 211, 153, 0.6);
             color: #ffffff;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.25);
         }
 
         .arrow {
             color: #6b7280;
             font-size: 14px;
+            font-family: 'Inter', sans-serif;
             transition: transform 0.2s ease, color 0.2s ease;
         }
 
@@ -348,7 +340,7 @@
             transform: translate(2px, -2px);
         }
 
-        /* --- ПРАВАЯ ЧАСТЬ (ПРОЕКТЫ) --- */
+        /* Правая колонка проектов */
         .main-content {
             flex: 1;
             width: 100%;
@@ -370,16 +362,16 @@
         }
 
         .project-card {
-            background: rgba(255, 255, 255, 0.015);
-            border: 1px solid rgba(52, 211, 153, 0.15);
+            background: rgba(255, 255, 255, 0.012);
+            border: 1px solid rgba(52, 211, 153, 0.18);
             border-radius: 20px;
             overflow: hidden;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(18px);
             transition: all 0.3s ease;
         }
 
         .project-card:hover {
-            border-color: rgba(52, 211, 153, 0.4);
+            border-color: rgba(52, 211, 153, 0.45);
             transform: translateY(-4px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
@@ -427,7 +419,7 @@
 </head>
 <body>
 
-    <!-- Бегущие бинарные цифры 01 на фоне -->
+    <!-- Бегущие цифры 01 -->
     <div class="binary-rain-container">
         <div class="binary-col">0<br>1<br>0<br>0<br>1<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1</div>
         <div class="binary-col">1<br>0<br>1<br>1<br>0<br>0<br>1<br>0<br>1<br>0<br>1<br>0<br>1<br>0</div>
@@ -438,15 +430,15 @@
         <div class="binary-col">0<br>1<br>1<br>0<br>1<br>0<br>1<br>1<br>0<br>1<br>0<br>0<br>1<br>0</div>
     </div>
 
-    <!-- Курсор -->
+    <!-- Анимированный курсор -->
     <div class="cursor-main" id="cursor"></div>
 
-    <!-- Молния SVG -->
+    <!-- Молнии -->
     <svg id="lightning-canvas"></svg>
 
-    <!-- Основной сайт -->
+    <!-- Основной интерфейс -->
     <div class="site-container" id="siteContainer">
-        <!-- Левая колонка: Карточка -->
+        <!-- Карточка профиля -->
         <aside class="profile-sidebar">
             <div class="profile-card" id="tiltCard">
                 <div class="avatar-container">
@@ -473,6 +465,7 @@
                     </div>
                 </div>
 
+                <!-- Кнопки перехода с шрифтом Syne -->
                 <div class="social-links">
                     <a href="https://discord.com/users/1142187822250471535" target="_blank" class="social-btn">
                         <span>Discord</span>
@@ -490,13 +483,13 @@
             </div>
         </aside>
 
-        <!-- Правая колонка: Проекты -->
+        <!-- Проекты -->
         <main class="main-content">
             <section class="content-section">
                 <h2 class="section-title">projects</h2>
                 <div class="projects-grid">
                     <div class="project-card">
-                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(6,78,59,0.5), rgba(4,120,87,0.5));">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(6,78,59,0.4), rgba(4,120,87,0.4));">
                             <span class="proj-emoji">⚡</span>
                         </div>
                         <div class="project-info">
@@ -507,7 +500,7 @@
                     </div>
 
                     <div class="project-card">
-                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(2,44,34,0.5), rgba(6,95,70,0.5));">
+                        <div class="project-img-box" style="background: linear-gradient(135deg, rgba(2,44,34,0.4), rgba(6,95,70,0.4));">
                             <span class="proj-emoji">🎮</span>
                         </div>
                         <div class="project-info">
@@ -522,7 +515,7 @@
     </div>
 
     <script>
-        // --- 1. КУРСОР И ШЛЕЙФ ---
+        // Курсор и шлейф
         const cursor = document.getElementById('cursor');
         let mouseX = 0, mouseY = 0;
 
@@ -546,14 +539,14 @@
 
             setTimeout(() => trail.remove(), 450);
 
-            // --- 2. ЭФФЕКТ ДВИЖЕНИЯ ПО САЙТУ ---
+            // Смещение интерфейса при движении мыши
             const siteContainer = document.getElementById('siteContainer');
             const moveY = (mouseY - window.innerHeight / 2) / 35;
             const moveX = (mouseX - window.innerWidth / 2) / 35;
             siteContainer.style.transform = `translate(${moveX}px, ${moveY}px)`;
         });
 
-        // --- 3. 3D НАКЛОН СТРОГО ПРИ НАВЕДЕНИИ НА КАРТОЧКУ ---
+        // 3D Tilt эффект строго при наведении на карточку
         const card = document.getElementById('tiltCard');
 
         card.addEventListener('mousemove', (e) => {
@@ -574,7 +567,7 @@
             card.style.transform = 'rotateX(0deg) rotateY(0deg)';
         });
 
-        // --- 4. РЕАЛЬНЫЙ СЧЕТЧИК ПРОСМОТРОВ ---
+        // Счетчик просмотров
         async function updateViews() {
             try {
                 const res = await fetch('https://api.counterapi.dev/v1/thedyserrealm/views/up');
@@ -586,7 +579,7 @@
         }
         updateViews();
 
-        // --- 5. УДАР МОЛНИИ В МЫШКУ КАЖДУЮ МИНУТУ ---
+        // Молния в мышку каждую минуту
         function strikeLightning() {
             const svg = document.getElementById('lightning-canvas');
             const startX = Math.random() * window.innerWidth;
@@ -617,7 +610,7 @@
         }
         setInterval(strikeLightning, 60000);
 
-        // --- 6. ЭФФЕКТ ПЕЧАТАНИЯ ---
+        // Эффект печати
         let textToType = "Hello";
         let typedElement = document.getElementById('typed-text');
         let charIndex = 0;
@@ -631,7 +624,7 @@
         }
         typeWriter();
 
-        // --- 7. ЧАСЫ И DISCORD LANYARD API ---
+        // Часы и Discord Lanyard API
         function updateTime() {
             const now = new Date();
             document.getElementById('local-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
