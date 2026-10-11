@@ -342,7 +342,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- КНОПКИ С ИКОНКАМИ --- */
+        /* --- КНОПКИ --- */
         .social-links {
             display: flex;
             flex-direction: column;
@@ -437,6 +437,9 @@
             overflow: hidden;
             backdrop-filter: blur(5px);
             transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         .project-card:hover {
@@ -452,8 +455,13 @@
             justify-content: center;
         }
 
-        .proj-emoji {
-            font-size: 36px;
+        .project-avatar-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(52, 211, 153, 0.4);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
         }
 
         .project-info {
@@ -481,7 +489,7 @@
             text-decoration: none;
         }
 
-        .project-link:hover {
+        .project-card:hover .project-link {
             text-decoration: underline;
         }
     </style>
@@ -576,25 +584,26 @@
             <section class="content-section">
                 <h2 class="section-title">projects</h2>
                 <div class="projects-grid">
-                    <div class="project-card">
+                    <!-- Карточка с аватаркой/пингвином из Discord, ведущая на этот сайт -->
+                    <a href="#" class="project-card" id="portfolio-project-link">
                         <div class="project-img-box" style="background: linear-gradient(135deg, rgba(6,78,59,0.2), rgba(4,120,87,0.2));">
-                            <span class="proj-emoji">⚡</span>
+                            <img id="project-avatar-icon" src="favicon.png" alt="Project Icon" class="project-avatar-img">
                         </div>
                         <div class="project-info">
                             <h3>Thedyserrealm</h3>
                             <p>the site you're on</p>
-                            <a href="#" class="project-link">thedyserrealm.github.io ↗</a>
+                            <span class="project-link">thedyserrealm.github.io ↗</span>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="project-card">
+                    <div class="project-card" style="cursor: default;">
                         <div class="project-img-box" style="background: linear-gradient(135deg, rgba(2,44,34,0.2), rgba(6,95,70,0.2));">
                             <span class="proj-emoji">🎮</span>
                         </div>
                         <div class="project-info">
                             <h3>Smash Blast</h3>
                             <p>my very own game</p>
-                            <a href="#" class="project-link">github.com/Haralampos2009 ↗</a>
+                            <a href="https://github.com/Haralampos2009" target="_blank" class="project-link">github.com/Haralampos2009 ↗</a>
                         </div>
                     </div>
                 </div>
@@ -762,7 +771,9 @@
                     const { discord_user, discord_status } = data.data;
 
                     if (discord_user.avatar) {
-                        document.getElementById('discord-avatar').src = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
+                        const avatarUrl = `https://cdn.discordapp.com/avatars/${discord_user.id}/${discord_user.avatar}.png?size=256`;
+                        document.getElementById('discord-avatar').src = avatarUrl;
+                        document.getElementById('project-avatar-icon').src = avatarUrl;
                     }
 
                     const avatarStatus = document.getElementById('discord-status');
@@ -776,7 +787,9 @@
                     avatarStatus.className = `status-indicator status-${currentStatus}`;
                     statusDot.className = `status-dot-icon status-${currentStatus}`;
 
-                    // Динамическая био в зависимости от статуса
+                    // Установка ссылки на текущий сайт для карточки проекта
+                    document.getElementById('portfolio-project-link').href = window.location.href;
+
                     if (lastStatus !== currentStatus) {
                         lastStatus = currentStatus;
                         if (currentStatus === 'online') {
@@ -788,6 +801,7 @@
                 }
             } catch (e) {
                 console.error("Ошибка Lanyard:", e);
+                document.getElementById('portfolio-project-link').href = window.location.href;
                 if (lastStatus !== 'offline') {
                     lastStatus = 'offline';
                     startTyping("Yo 👋 Recharging for new challenges. Back online soon 🎯");
