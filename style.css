@@ -14,20 +14,39 @@ body {
 
 /* Боковая панель */
 .sidebar {
-    width: 240px;
+    width: 260px;
     background-color: #111111;
-    padding: 30px 20px;
+    padding: 25px 18px;
     display: flex;
     flex-direction: column;
     border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Контейнер аватара и статуса */
-.profile-avatar-container {
+/* Красивая карточка профиля (aquabeary style) */
+.profile-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.profile-avatar-wrapper {
     position: relative;
-    width: 90px;
-    height: 90px;
-    margin: 0 auto 25px auto;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
 }
 
 .avatar-img {
@@ -35,50 +54,71 @@ body {
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    transition: transform 0.3s ease;
-}
-
-.avatar-img:hover {
-    transform: scale(1.05);
 }
 
 .status-indicator {
     position: absolute;
-    bottom: 3px;
-    right: 3px;
-    width: 16px;
-    height: 16px;
+    bottom: 0px;
+    right: 0px;
+    width: 13px;
+    height: 13px;
     border-radius: 50%;
-    border: 3px solid #111111;
+    border: 2px solid #111111;
     background-color: #80848e;
 }
 
-/* Индикаторы статуса Discord */
+/* Цвета статусов Discord */
 .status-online { background-color: #23a55a; }
 .status-idle { background-color: #f0b232; }
 .status-dnd { background-color: #f23f43; }
 .status-offline { background-color: #80848e; }
+
+/* Текст внутри карточки */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.profile-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-subtext {
+    font-size: 12px;
+    color: #888888;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 /* Навигация */
 .sidebar ul {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
 .sidebar a {
     color: #888888;
     text-decoration: none;
-    font-size: 16px;
-    transition: color 0.3s ease;
+    font-size: 15px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
 .sidebar a:hover,
 .sidebar a.active {
     color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 /* Контент */
