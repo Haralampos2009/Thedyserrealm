@@ -307,3 +307,32 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 .profile-deck.show-second-profile>.profile-card.deck-primary{z-index:2}
 .profile-account-arrow{z-index:20;pointer-events:auto;touch-action:manipulation}
 .profile-flip-arrow{z-index:20;touch-action:manipulation}
+
+
+/* Pull the entire second Discord card out before it becomes the active profile. */
+.profile-deck.second-card-revealed>.profile-card.deck-secondary{
+  z-index:10!important;
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+  filter:none!important;
+  transform:translate3d(0,0,0) scale(1)!important;
+  cursor:pointer;
+  box-shadow:0 24px 65px rgba(0,0,0,.48),0 0 34px rgba(52,211,153,.2);
+}
+.profile-deck.second-card-revealed>.profile-card.deck-primary{
+  z-index:2!important;
+  opacity:.28!important;
+  filter:blur(1px) saturate(.65) brightness(.6)!important;
+  transform:translate3d(-28px,14px,-35px) scale(.94)!important;
+  pointer-events:none!important;
+}
+.profile-deck.second-card-revealed>.profile-second-card{min-height:470px}
+@media(max-width:850px){
+  .profile-deck.second-card-revealed>.profile-card.deck-secondary{
+    transform:translate3d(0,0,0) scale(1)!important;
+  }
+  .profile-deck.second-card-revealed>.profile-card.deck-primary{
+    transform:translate3d(-12px,8px,-20px) scale(.96)!important;
+  }
+}
