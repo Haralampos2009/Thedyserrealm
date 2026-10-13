@@ -243,3 +243,9 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 .shape-choice.shape-locked:hover{transform:none;box-shadow:none}
 @media(max-width:850px){.profile-card{transform:none!important}.profile-flip-arrow{width:34px;height:46px}.profile-face{padding:23px 19px}.penguin-banner{height:94px}}
 @media(prefers-reduced-motion:reduce){.profile-card,.profile-penguin{transition:none;animation:none}}
+
+
+/* Quick link to the second Discord account on the penguin profile */
+.profile-account-arrow{position:absolute;z-index:6;top:50%;right:7px;transform:translateY(-50%);width:32px;height:44px;display:flex;align-items:center;justify-content:center;box-sizing:border-box;border:1px solid rgba(110,255,190,.35);border-radius:12px;background:rgba(4,24,19,.78);color:#d8fff0;font-size:21px;text-decoration:none;box-shadow:0 0 15px rgba(52,211,153,.12);transition:background .2s,transform .2s}
+.profile-account-arrow:hover{background:rgba(16,185,129,.32);transform:translateY(-50%) translateX(2px)}
+@media(max-width:850px){.profile-account-arrow{width:34px;height:46px}}
