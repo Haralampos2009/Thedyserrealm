@@ -35,7 +35,6 @@
         <div class="profile-face profile-front">
         <div class="penguin-banner" aria-label="Penguin profile banner"><span class="penguin-snow">✦ · ❄ · ✦</span><span class="profile-penguin" aria-hidden="true">🐧</span><span class="penguin-caption">DYser · THE REALM</span></div>
         <button type="button" class="profile-flip-arrow flip-to-back" aria-label="Flip profile card to more information" title="More about me">←</button>
-        <button type="button" class="profile-account-arrow" data-profile-switch aria-label="Bring the second Discord card forward" title="Show second account card">↗</button>
         <div class="avatar-container">
           <img id="discord-avatar" src="favicon.png" alt="lampik2009 avatar" class="avatar-img">
           <span id="discord-status" class="status-indicator status-offline"></span>
@@ -85,16 +84,7 @@
           <p class="back-note">Thanks for visiting my little corner of the internet 💚</p>
         </div>
       </div>
-      <div class="profile-card profile-second-card deck-secondary" id="secondDiscordCard" role="button" tabindex="0" aria-label="Switch to the dyser_1 Discord profile">
-        <div class="second-card-glow" aria-hidden="true"></div>
-        <div class="penguin-banner second-penguin-banner"><span class="penguin-snow">✦ · ❄ · ✦</span><span class="profile-penguin" aria-hidden="true">🪐</span><span class="penguin-caption">ALTERNATE ACCOUNT</span></div>
-        <div class="avatar-container second-account-avatar"><img src="favicon.png" alt="" class="avatar-img"><span class="status-indicator status-offline"></span></div>
-        <h2 class="profile-name">dyser_1 <span class="sparkle">◈</span></h2>
-        <p class="profile-bio">My second Discord account</p>
-        <div class="status-pill second-account-pill"><span class="status-dot-icon status-offline"></span><span>Discord profile</span></div>
-        <button type="button" class="social-btn second-account-open" id="openSecondDiscord"><span class="btn-left"><span class="social-emoji">◈</span><span>Open Discord profile</span></span><span class="arrow">↗</span></button>
-        <p class="second-card-hint">Click this card to bring it to the front</p>
-      </div>
+
     </aside>
 
     <main class="main-content">
@@ -389,55 +379,6 @@
   }));
 
   // Animated two-card Discord profile deck
-  const profileDeck=document.querySelector(".profile-deck");
-  const secondProfile=document.getElementById("secondDiscordCard");
-  const firstProfile=document.getElementById("tiltCard");
-  let secondIsFront=false;
-  let secondRevealed=false;
-  function resetProfileFlip(){
-    firstProfile.classList.remove("is-flipped");
-    profileDeck.classList.remove("main-profile-flipped");
-    firstProfile.style.transform="";
-  }
-  function revealSecondProfile(){
-    if(!profileDeck||!secondProfile||!firstProfile)return;
-    resetProfileFlip();
-    secondRevealed=!secondRevealed;
-    profileDeck.classList.toggle("second-card-revealed",secondRevealed);
-  }
-  function switchProfileCard(){
-    if(!profileDeck||!secondProfile||!firstProfile)return;
-    resetProfileFlip();
-    secondRevealed=false;
-    profileDeck.classList.remove("second-card-revealed");
-    secondIsFront=!secondIsFront;
-    firstProfile.classList.toggle("deck-secondary",secondIsFront);
-    firstProfile.classList.toggle("deck-primary",!secondIsFront);
-    secondProfile.classList.toggle("deck-primary",secondIsFront);
-    secondProfile.classList.toggle("deck-secondary",!secondIsFront);
-    profileDeck.classList.toggle("show-second-profile",secondIsFront);
-    secondProfile.setAttribute("aria-label",secondIsFront?"Click to return to the main profile":"Click to switch to the dyser_1 Discord profile");
-  }
-  document.querySelectorAll("[data-profile-switch]").forEach(btn=>btn.addEventListener("click",e=>{
-    e.preventDefault();
-    e.stopPropagation();
-    // First click pulls the whole second card out; once it is active, the arrow returns to the first.
-    if(secondIsFront)switchProfileCard();
-    else revealSecondProfile();
-  }));
-  if(secondProfile){
-    secondProfile.addEventListener("click",e=>{
-      if(e.target.closest("#openSecondDiscord"))return;
-      // Clicking the fully revealed card promotes it; clicking it again returns to the first.
-      switchProfileCard();
-    });
-    secondProfile.addEventListener("keydown",e=>{
-      if((e.key==="Enter"||e.key===" ")&&e.target===secondProfile){e.preventDefault();switchProfileCard()}
-    });
-  }
-  const openSecond=document.getElementById("openSecondDiscord");
-  if(openSecond)openSecond.addEventListener("click",e=>{e.stopPropagation();window.open("https://discord.com/users/1279532395799904388","_blank","noopener,noreferrer")});
-
   // SNAKE — saves best score
   const canvas=$("snake-board"), ctx=canvas.getContext("2d"), CELL=15, GRID=20;
   let snake=[{x:9,y:10},{x:8,y:10},{x:7,y:10}], dir={x:1,y:0}, nextDir={x:1,y:0};
