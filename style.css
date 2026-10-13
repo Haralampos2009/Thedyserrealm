@@ -361,3 +361,9 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 .cursor-main{width:15px!important;height:15px!important;box-shadow:0 0 12px #10b981,0 0 24px rgba(16,255,160,.9),0 0 38px rgba(16,185,129,.45)!important}
 .cursor-trail{width:9px!important;height:9px!important;background:rgba(70,255,180,.8)!important;box-shadow:0 0 9px rgba(16,255,160,.95),0 0 18px rgba(16,185,129,.65)!important;animation:trailFade 1.05s ease-out forwards!important}
 @keyframes trailFade{0%{opacity:.95;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.12)}}
+
+
+/* Large storm cloud drifts from left to right, then loops back in from the left */
+.storm-cloud{left:0!important;transform:translateX(-110vw)!important;animation:storm-cross-screen 38s linear infinite,storm-breathe 8s ease-in-out infinite!important;will-change:transform}
+@keyframes storm-cross-screen{0%{transform:translateX(-110vw)}100%{transform:translateX(110vw)}}
+@media(prefers-reduced-motion:reduce){.storm-cloud{animation:none!important;left:50%!important;transform:translateX(-50%)!important}}
