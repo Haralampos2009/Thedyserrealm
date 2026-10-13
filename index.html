@@ -65,24 +65,8 @@
           <a href="https://www.youtube.com/@Dyser_l" target="_blank" rel="noopener noreferrer" class="social-btn"><span class="btn-left"><span class="social-emoji">▶</span><span>YouTube</span></span><span class="arrow">↗</span></a>
         </div>
         </div>
-        <div class="profile-face profile-back" aria-label="More about me">
-          <button type="button" class="profile-flip-arrow flip-to-front" aria-label="Flip profile card back" title="Back to links">→</button>
-          <div class="back-penguin" aria-hidden="true">🐧</div>
-          <p class="back-eyebrow">BEHIND THE REALM</p>
-          <h2 class="back-title">Hey, I'm Dyser!</h2>
-          <p class="back-copy">I build Thedyserrealm, experiment with web design, and make little browser games and creative projects.</p>
-          <div class="about-facts">
-            <div><span>✦</span><section><b>Creator</b><small>Thedyserrealm website</small></section></div>
-            <div><span>🎮</span><section><b>Game maker</b><small>Realm Clicker, Realm Drop, Snake and more</small></section></div>
-            <div><span>⚡</span><section><b>Always learning</b><small>Trying new ideas and improving the site</small></section></div>
-          </div>
-          <p class="back-social-label">FIND ME ONLINE</p>
-          <div class="back-links">
-            <a href="https://discord.com/users/1142187822250471535" target="_blank" rel="noopener noreferrer">Discord ↗</a>
-            <a href="https://www.youtube.com/@Dyser_l" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
-            <a href="https://github.com/Haralampos2009" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          </div>
-          <p class="back-note">Thanks for visiting my little corner of the internet 💚</p>
+        <div class="profile-face profile-back" aria-label="Blank back of profile card">
+          <button type="button" class="profile-flip-arrow flip-to-front" aria-label="Flip profile card back" title="Back to profile">→</button>
         </div>
       </div>
       <div class="profile-card profile-second-card deck-secondary" id="secondDiscordCard" role="button" tabindex="0" aria-label="Switch to the dyser_1 Discord profile">
@@ -380,7 +364,11 @@
   });
   card.addEventListener("mouseleave",()=>{if(!card.classList.contains("is-flipped"))card.style.transform="rotateX(0) rotateY(0)"});
   document.querySelectorAll(".profile-flip-arrow").forEach(button=>button.addEventListener("click",()=>{
-    const flipped=button.classList.contains("flip-to-back");card.classList.toggle("is-flipped",flipped);card.style.transform=flipped?"rotateY(180deg)":"rotateX(0) rotateY(0)";
+    const flipped=button.classList.contains("flip-to-back");
+    card.classList.toggle("is-flipped",flipped);
+    const deck=card.closest(".profile-deck");
+    if(deck)deck.classList.toggle("main-profile-flipped",flipped);
+    card.style.transform=flipped?"rotateY(180deg)":"rotateX(0) rotateY(0)";
   }));
 
   // Animated two-card Discord profile deck
