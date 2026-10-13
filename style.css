@@ -209,3 +209,37 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 .cloud{filter:blur(12px) drop-shadow(0 10px 16px rgba(0,0,0,.18));background:radial-gradient(ellipse at 28% 35%,rgba(222,255,239,.28),rgba(95,145,119,.19) 35%,rgba(19,65,43,.09) 65%,transparent 78%);box-shadow:inset 0 -9px 18px rgba(3,22,13,.2),0 8px 24px rgba(0,0,0,.12)}
 .storm-cloud{background:radial-gradient(ellipse at 30% 28%,rgba(232,248,255,.38),rgba(100,135,165,.36) 30%,rgba(38,54,76,.78) 66%,rgba(12,20,37,.08) 82%);filter:drop-shadow(0 12px 18px rgba(0,0,0,.26))}
 @media(max-width:600px){.clicker-progression{justify-content:center}.clicker-progression .game-btn{width:100%}.stack-controls{grid-template-columns:52px minmax(0,1fr) 52px}.realm-drop-touch-controls button{min-height:54px;min-width:58px}}
+
+
+/* Penguin profile card flip */
+.profile-card{position:relative;padding:0;display:block;min-width:0;transform-style:preserve-3d;transition:transform .72s cubic-bezier(.2,.75,.2,1),border-color .3s,box-shadow .3s;background:transparent;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.profile-card:hover{border-color:transparent;box-shadow:none}
+.profile-face{box-sizing:border-box;width:100%;border:1px solid rgba(110,255,190,.26);border-radius:24px;padding:25px 22px 23px;background:linear-gradient(145deg,rgba(22,64,43,.43),rgba(3,20,10,.67));-webkit-backdrop-filter:blur(18px) saturate(135%);backdrop-filter:blur(18px) saturate(135%);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 15px 45px rgba(0,0,0,.32),0 0 25px rgba(16,185,129,.06);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.profile-front{position:relative;display:flex;flex-direction:column;align-items:center}
+.profile-back{position:absolute;inset:0;transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:auto;scrollbar-width:thin;scrollbar-color:rgba(52,211,153,.45) transparent}
+.profile-card.is-flipped{transform:rotateY(180deg)!important}
+.penguin-banner{width:100%;height:104px;position:relative;display:flex;align-items:center;justify-content:center;margin:0 0 17px;border-radius:17px;overflow:hidden;background:radial-gradient(ellipse at 50% 120%,rgba(71,214,170,.28),transparent 55%),linear-gradient(145deg,rgba(42,105,123,.48),rgba(8,37,48,.55));border:1px solid rgba(155,231,255,.2);box-shadow:inset 0 1px rgba(255,255,255,.1)}
+.penguin-banner:before,.penguin-banner:after{content:"";position:absolute;border-radius:50%;background:rgba(226,250,255,.13);filter:blur(1px)}
+.penguin-banner:before{width:125px;height:125px;left:-34px;top:34px}.penguin-banner:after{width:95px;height:95px;right:-18px;top:-25px}
+.profile-penguin{font-size:61px;line-height:1;filter:drop-shadow(0 8px 9px rgba(0,0,0,.3));animation:penguinBob 3s ease-in-out infinite;z-index:1}
+.penguin-snow{position:absolute;top:11px;left:12px;right:12px;text-align:center;color:rgba(222,249,255,.65);font-size:11px;letter-spacing:9px}
+.penguin-caption{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:8px;letter-spacing:.25em;color:#b9f7e5;font-weight:800}
+@keyframes penguinBob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
+.profile-flip-arrow{position:absolute;z-index:5;top:50%;left:7px;transform:translateY(-50%);width:32px;height:44px;border:1px solid rgba(110,255,190,.35);border-radius:12px;background:rgba(4,24,19,.78);color:#d8fff0;font-size:21px;cursor:pointer;box-shadow:0 0 15px rgba(52,211,153,.12);transition:background .2s,transform .2s}
+.profile-flip-arrow:hover{background:rgba(16,185,129,.32);transform:translateY(-50%) translateX(-2px)}
+.profile-back .flip-to-front{left:auto;right:7px}
+.back-penguin{font-size:40px;line-height:1;margin:7px 0 6px;filter:drop-shadow(0 4px 9px rgba(0,0,0,.3))}
+.back-eyebrow{font-size:9px;letter-spacing:.22em;color:#78e8bf;font-weight:800;margin:0 0 5px}
+.back-title{font-size:23px;line-height:1.2;margin:0 0 11px;color:#f2fff8;text-align:center}
+.back-copy{font-size:12px;line-height:1.65;text-align:center;color:#c3d9d0;margin:0 8px 16px}
+.about-facts{display:grid;gap:9px;width:100%;margin:0 0 15px}
+.about-facts>div{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid rgba(110,255,190,.15);border-radius:12px;background:rgba(0,0,0,.16)}
+.about-facts>div>span{font-size:18px;width:24px;text-align:center}.about-facts section{display:flex;flex-direction:column;gap:3px}.about-facts b{font-size:11px;color:#e3fff0}.about-facts small{font-size:10px;line-height:1.4;color:#a8c8b9}
+.back-social-label{font-size:9px;letter-spacing:.2em;color:#85dcb8;font-weight:800;margin:0 0 8px}
+.back-links{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;width:100%}.back-links a{font-size:10px;color:#dcfff0;text-decoration:none;border:1px solid rgba(110,255,190,.22);border-radius:9px;padding:7px 9px;background:rgba(16,185,129,.09)}.back-links a:hover{background:rgba(16,185,129,.22)}
+.back-note{font-size:10px;line-height:1.5;color:#83b8a0;text-align:center;margin:13px 4px 0}
+.shape-choice.shape-locked{opacity:.35;filter:grayscale(1);cursor:not-allowed;position:relative}
+.shape-choice.shape-locked:after{content:"🔒";position:absolute;right:-5px;top:-6px;font-size:9px;line-height:1;background:#0b1b15;border-radius:5px;padding:2px;filter:none}
+.shape-choice.shape-locked:hover{transform:none;box-shadow:none}
+@media(max-width:850px){.profile-card{transform:none!important}.profile-flip-arrow{width:34px;height:46px}.profile-face{padding:23px 19px}.penguin-banner{height:94px}}
+@media(prefers-reduced-motion:reduce){.profile-card,.profile-penguin{transition:none;animation:none}}
