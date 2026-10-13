@@ -295,3 +295,15 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
   .profile-deck.show-second-profile>.profile-card.deck-secondary{transform:translate3d(0,0,0) scale(1)!important}
   .profile-deck.main-profile-flipped>.profile-card.deck-primary{transform:rotateY(180deg)!important}
 }
+
+
+/* Final profile deck fixes: the tilt effect must never override slide animation. */
+.profile-deck{display:grid;grid-template-columns:minmax(0,1fr);align-items:stretch}
+.profile-deck>.profile-card{grid-row:1;grid-column:1;align-self:stretch}
+.profile-second-card{display:flex;flex-direction:column}
+.profile-deck>.profile-card.deck-secondary{z-index:2;pointer-events:auto}
+.profile-deck>.profile-card.deck-primary{z-index:3}
+.profile-deck.show-second-profile>.profile-card.deck-secondary{z-index:3}
+.profile-deck.show-second-profile>.profile-card.deck-primary{z-index:2}
+.profile-account-arrow{z-index:20;pointer-events:auto;touch-action:manipulation}
+.profile-flip-arrow{z-index:20;touch-action:manipulation}
