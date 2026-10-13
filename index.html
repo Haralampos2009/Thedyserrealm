@@ -65,23 +65,24 @@
           <a href="https://www.youtube.com/@Dyser_l" target="_blank" rel="noopener noreferrer" class="social-btn"><span class="btn-left"><span class="social-emoji">▶</span><span>YouTube</span></span><span class="arrow">↗</span></a>
         </div>
         </div>
-        <div class="profile-face profile-back" aria-label="About me">
-          <button type="button" class="profile-flip-arrow flip-to-front" aria-label="Flip profile card back" title="Back to profile">→</button>
+        <div class="profile-face profile-back" aria-label="More about me">
+          <button type="button" class="profile-flip-arrow flip-to-front" aria-label="Flip profile card back" title="Back to links">→</button>
           <div class="back-penguin" aria-hidden="true">🐧</div>
-          <p class="back-eyebrow">WELCOME TO MY REALM</p>
-          <h2 class="back-title">About me</h2>
-          <p class="back-copy">Hey! I'm lampik2009 — creator of Thedyserrealm. I like coding, games, and building cool things for the web.</p>
+          <p class="back-eyebrow">BEHIND THE REALM</p>
+          <h2 class="back-title">Hey, I'm Dyser!</h2>
+          <p class="back-copy">I build Thedyserrealm, experiment with web design, and make little browser games and creative projects.</p>
           <div class="about-facts">
-            <div><span>💻</span><section><b>What I do</b><small>Web projects, experiments and browser games</small></section></div>
-            <div><span>🎮</span><section><b>What I like</b><small>Games, technology and creative ideas</small></section></div>
-            <div><span>🌐</span><section><b>This website</b><small>A little digital realm made with curiosity</small></section></div>
+            <div><span>✦</span><section><b>Creator</b><small>Thedyserrealm website</small></section></div>
+            <div><span>🎮</span><section><b>Game maker</b><small>Realm Clicker, Realm Drop, Snake and more</small></section></div>
+            <div><span>⚡</span><section><b>Always learning</b><small>Trying new ideas and improving the site</small></section></div>
           </div>
           <p class="back-social-label">FIND ME ONLINE</p>
           <div class="back-links">
             <a href="https://discord.com/users/1142187822250471535" target="_blank" rel="noopener noreferrer">Discord ↗</a>
-            <a href="https://github.com/Haralampos2009" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
             <a href="https://www.youtube.com/@Dyser_l" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+            <a href="https://github.com/Haralampos2009" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
           </div>
+          <p class="back-note">Thanks for visiting my little corner of the internet 💚</p>
         </div>
       </div>
       <div class="profile-card profile-second-card deck-secondary" id="secondDiscordCard" role="button" tabindex="0" aria-label="Switch to the dyser_1 Discord profile">
@@ -372,12 +373,13 @@
   // Profile card tilt
   const card=$("tiltCard");
   card.addEventListener("mousemove",e=>{
-    if(card.classList.contains("is-flipped"))return;
+    // Tilt only the front-most main card; never overwrite the deck's slide transforms.
+    if(card.classList.contains("is-flipped")||!card.classList.contains("deck-primary"))return;
     if(innerWidth<850) return;
     const r=card.getBoundingClientRect();
     card.style.transform=`rotateX(${((e.clientY-r.top-r.height/2)/(r.height/2))*-5}deg) rotateY(${((e.clientX-r.left-r.width/2)/(r.width/2))*5}deg)`;
   });
-  card.addEventListener("mouseleave",()=>{if(!card.classList.contains("is-flipped"))card.style.transform="rotateX(0) rotateY(0)"});
+  card.addEventListener("mouseleave",()=>{if(!card.classList.contains("is-flipped")&&card.classList.contains("deck-primary"))card.style.transform="rotateX(0) rotateY(0)"});
   document.querySelectorAll(".profile-flip-arrow").forEach(button=>button.addEventListener("click",()=>{
     const flipped=button.classList.contains("flip-to-back");
     card.classList.toggle("is-flipped",flipped);
@@ -405,7 +407,11 @@
     profileDeck.classList.toggle("show-second-profile",secondIsFront);
     secondProfile.setAttribute("aria-label",secondIsFront?"Click to return to the main profile":"Click to switch to the dyser_1 Discord profile");
   }
-  document.querySelectorAll("[data-profile-switch]").forEach(btn=>btn.addEventListener("click",switchProfileCard));
+  document.querySelectorAll("[data-profile-switch]").forEach(btn=>btn.addEventListener("click",e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    switchProfileCard();
+  }));
   if(secondProfile){
     secondProfile.addEventListener("click",e=>{
       if(e.target.closest("#openSecondDiscord"))return;
