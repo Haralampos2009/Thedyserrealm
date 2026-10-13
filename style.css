@@ -194,3 +194,18 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
   cursor:pointer; user-select:none; -webkit-user-select:none; touch-action:manipulation; }
 .realm-drop-touch-controls button:active { transform:translateY(2px); border-color:#79fff0; box-shadow:0 0 18px rgba(113,245,231,.24); }
 @media (hover:hover) and (pointer:fine) { .realm-drop-touch-controls { opacity:.72; } }
+
+
+/* Realm Clicker progression, generated audio and spark effects */
+.clicker-progression{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:10px 0 14px;padding:10px 12px;border:1px solid rgba(110,255,190,.22);border-radius:13px;background:rgba(4,30,20,.56);font-size:.72rem;letter-spacing:.06em;color:#b8e9d1}
+.clicker-progression strong{color:#fff;font-size:.95rem;margin-left:4px}.clicker-progression .game-btn{padding:8px 10px;font-size:.72rem}.clicker-progression .game-btn:disabled{opacity:.55;cursor:not-allowed}
+.clicker-stage{position:relative;overflow:hidden}.clicker-spark{position:absolute;left:var(--sx);top:var(--sy);z-index:4;pointer-events:none;color:#d5fff0;font-size:1rem;text-shadow:0 0 12px #67ffbd;animation:clickerSpark .78s ease-out forwards}
+.clicker-spark.spark-upgrade{color:#a6faff;text-shadow:0 0 14px #68dfff;font-size:1.2rem}.clicker-spark.spark-rebirth{color:#f6dcff;text-shadow:0 0 18px #c18cff;font-size:1.4rem}
+@keyframes clickerSpark{0%{opacity:0;transform:translate(0,0) scale(.35) rotate(0)}15%{opacity:1}100%{opacity:0;transform:translate(var(--sdx),var(--sdy)) scale(1.4) rotate(100deg)}}
+.clicker-stage:has(.spark-rebirth){filter:drop-shadow(0 0 22px rgba(189,130,255,.8))}
+.realm-drop-touch-controls{touch-action:none;user-select:none;-webkit-user-select:none}.realm-drop-touch-controls button{min-width:56px;min-height:50px;touch-action:none}.realm-drop-touch-controls button:focus-visible,.stack-controls button:focus-visible{outline:2px solid #c4fff0;outline-offset:2px}
+#realm-stack-board{display:block;width:100%;max-width:300px;height:auto;aspect-ratio:5/6;margin:0 auto 12px;border:1px solid rgba(160,226,255,.4);border-radius:13px;background:#86d0f3;touch-action:manipulation;cursor:pointer}
+.stack-controls{display:grid;grid-template-columns:58px minmax(0,1fr) 58px;gap:8px;margin:8px 0}.stack-controls .game-btn{min-width:0;padding:10px 6px}.stack-card .game-heading .game-icon{filter:drop-shadow(0 0 8px rgba(255,191,105,.28))}.stack-card .game-hint{color:#b7d5dc}
+.cloud{filter:blur(12px) drop-shadow(0 10px 16px rgba(0,0,0,.18));background:radial-gradient(ellipse at 28% 35%,rgba(222,255,239,.28),rgba(95,145,119,.19) 35%,rgba(19,65,43,.09) 65%,transparent 78%);box-shadow:inset 0 -9px 18px rgba(3,22,13,.2),0 8px 24px rgba(0,0,0,.12)}
+.storm-cloud{background:radial-gradient(ellipse at 30% 28%,rgba(232,248,255,.38),rgba(100,135,165,.36) 30%,rgba(38,54,76,.78) 66%,rgba(12,20,37,.08) 82%);filter:drop-shadow(0 12px 18px rgba(0,0,0,.26))}
+@media(max-width:600px){.clicker-progression{justify-content:center}.clicker-progression .game-btn{width:100%}.stack-controls{grid-template-columns:52px minmax(0,1fr) 52px}.realm-drop-touch-controls button{min-height:54px;min-width:58px}}
