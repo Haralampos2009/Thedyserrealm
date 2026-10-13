@@ -278,3 +278,20 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 .profile-deck.main-profile-flipped>.profile-card.deck-primary{z-index:5}
 .profile-face.profile-back{background:linear-gradient(145deg,rgba(22,64,43,.96),rgba(3,20,10,.98));border-color:rgba(110,255,190,.3)}
 @media(max-width:850px){.profile-deck>.profile-card.deck-secondary{transform:translate3d(18px,15px,-30px) scale(.94)}.profile-deck.show-second-profile>.profile-card.deck-primary{transform:translate3d(-18px,15px,-30px) scale(.94)}}
+
+
+/* Profile deck interaction fix: keep both cards layered and animate on every viewport. */
+.profile-deck>.profile-card.deck-primary{transform:translate3d(0,0,0) scale(1)}
+.profile-deck>.profile-card.deck-secondary{transform:translate3d(34px,25px,0) scale(.91)}
+.profile-deck.show-second-profile>.profile-card.deck-primary{transform:translate3d(-34px,25px,0) scale(.91)}
+.profile-deck.show-second-profile>.profile-card.deck-secondary{transform:translate3d(0,0,0) scale(1)}
+.profile-deck.main-profile-flipped>.profile-card.deck-primary{transform:rotateY(180deg)!important}
+.profile-deck.main-profile-flipped>.profile-second-card{opacity:0!important;visibility:hidden;pointer-events:none}
+.profile-face.profile-back{justify-content:flex-start;gap:0}
+@media(max-width:850px){
+  .profile-deck>.profile-card.deck-primary{transform:translate3d(0,0,0) scale(1)!important}
+  .profile-deck>.profile-card.deck-secondary{transform:translate3d(18px,14px,0) scale(.94)!important}
+  .profile-deck.show-second-profile>.profile-card.deck-primary{transform:translate3d(-18px,14px,0) scale(.94)!important}
+  .profile-deck.show-second-profile>.profile-card.deck-secondary{transform:translate3d(0,0,0) scale(1)!important}
+  .profile-deck.main-profile-flipped>.profile-card.deck-primary{transform:rotateY(180deg)!important}
+}
