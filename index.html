@@ -35,7 +35,7 @@
         <div class="profile-face profile-front">
         <div class="penguin-banner" aria-label="Penguin profile banner"><span class="penguin-snow">✦ · ❄ · ✦</span><span class="profile-penguin" aria-hidden="true">🐧</span><span class="penguin-caption">DYser · THE REALM</span></div>
         <button type="button" class="profile-flip-arrow flip-to-back" aria-label="Flip profile card to more information" title="More about me">←</button>
-        <a class="profile-account-arrow" href="https://discord.com/users/1279532395799904388" target="_blank" rel="noopener noreferrer" aria-label="Open my second Discord account dyser_1" title="Second Discord account · dyser_1">↗</a>
+        <button type="button" class="profile-account-arrow" data-profile-switch aria-label="Bring the second Discord card forward" title="Show second account card">↗</button>
         <div class="avatar-container">
           <img id="discord-avatar" src="favicon.png" alt="lampik2009 avatar" class="avatar-img">
           <span id="discord-status" class="status-indicator status-offline"></span>
@@ -382,6 +382,35 @@
   document.querySelectorAll(".profile-flip-arrow").forEach(button=>button.addEventListener("click",()=>{
     const flipped=button.classList.contains("flip-to-back");card.classList.toggle("is-flipped",flipped);card.style.transform=flipped?"rotateY(180deg)":"rotateX(0) rotateY(0)";
   }));
+
+  // Animated two-card Discord profile deck
+  const profileDeck=document.querySelector(".profile-deck");
+  const secondProfile=document.getElementById("secondDiscordCard");
+  const firstProfile=document.getElementById("tiltCard");
+  let secondIsFront=false;
+  function switchProfileCard(){
+    if(!profileDeck||!secondProfile||!firstProfile)return;
+    secondIsFront=!secondIsFront;
+    firstProfile.classList.toggle("deck-secondary",secondIsFront);
+    firstProfile.classList.toggle("deck-primary",!secondIsFront);
+    secondProfile.classList.toggle("deck-primary",secondIsFront);
+    secondProfile.classList.toggle("deck-secondary",!secondIsFront);
+    profileDeck.classList.toggle("show-second-profile",secondIsFront);
+    firstProfile.style.transform="";
+    secondProfile.setAttribute("aria-label",secondIsFront?"Click to return to the main profile":"Click to switch to the dyser_1 Discord profile");
+  }
+  document.querySelectorAll("[data-profile-switch]").forEach(btn=>btn.addEventListener("click",switchProfileCard));
+  if(secondProfile){
+    secondProfile.addEventListener("click",e=>{
+      if(e.target.closest("#openSecondDiscord"))return;
+      switchProfileCard();
+    });
+    secondProfile.addEventListener("keydown",e=>{
+      if((e.key==="Enter"||e.key===" ")&&e.target===secondProfile){e.preventDefault();switchProfileCard()}
+    });
+  }
+  const openSecond=document.getElementById("openSecondDiscord");
+  if(openSecond)openSecond.addEventListener("click",e=>{e.stopPropagation();window.open("https://discord.com/users/1279532395799904388","_blank","noopener,noreferrer")});
 
   // SNAKE — saves best score
   const canvas=$("snake-board"), ctx=canvas.getContext("2d"), CELL=15, GRID=20;
