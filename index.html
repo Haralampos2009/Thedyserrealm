@@ -31,6 +31,9 @@
   <div class="site-container" id="siteContainer">
     <aside class="profile-sidebar">
       <div class="profile-card" id="tiltCard">
+        <div class="profile-face profile-front">
+        <div class="penguin-banner" aria-label="Penguin profile banner"><span class="penguin-snow">✦ · ❄ · ✦</span><span class="profile-penguin" aria-hidden="true">🐧</span><span class="penguin-caption">DYser · THE REALM</span></div>
+        <button type="button" class="profile-flip-arrow flip-to-back" aria-label="Flip profile card to more information" title="More about me">←</button>
         <div class="avatar-container">
           <img id="discord-avatar" src="favicon.png" alt="lampik2009 avatar" class="avatar-img">
           <span id="discord-status" class="status-indicator status-offline"></span>
@@ -58,6 +61,26 @@
           <a href="https://discord.com/users/1142187822250471535" target="_blank" rel="noopener noreferrer" class="social-btn"><span class="btn-left"><span class="social-emoji">◈</span><span>Discord</span></span><span class="arrow">↗</span></a>
           <a href="https://github.com/Haralampos2009" target="_blank" rel="noopener noreferrer" class="social-btn"><span class="btn-left"><span class="social-emoji">⌘</span><span>GitHub</span></span><span class="arrow">↗</span></a>
           <a href="https://www.youtube.com/@Dyser_l" target="_blank" rel="noopener noreferrer" class="social-btn"><span class="btn-left"><span class="social-emoji">▶</span><span>YouTube</span></span><span class="arrow">↗</span></a>
+        </div>
+        </div>
+        <div class="profile-face profile-back" aria-label="More about me">
+          <button type="button" class="profile-flip-arrow flip-to-front" aria-label="Flip profile card back" title="Back to links">→</button>
+          <div class="back-penguin" aria-hidden="true">🐧</div>
+          <p class="back-eyebrow">BEHIND THE REALM</p>
+          <h2 class="back-title">Hey, I'm Dyser!</h2>
+          <p class="back-copy">I build Thedyserrealm, experiment with web design, and make little browser games and creative projects.</p>
+          <div class="about-facts">
+            <div><span>✦</span><section><b>Creator</b><small>Thedyserrealm website</small></section></div>
+            <div><span>🎮</span><section><b>Game maker</b><small>Realm Clicker, Realm Drop, Snake and more</small></section></div>
+            <div><span>⚡</span><section><b>Always learning</b><small>Trying new ideas and improving the site</small></section></div>
+          </div>
+          <p class="back-social-label">FIND ME ONLINE</p>
+          <div class="back-links">
+            <a href="https://discord.com/users/1142187822250471535" target="_blank" rel="noopener noreferrer">Discord ↗</a>
+            <a href="https://www.youtube.com/@Dyser_l" target="_blank" rel="noopener noreferrer">YouTube ↗</a>
+            <a href="https://github.com/Haralampos2009" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          </div>
+          <p class="back-note">Thanks for visiting my little corner of the internet 💚</p>
         </div>
       </div>
     </aside>
@@ -111,12 +134,12 @@
               <button class="clicker-core shape-star" id="clicker-tap" aria-label="Collect energy"><span id="clicker-core-symbol">✦</span></button>
             </div>
             <div class="shape-picker" aria-label="Choose energy core shape">
-              <button type="button" class="shape-choice selected" data-shape="star" data-symbol="✦" aria-label="Star shape">✦</button>
-              <button type="button" class="shape-choice" data-shape="diamond" data-symbol="◆" aria-label="Diamond shape">◆</button>
-              <button type="button" class="shape-choice" data-shape="hex" data-symbol="⬡" aria-label="Hexagon shape">⬡</button>
-              <button type="button" class="shape-choice" data-shape="triangle" data-symbol="▲" aria-label="Triangle shape">▲</button>
-              <button type="button" class="shape-choice" data-shape="circle" data-symbol="●" aria-label="Circle shape">●</button>
-              <button type="button" class="shape-choice" data-shape="bolt" data-symbol="ϟ" aria-label="Lightning shape">ϟ</button>
+              <button type="button" class="shape-choice selected" data-required-prestige="0" data-shape="star" data-symbol="✦" aria-label="Star shape">✦</button>
+              <button type="button" class="shape-choice" data-required-prestige="1" data-shape="diamond" data-symbol="◆" aria-label="Diamond shape">◆</button>
+              <button type="button" class="shape-choice" data-required-prestige="2" data-shape="hex" data-symbol="⬡" aria-label="Hexagon shape">⬡</button>
+              <button type="button" class="shape-choice" data-required-prestige="3" data-shape="triangle" data-symbol="▲" aria-label="Triangle shape">▲</button>
+              <button type="button" class="shape-choice" data-required-prestige="4" data-shape="circle" data-symbol="●" aria-label="Circle shape">●</button>
+              <button type="button" class="shape-choice" data-required-prestige="5" data-shape="bolt" data-symbol="ϟ" aria-label="Lightning shape">ϟ</button>
             </div>
             <p class="clicker-power">Per click: <strong id="clicker-power">1</strong> · Per second: <strong id="clicker-auto">0</strong></p>
             <div class="clicker-progression"><span>LEVEL <strong id="clicker-level">1</strong></span><span>REBIRTHS <strong id="clicker-prestige-count">0</strong></span><button class="game-btn secondary" id="clicker-prestige" type="button" disabled>Rebirth at level 10</button></div>
@@ -338,11 +361,15 @@
   // Profile card tilt
   const card=$("tiltCard");
   card.addEventListener("mousemove",e=>{
+    if(card.classList.contains("is-flipped"))return;
     if(innerWidth<850) return;
     const r=card.getBoundingClientRect();
     card.style.transform=`rotateX(${((e.clientY-r.top-r.height/2)/(r.height/2))*-5}deg) rotateY(${((e.clientX-r.left-r.width/2)/(r.width/2))*5}deg)`;
   });
-  card.addEventListener("mouseleave",()=>card.style.transform="rotateX(0) rotateY(0)");
+  card.addEventListener("mouseleave",()=>{if(!card.classList.contains("is-flipped"))card.style.transform="rotateX(0) rotateY(0)"});
+  document.querySelectorAll(".profile-flip-arrow").forEach(button=>button.addEventListener("click",()=>{
+    const flipped=button.classList.contains("flip-to-back");card.classList.toggle("is-flipped",flipped);card.style.transform=flipped?"rotateY(180deg)":"rotateX(0) rotateY(0)";
+  }));
 
   // SNAKE — saves best score
   const canvas=$("snake-board"), ctx=canvas.getContext("2d"), CELL=15, GRID=20;
@@ -434,13 +461,14 @@
     $("clicker-cost").textContent=clicker.powerCost.toLocaleString();$("clicker-auto-cost").textContent=clicker.autoCost.toLocaleString();
     $("clicker-upgrade").disabled=clicker.energy<clicker.powerCost;$("clicker-auto-buy").disabled=clicker.energy<clicker.autoCost;
     const levelEl=$("clicker-level"),prestigeEl=$("clicker-prestige-count"),rebirth=$("clicker-prestige");if(levelEl)levelEl.textContent=level;if(prestigeEl)prestigeEl.textContent=clicker.prestige;if(rebirth){rebirth.disabled=level<10;rebirth.textContent=level<10?"Rebirth at level 10":"Rebirth · +50% power";}
+    document.querySelectorAll(".shape-choice").forEach(b=>{const required=Number(b.dataset.requiredPrestige||0),locked=clicker.prestige<required;b.disabled=locked;b.classList.toggle("shape-locked",locked);b.title=locked?"Unlock after "+required+" rebirth"+(required===1?"":"s"):"Available core shape";b.setAttribute("aria-label",(b.dataset.shape||"Core")+" shape"+(locked?", locked until "+required+" rebirths":""));});
     [["realm-upgrade-power","realmPowerCost"],["realm-upgrade-auto","realmAutoCost"],["realm-upgrade-aura","realmAuraCost"]].forEach(([id,key])=>{const b=$(id);if(b){const strong=b.querySelector("strong");if(strong)strong.textContent=(key==="realmAuraCost"&&clicker.auraOwned)?"OWNED":"Cost: "+clicker[key];b.disabled=clicker.energy<clicker[key]||(key==="realmAuraCost"&&clicker.auraOwned);}});
     const shop=$("realm-upgrade-shop");if(shop)shop.classList.toggle("realm-aura-active",!!clicker.auraOwned);
   }
   function saveClicker(){saveData.clicker=clicker;saveArcade()}
   function scheduleClickSave(){clearTimeout(clickSaveTimer);clickSaveTimer=setTimeout(saveClicker,350)}
-  function setClickerShape(shape){if(!shapeSymbols[shape])return;clickerShape=shape;clicker.shape=shape;$("clicker-tap").className="clicker-core shape-"+shape;$("clicker-core-symbol").textContent=shapeSymbols[shape];document.querySelectorAll(".shape-choice").forEach(b=>b.classList.toggle("selected",b.dataset.shape===shape));scheduleClickSave()}
-  document.querySelectorAll(".shape-choice").forEach(b=>b.addEventListener("click",()=>{setClickerShape(b.dataset.shape);clickerSound("tap",b.dataset.shape);clickerBurst("upgrade")}));
+  function setClickerShape(shape){const button=document.querySelector('.shape-choice[data-shape="'+shape+'"]');if(!shapeSymbols[shape]||(button&&button.disabled))return;clickerShape=shape;clicker.shape=shape;$("clicker-tap").className="clicker-core shape-"+shape;$("clicker-core-symbol").textContent=shapeSymbols[shape];document.querySelectorAll(".shape-choice").forEach(b=>b.classList.toggle("selected",b.dataset.shape===shape));scheduleClickSave()}
+  document.querySelectorAll(".shape-choice").forEach(b=>b.addEventListener("click",()=>{if(b.disabled)return;setClickerShape(b.dataset.shape);clickerSound("tap",b.dataset.shape);clickerBurst("upgrade")}));
   setClickerShape(clickerShape);
   $("clicker-tap").addEventListener("click",()=>{const gain=Math.ceil(clicker.power*(1+clicker.prestige*.5));clicker.energy+=gain;clicker.totalEarned+=gain;const stage=$("clicker-stage"),float=document.createElement("span");float.className="energy-float";float.textContent="+"+gain;float.style.left=(35+Math.random()*30)+"%";stage.appendChild(float);setTimeout(()=>float.remove(),850);stage.classList.remove("core-pulse");void stage.offsetWidth;stage.classList.add("core-pulse");clickerSound("tap");clickerBurst("tap");renderClicker();scheduleClickSave()});
   $("clicker-upgrade").addEventListener("click",()=>{if(clicker.energy<clicker.powerCost)return;clicker.energy-=clicker.powerCost;clicker.power++;clicker.powerCost=Math.ceil(clicker.powerCost*1.65);clickerSound("upgrade");clickerBurst("upgrade");renderClicker();saveClicker()});
@@ -533,8 +561,13 @@
 function makeBlock(x,y,w,h){return{x,y,w,h}}
 function reset(){if(anim)cancelAnimationFrame(anim);score=0;running=true;blocks=[makeBlock(76,H-38,148,24)];active={x:24,y:H-95,w:92,h:24,dir:1,speed:1.55};scoreEl.textContent='0';dropBtn.textContent='Drop block';draw();loop()}
 function cloud(x,y,s){ctx.save();ctx.globalAlpha=.78;ctx.fillStyle='#f3fbff';ctx.shadowColor='rgba(255,255,255,.5)';ctx.shadowBlur=8*s;[[0,5,14],[17,-2,19],[38,5,15],[23,8,20]].forEach(([dx,dy,r])=>{ctx.beginPath();ctx.ellipse(x+dx*s,y+dy*s,r*s,r*.62*s,0,0,Math.PI*2);ctx.fill()});ctx.restore()}
+function tree(x,base,scale){ctx.save();ctx.translate(x,base);ctx.scale(scale,scale);ctx.fillStyle='#654329';ctx.fillRect(-4,-70,8,70);ctx.fillStyle='#2e6b45';ctx.beginPath();ctx.moveTo(0,-145);ctx.lineTo(-26,-93);ctx.lineTo(-13,-93);ctx.lineTo(-34,-58);ctx.lineTo(-16,-58);ctx.lineTo(-38,-27);ctx.lineTo(38,-27);ctx.lineTo(16,-58);ctx.lineTo(34,-58);ctx.lineTo(13,-93);ctx.lineTo(26,-93);ctx.closePath();ctx.fill();ctx.fillStyle='#438b57';ctx.beginPath();ctx.moveTo(0,-140);ctx.lineTo(-18,-98);ctx.lineTo(-8,-98);ctx.lineTo(-24,-63);ctx.lineTo(-10,-63);ctx.lineTo(-26,-33);ctx.lineTo(0,-33);ctx.closePath();ctx.fill();ctx.strokeStyle='rgba(218,255,207,.24)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-131);ctx.lineTo(-4,-84);ctx.lineTo(-8,-52);ctx.stroke();ctx.restore()}
+function bird(x,y,scale,phase){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.strokeStyle='#233d4b';ctx.lineWidth=2.1;ctx.lineCap='round';const flap=Math.sin(phase)*5;ctx.beginPath();ctx.moveTo(-8,0);ctx.quadraticCurveTo(-3,-8-flap,0,-1);ctx.quadraticCurveTo(4,-9+flap,9,0);ctx.stroke();ctx.restore()}
 function block(b,live=false){const{x,y,w,h}=b;ctx.save();ctx.shadowColor='rgba(18,32,28,.3)';ctx.shadowBlur=7;ctx.shadowOffsetY=4;const wood=ctx.createLinearGradient(x,y,x+w,y+h);wood.addColorStop(0,'#f0c27c');wood.addColorStop(.25,'#c58a4c');wood.addColorStop(.68,'#a66b38');wood.addColorStop(1,'#754421');ctx.fillStyle=wood;ctx.fillRect(x,y,w,h);ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.strokeStyle='rgba(255,225,165,.72)';ctx.lineWidth=1.5;ctx.strokeRect(x+1,y+1,w-2,h-2);ctx.strokeStyle='rgba(74,42,19,.38)';ctx.lineWidth=1;for(let i=0;i<3;i++){const yy=y+5+i*6;ctx.beginPath();ctx.moveTo(x+5,yy);ctx.bezierCurveTo(x+w*.3,yy-2,x+w*.65,yy+2,x+w-5,yy);ctx.stroke()}ctx.fillStyle='rgba(255,226,174,.3)';ctx.fillRect(x+4,y+3,w-8,2);if(live){ctx.strokeStyle='rgba(255,255,255,.7)';ctx.setLineDash([4,3]);ctx.strokeRect(x-2,y-2,w+4,h+4);ctx.setLineDash([])}ctx.restore()}
-function draw(){const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#52b7ef');sky.addColorStop(.62,'#c3edff');sky.addColorStop(1,'#edf8e9');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(255,238,164,.9)';ctx.beginPath();ctx.arc(250,45,19,0,Math.PI*2);ctx.fill();cloud(25,42,.7);cloud(150,83,.56);cloud(236,132,.42);ctx.fillStyle='#78bd78';ctx.beginPath();ctx.moveTo(0,H-20);ctx.quadraticCurveTo(70,H-62,143,H-27);ctx.quadraticCurveTo(220,H-68,W,H-24);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();ctx.fillStyle='#4b8b52';ctx.fillRect(0,H-12,W,12);blocks.forEach(b=>block(b));if(active&&running)block(active,true);if(!running){ctx.fillStyle='rgba(12,31,38,.5)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='bold 21px system-ui';ctx.fillText('TOWER FELL!',W/2,H/2-6);ctx.font='12px system-ui';ctx.fillText('Tap New tower to try again',W/2,H/2+18)}}
+function draw(){const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#52b7ef');sky.addColorStop(.62,'#c3edff');sky.addColorStop(1,'#edf8e9');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(255,238,164,.9)';ctx.beginPath();ctx.arc(250,45,19,0,Math.PI*2);ctx.fill();cloud(25,42,.7);cloud(150,83,.56);cloud(236,132,.42);
+tree(17,H-12,.9);tree(54,H-12,.62);tree(W-18,H-12,.92);tree(W-54,H-12,.62);
+const t=Date.now()/270;bird(((Date.now()/24)%380)-40,35+Math.sin(t)*9,.9,t);bird(((Date.now()/31+140)%380)-40,68+Math.sin(t*.8+2)*7,.63,t+2);
+ctx.fillStyle='#78bd78';ctx.beginPath();ctx.moveTo(0,H-20);ctx.quadraticCurveTo(70,H-62,143,H-27);ctx.quadraticCurveTo(220,H-68,W,H-24);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();ctx.fillStyle='#4b8b52';ctx.fillRect(0,H-12,W,12);blocks.forEach(b=>block(b));if(active&&running)block(active,true);if(!running){ctx.fillStyle='rgba(12,31,38,.5)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='bold 21px system-ui';ctx.fillText('TOWER FELL!',W/2,H/2-6);ctx.font='12px system-ui';ctx.fillText('Tap New tower to try again',W/2,H/2+18)}}
 function place(){if(!running||!active)return;const top=blocks[blocks.length-1],left=Math.max(active.x,top.x),right=Math.min(active.x+active.w,top.x+top.w),overlap=right-left;if(overlap<12){running=false;active=null;draw();return}const perfect=overlap>=Math.min(active.w,top.w)-8;blocks.push(makeBlock(left,top.y-active.h,overlap,active.h));score++;scoreEl.textContent=score;if(score>best){best=score;bestEl.textContent=best;try{localStorage.setItem('realmStackBest',String(best))}catch(_){}}if(blocks.length>10){const shift=blocks[blocks.length-1].y-105;blocks=blocks.map(b=>({...b,y:b.y-shift}))}const t=blocks[blocks.length-1];active={x:active.dir>0?5:W-t.w-5,y:t.y-active.h,w:t.w,h:active.h,dir:active.dir,speed:Math.min(4.5,1.55+score*.055)};if(perfect)active.x=Math.max(0,Math.min(W-active.w,active.x));draw()}
 function move(dir){if(!active||!running)return;active.x=Math.max(0,Math.min(W-active.w,active.x+dir*12));draw()}
 function loop(){if(!running)return;if(active){active.x+=active.dir*active.speed;if(active.x<=0){active.x=0;active.dir=1}else if(active.x+active.w>=W){active.x=W-active.w;active.dir=-1}draw()}anim=requestAnimationFrame(loop)}
