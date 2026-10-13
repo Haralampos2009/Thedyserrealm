@@ -249,3 +249,26 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 .profile-account-arrow{position:absolute;z-index:6;top:50%;right:7px;transform:translateY(-50%);width:32px;height:44px;display:flex;align-items:center;justify-content:center;box-sizing:border-box;border:1px solid rgba(110,255,190,.35);border-radius:12px;background:rgba(4,24,19,.78);color:#d8fff0;font-size:21px;text-decoration:none;box-shadow:0 0 15px rgba(52,211,153,.12);transition:background .2s,transform .2s}
 .profile-account-arrow:hover{background:rgba(16,185,129,.32);transform:translateY(-50%) translateX(2px)}
 @media(max-width:850px){.profile-account-arrow{width:34px;height:46px}}
+
+
+/* Animated stacked profile cards: tap the card behind to swap places */
+.profile-deck{display:grid;grid-template-columns:minmax(0,1fr);width:100%;position:relative;isolation:isolate;perspective:1200px}
+.profile-deck>.profile-card{grid-area:1/1;width:100%;min-width:0;box-sizing:border-box;transition:transform .68s cubic-bezier(.2,.82,.2,1),opacity .5s ease,filter .5s ease,box-shadow .5s ease;will-change:transform;transform-origin:center center}
+.profile-deck>.profile-card.deck-primary{position:relative;z-index:3;opacity:1;filter:none;pointer-events:auto;transform:translate3d(0,0,0) scale(1)}
+.profile-deck>.profile-card.deck-secondary{position:relative;z-index:2;opacity:.83;filter:saturate(.8) brightness(.8);cursor:pointer;pointer-events:auto;transform:translate3d(10px,14px,-45px) scale(.94);box-shadow:0 18px 45px rgba(0,0,0,.38),0 0 24px rgba(52,211,153,.12)}
+.profile-deck>.profile-card.deck-secondary:hover{filter:saturate(1) brightness(.98);transform:translate3d(13px,11px,-25px) scale(.955)}
+.profile-deck.show-second-profile>.profile-card.deck-secondary{z-index:3;filter:none;transform:translate3d(0,0,0) scale(1);opacity:1;cursor:default}
+.profile-deck.show-second-profile>.profile-card.deck-primary{z-index:2;opacity:.83;filter:saturate(.8) brightness(.8);transform:translate3d(10px,14px,-45px) scale(.94);cursor:pointer}
+.profile-deck.show-second-profile>.profile-card.deck-primary:hover{filter:saturate(1) brightness(.98);transform:translate3d(13px,11px,-25px) scale(.955)}
+.profile-account-arrow{appearance:none;display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+.profile-second-card{overflow:hidden;min-height:470px;align-items:center;justify-content:flex-start;text-align:center;gap:0;cursor:pointer;position:relative}
+.second-card-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 0,rgba(52,211,153,.13),transparent 55%)}
+.second-penguin-banner{background:radial-gradient(ellipse at 50% 120%,rgba(115,150,255,.28),transparent 55%),linear-gradient(145deg,rgba(51,67,128,.5),rgba(8,26,48,.62));border-color:rgba(160,180,255,.25)}
+.second-account-avatar{margin-top:3px}
+.second-account-avatar .avatar-img{border-color:rgba(139,160,255,.45);box-shadow:0 0 28px rgba(110,130,255,.22)}
+.second-account-pill{margin-bottom:16px;border-color:rgba(139,160,255,.25)}
+.second-account-open{width:100%;box-sizing:border-box;justify-content:space-between;position:relative;z-index:2;cursor:pointer;font:inherit}
+.second-card-hint{font-size:10px;line-height:1.5;color:#8fb8ad;margin:17px 0 0;position:relative;z-index:1}
+.profile-second-card:focus-visible{outline:2px solid #6ee7b7;outline-offset:4px}
+@media(max-width:850px){.profile-deck{perspective:900px}.profile-deck>.profile-card.deck-secondary{transform:translate3d(5px,10px,-25px) scale(.96)}.profile-deck.show-second-profile>.profile-card.deck-primary{transform:translate3d(5px,10px,-25px) scale(.96)}.profile-second-card{min-height:455px}}
+@media(prefers-reduced-motion:reduce){.profile-deck>.profile-card{transition:none}}
