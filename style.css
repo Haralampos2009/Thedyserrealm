@@ -377,3 +377,11 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 .realm-upgrade b,.realm-upgrade small,.realm-upgrade strong{min-width:0;overflow-wrap:anywhere;word-break:normal}
 @media(max-width:680px){.realm-upgrade-grid{grid-template-columns:minmax(0,1fr)}.realm-upgrade-heading{gap:8px}.realm-upgrade-heading small{font-size:.6rem;letter-spacing:.04em}.realm-upgrade-shop{padding:14px}}
 @media(prefers-reduced-motion:reduce){.storm-cloud{animation:none!important;left:50%!important;transform:translateX(-50%)!important}}
+
+/* Final overflow guard for the upgrade cards and their text */
+.realm-upgrade-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.realm-upgrade{grid-template-columns:35px minmax(0,1fr)!important;overflow:hidden}
+.realm-upgrade>*{min-width:0;max-width:100%}
+.realm-upgrade b,.realm-upgrade small,.realm-upgrade strong{white-space:normal;overflow-wrap:anywhere;word-break:normal}
+.realm-upgrade strong{grid-column:2;line-height:1.35}
+@media(max-width:680px){.realm-upgrade-grid{grid-template-columns:minmax(0,1fr)!important}.realm-upgrade-shop{padding:14px!important}.realm-upgrade-heading .realm-upgrade-title{flex:1 1 120px}.realm-shop-status{display:none}}
