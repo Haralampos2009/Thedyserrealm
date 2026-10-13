@@ -363,7 +363,7 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 @keyframes trailFade{0%{opacity:.95;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.12)}}
 
 
-/* Large storm cloud drifts from left to right, then loops back in from the left */
-.storm-cloud{left:0!important;transform:translateX(-110vw)!important;animation:storm-cross-screen 38s linear infinite,storm-breathe 8s ease-in-out infinite!important;will-change:transform}
-@keyframes storm-cross-screen{0%{transform:translateX(-110vw)}100%{transform:translateX(110vw)}}
+/* Keep the entire cloud on-screen while it crosses; pause briefly off-screen before looping */
+.storm-cloud{left:0!important;transform:translateX(calc(-100% - 24px))!important;animation:storm-cross-screen 30s linear infinite!important;will-change:transform;max-width:none!important}
+@keyframes storm-cross-screen{0%,7%{transform:translateX(calc(-100% - 24px))}93%,100%{transform:translateX(calc(100vw + 24px))}}
 @media(prefers-reduced-motion:reduce){.storm-cloud{animation:none!important;left:50%!important;transform:translateX(-50%)!important}}
