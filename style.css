@@ -352,3 +352,12 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
   .cloud-four { width: 235px; height: 58px; top: 74px; opacity: .38; }
   .cloud-five { width: 195px; height: 49px; top: 107px; opacity: .29; }
 }
+
+
+/* Visibility pass: brighter falling 0/1 code, richer mouse halo, slower wire sparks */
+.binary-rain-container{opacity:.31!important;color:#5bffc0!important;text-shadow:0 0 7px rgba(53,245,160,.95),0 0 17px rgba(16,185,129,.65)!important}
+.binary-col{font-size:clamp(19px,2.25vw,27px)!important;line-height:1.8!important;filter:drop-shadow(0 0 7px rgba(53,245,160,.8))!important}
+.binary-col:nth-child(3n){opacity:.82!important}
+.cursor-main{width:15px!important;height:15px!important;box-shadow:0 0 12px #10b981,0 0 24px rgba(16,255,160,.9),0 0 38px rgba(16,185,129,.45)!important}
+.cursor-trail{width:9px!important;height:9px!important;background:rgba(70,255,180,.8)!important;box-shadow:0 0 9px rgba(16,255,160,.95),0 0 18px rgba(16,185,129,.65)!important;animation:trailFade 1.05s ease-out forwards!important}
+@keyframes trailFade{0%{opacity:.95;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.12)}}
