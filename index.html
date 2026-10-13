@@ -596,8 +596,11 @@ dropBtn.addEventListener('click',place);restartBtn.addEventListener('click',rese
     const cloudRect=cloud.getBoundingClientRect();
     const startX=cloudRect.left+cloudRect.width*(0.28+Math.random()*0.44);
     const startY=cloudRect.top+cloudRect.height*0.66;
-    const endX=Math.max(24,Math.min(width-24,startX+(Math.random()-.5)*Math.min(170,width*.22)));
-    const endY=Math.min(height-18,startY+height*(0.28+Math.random()*0.34));
+    // Aim the bolt at the visible circular custom cursor; the cloud itself stays fixed.
+    const target=document.getElementById('cursor');
+    const targetRect=target ? target.getBoundingClientRect() : null;
+    const endX=targetRect && targetRect.width ? targetRect.left+targetRect.width/2 : Math.max(24,Math.min(width-24,startX));
+    const endY=targetRect && targetRect.height ? targetRect.top+targetRect.height/2 : Math.min(height-18,startY+height*.3);
     const pts=[[startX,startY]];
     let x=startX,y=startY;
     const segments=9;
@@ -621,6 +624,23 @@ dropBtn.addEventListener('click',place);restartBtn.addEventListener('click',rese
     flash.classList.remove('flash'); void flash.offsetWidth; flash.classList.add('flash');
     cloud.classList.remove('storm-lit'); void cloud.offsetWidth; cloud.classList.add('storm-lit');
     document.body.appendChild(svg);
+    // Synthetic thunder crack, no external audio file required.
+    try {
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(AC){
+        const ctx=new AC();
+        if(ctx.state==='suspended') ctx.resume();
+        const now=ctx.currentTime, duration=.7;
+        const buffer=ctx.createBuffer(1,Math.floor(ctx.sampleRate*duration),ctx.sampleRate);
+        const data=buffer.getChannelData(0);
+        for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*(1-i/data.length);
+        const noise=ctx.createBufferSource(); noise.buffer=buffer;
+        const filter=ctx.createBiquadFilter(); filter.type='lowpass'; filter.frequency.setValueAtTime(950,now); filter.frequency.exponentialRampToValueAtTime(120,now+duration);
+        const gain=ctx.createGain(); gain.gain.setValueAtTime(.0001,now); gain.gain.exponentialRampToValueAtTime(.22,now+.015); gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+        noise.connect(filter); filter.connect(gain); gain.connect(ctx.destination); noise.start(now); noise.stop(now+duration);
+        noise.onended=()=>ctx.close();
+      }
+    } catch(_){}
     setTimeout(()=>{svg.remove();flash.classList.remove('flash');cloud.classList.remove('storm-lit');},360);
   }
   setTimeout(strike,6500);
