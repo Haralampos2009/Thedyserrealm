@@ -321,3 +321,34 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 @media(max-width:600px) {
   .storm-cloud { top:9%; width:clamp(205px,64vw,300px); height:100px; }
 }
+
+
+/* Extra atmospheric cloud layers — slow independent drift, no pointer tracking */
+.cloud-four, .cloud-five {
+  background:
+    radial-gradient(ellipse at 20% 66%, rgba(154,177,194,.25) 0 12%, transparent 39%),
+    radial-gradient(ellipse at 39% 37%, rgba(113,143,164,.31) 0 23%, transparent 49%),
+    radial-gradient(ellipse at 61% 48%, rgba(42,62,83,.48) 0 29%, transparent 56%),
+    radial-gradient(ellipse at 78% 68%, rgba(9,20,35,.58) 0 20%, transparent 49%),
+    linear-gradient(180deg, rgba(126,153,173,.13), rgba(7,19,32,.30));
+  border-radius: 48% 52% 42% 58%;
+  box-shadow: inset 0 -12px 18px rgba(2,9,18,.24), 0 12px 24px rgba(0,0,0,.16);
+  filter: blur(15px) drop-shadow(0 9px 16px rgba(0,0,0,.18));
+}
+.cloud-four:before, .cloud-four:after, .cloud-five:before, .cloud-five:after {
+  background:
+    radial-gradient(ellipse at 33% 24%, rgba(154,180,198,.25), rgba(62,86,107,.22) 47%, rgba(8,19,32,.20) 79%);
+  box-shadow: inset -9px -9px 17px rgba(0,0,0,.18);
+}
+.cloud-four {
+  width: 330px; height: 76px; top: 78px;
+  opacity: .48; animation-duration: 91s; animation-delay: -47s;
+}
+.cloud-five {
+  width: 250px; height: 61px; top: 119px;
+  opacity: .37; animation-duration: 108s; animation-delay: -72s;
+}
+@media(max-width:600px) {
+  .cloud-four { width: 235px; height: 58px; top: 74px; opacity: .38; }
+  .cloud-five { width: 195px; height: 49px; top: 107px; opacity: .29; }
+}
