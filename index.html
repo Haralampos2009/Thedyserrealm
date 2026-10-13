@@ -349,16 +349,7 @@
       setTimeout(()=>trail.remove(),420);
     }
   });
-  setInterval(()=>{
-    if(document.hidden) return;
-    const cloud=document.querySelector(".cloud"); if(!cloud) return;
-    const r=cloud.getBoundingClientRect(), x=mouseX || innerWidth/2, y=mouseY || innerHeight/2;
-    const startX=r.left+r.width/2, startY=r.top+r.height/2;
-    const pts=[`${startX},${startY}`]; let px=startX,py=startY;
-    for(let i=1;i<=10;i++){px+=(x-px)/(11-i)+(Math.random()-.5)*25;py+=(y-py)/(11-i)+(Math.random()-.5)*25;pts.push(`${px},${py}`);}
-    const line=svgEl("polyline",{points:pts.join(" "),stroke:"#d1fae5","stroke-width":"2","stroke-linecap":"round",fill:"none",style:"filter:drop-shadow(0 0 7px #34d399)"});
-    $("lightning-canvas").appendChild(line); setTimeout(()=>line.remove(),240);
-  },9000);
+  // Pointer movement only controls the custom cursor; storm lightning is independent of the mouse.
 
   // Profile card tilt
   const card=$("tiltCard");
@@ -585,35 +576,56 @@ dropBtn.addEventListener('click',place);restartBtn.addEventListener('click',rese
 </script>
 
 <script>
-/* REALM STORM SYSTEM */
+/* REALM STORM SYSTEM — fixed storm cloud; lightning never follows the pointer */
 (() => {
   if (document.getElementById('realm-lightning-flash')) return;
-  const flash=document.createElement('div'); flash.id='realm-lightning-flash'; flash.className='realm-lightning-flash'; document.body.appendChild(flash);
-  const cloud=document.createElement('div'); cloud.className='storm-cloud'; cloud.setAttribute('aria-hidden','true');
-  Object.assign(cloud.style,{position:'fixed',width:'170px',height:'65px',left:'50%',top:'8%',transform:'translateX(-50%)',borderRadius:'50%',zIndex:'9997',pointerEvents:'none',transition:'left 1.2s ease,top 1.2s ease',boxShadow:'inset 0 -8px 20px rgba(80,140,190,.18)'});
-  cloud.innerHTML='<span style="position:absolute;width:60px;height:48px;left:22px;top:-12px;border-radius:50%;background:inherit;box-shadow:0 0 18px rgba(140,205,255,.13)"></span><span style="position:absolute;width:72px;height:58px;left:65px;top:-23px;border-radius:50%;background:inherit;box-shadow:0 0 18px rgba(140,205,255,.13)"></span><span style="position:absolute;width:52px;height:42px;left:112px;top:-5px;border-radius:50%;background:inherit"></span>';
+  const flash=document.createElement('div');
+  flash.id='realm-lightning-flash';
+  flash.className='realm-lightning-flash';
+  document.body.appendChild(flash);
+
+  const cloud=document.createElement('div');
+  cloud.className='storm-cloud';
+  cloud.setAttribute('aria-hidden','true');
+  cloud.innerHTML='<span class="storm-puff puff-a"></span><span class="storm-puff puff-b"></span><span class="storm-puff puff-c"></span><span class="storm-puff puff-d"></span>';
   document.body.appendChild(cloud);
-  let px=innerWidth*.5,py=innerHeight*.5;
-  document.addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY;},{passive:true});
+
   function strike(){
-    cloud.style.left=Math.max(90,Math.min(innerWidth-90,px))+'px';
-    cloud.style.top=Math.max(30,Math.min(innerHeight-130,py-100))+'px';
-    flash.classList.remove('flash'); void flash.offsetWidth; flash.classList.add('flash');
-    const svgNS='http://www.w3.org/2000/svg', svg=document.createElementNS(svgNS,'svg');
-    svg.setAttribute('class','realm-lightning-bolt'); svg.setAttribute('width','100%'); svg.setAttribute('height','100%');
-    Object.assign(svg.style,{left:'0',top:'0',width:'100vw',height:'100vh'});
-    const startX=Math.max(90,Math.min(innerWidth-90,px)),startY=Math.max(30,Math.min(innerHeight-130,py-35));
-    const pts=[[startX,startY],[startX-12,startY+24],[startX+5,startY+37],[startX-17,startY+64],[px,py]];
+    if(document.hidden) return;
+    const width=innerWidth, height=innerHeight;
+    const cloudRect=cloud.getBoundingClientRect();
+    const startX=cloudRect.left+cloudRect.width*(0.28+Math.random()*0.44);
+    const startY=cloudRect.top+cloudRect.height*0.66;
+    const endX=Math.max(24,Math.min(width-24,startX+(Math.random()-.5)*Math.min(170,width*.22)));
+    const endY=Math.min(height-18,startY+height*(0.28+Math.random()*0.34));
+    const pts=[[startX,startY]];
+    let x=startX,y=startY;
+    const segments=9;
+    for(let i=1;i<segments;i++){
+      const t=i/segments;
+      x=startX+(endX-startX)*t+(Math.random()-.5)*Math.min(34,width*.045);
+      y=startY+(endY-startY)*t;
+      pts.push([x,y]);
+    }
+    pts.push([endX,endY]);
     const d=pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' ');
-    for(const cls of ['', 'bolt-core']){const path=document.createElementNS(svgNS,'path');path.setAttribute('d',d);if(cls)path.setAttribute('class',cls);svg.appendChild(path);}
+    const ns='http://www.w3.org/2000/svg';
+    const svg=document.createElementNS(ns,'svg');
+    svg.setAttribute('class','realm-lightning-bolt');
+    svg.setAttribute('viewBox',`0 0 ${width} ${height}`);
+    svg.setAttribute('preserveAspectRatio','none');
+    svg.style.width='100vw'; svg.style.height='100vh'; svg.style.left='0'; svg.style.top='0';
+    const glow=document.createElementNS(ns,'path'); glow.setAttribute('d',d); glow.setAttribute('class','bolt-glow');
+    const core=document.createElementNS(ns,'path'); core.setAttribute('d',d); core.setAttribute('class','bolt-core');
+    svg.append(glow,core);
+    flash.classList.remove('flash'); void flash.offsetWidth; flash.classList.add('flash');
+    cloud.classList.remove('storm-lit'); void cloud.offsetWidth; cloud.classList.add('storm-lit');
     document.body.appendChild(svg);
-    setTimeout(()=>{svg.remove();flash.classList.remove('flash');},420);
-    cloud.animate([{transform:'translateX(-50%) scale(1)'},{transform:'translateX(-50%) scale(1.12)'},{transform:'translateX(-50%) scale(1)'}],{duration:350});
+    setTimeout(()=>{svg.remove();flash.classList.remove('flash');cloud.classList.remove('storm-lit');},360);
   }
-  setTimeout(strike,4500);
+  setTimeout(strike,6500);
   setInterval(strike,30000);
-})();
-</script>
+})();</script>
 
 
 
