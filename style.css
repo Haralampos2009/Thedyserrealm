@@ -406,3 +406,11 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
   color: #ffffff !important;
 }
 #views-count { -webkit-text-fill-color: #ffffff !important; }
+
+/* StatCounter may render its digits as an image rather than text */
+#views-count img,
+#views-count a img,
+#views-count iframe {
+  filter: brightness(0) invert(1) !important;
+}
+#views-count { color:#fff !important; }
