@@ -340,13 +340,11 @@
   function addCable(wire) {
     wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:"#101a15","stroke-width":"8","stroke-linecap":"round","stroke-linejoin":"round"}));
     wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:wire.color,"stroke-width":"4.8","stroke-linecap":"round","stroke-linejoin":"round",style:`filter:drop-shadow(0 0 3px ${wire.color})`}));
-    // Short insulated ferrule followed by a visible, tapered bare-copper conductor.
+    // Clean exposed copper tip: no dark ferrule/rectangular collar.
     const dx=wire.tipDx ?? 6, dy=wire.tipDy ?? 6, len=Math.hypot(dx,dy), ux=dx/len, uy=dy/len;
-    const sx=wire.x-ux*7, sy=wire.y-uy*7, ex=wire.x+dx, ey=wire.y+dy;
-    wiresSvg.appendChild(svgEl("path",{d:`M${sx-uy*2.5} ${sy+ux*2.5} L${wire.x-uy*2.5} ${wire.y+ux*2.5} L${wire.x+uy*2.5} ${wire.y-ux*2.5} L${sx+uy*2.5} ${sy-ux*2.5} Z`,fill:wire.color,stroke:"#17221b","stroke-width":".8"}));
-    wiresSvg.appendChild(svgEl("path",{d:`M${wire.x-uy*1.7} ${wire.y+ux*1.7} L${ex-uy*1.2} ${ey+ux*1.2} L${ex+uy*1.2} ${ey-ux*1.2} L${wire.x+uy*1.7} ${wire.y-ux*1.7} Z`,fill:"url(#realm-copper-tip)",stroke:"#f0bd78","stroke-width":".55",style:"filter:drop-shadow(0 0 3px rgba(232,155,72,.55))"}));
-    // Fine strands make the cut conductor read as copper, not a round terminal.
-    for(let strand=-1;strand<=1;strand++) wiresSvg.appendChild(svgEl("path",{d:`M${wire.x+ux*1.5+uy*strand*.8} ${wire.y+uy*1.5-ux*strand*.8} L${ex+uy*strand*.55} ${ey-ux*strand*.55}`,fill:"none",stroke:strand===0?"#ffe0a1":"#a95c2b","stroke-width":".65","stroke-linecap":"round"}));
+    const ex=wire.x+dx, ey=wire.y+dy;
+    wiresSvg.appendChild(svgEl("path",{d:`M${wire.x-uy*1.5} ${wire.y+ux*1.5} L${ex-uy*.8} ${ey+ux*.8} M${wire.x+uy*1.5} ${wire.y-ux*1.5} L${ex+uy*.8} ${ey-ux*.8}`,fill:"none",stroke:"#d99a53","stroke-width":"1.5","stroke-linecap":"round",style:"filter:drop-shadow(0 0 2px rgba(255,190,100,.55))"}));
+    wiresSvg.appendChild(svgEl("path",{d:`M${wire.x} ${wire.y} L${ex} ${ey}`,fill:"none",stroke:"#ffe6b5","stroke-width":".7","stroke-linecap":"round"}));
     wireTips.push({x:ex,y:ey,color:wire.color});
   }
   function initWires() {
