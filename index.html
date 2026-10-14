@@ -372,10 +372,14 @@
   setInterval(() => {
     if (document.hidden || !wireTips.length) return;
     const p = wireTips[Math.floor(Math.random()*wireTips.length)];
-    const spark = svgEl("circle",{cx:p.x,cy:p.y,r:"3",fill:"#fff",style:"filter:drop-shadow(0 0 7px #fff)"});
+    const spark = svgEl("g",{});
+    // Bright spark core with a short jagged tail; particles travel downward.
+    spark.appendChild(svgEl("path",{d:"M0 -7 L-2 -2 L2 0 L-1 4 L1 7",fill:"none",stroke:"#fff4b0","stroke-width":"1.8","stroke-linecap":"round","stroke-linejoin":"round"}));
+    spark.appendChild(svgEl("circle",{cx:"0",cy:"0",r:"2.2",fill:"#fff",style:"filter:drop-shadow(0 0 5px #ffb347)"}));
+    spark.setAttribute("transform",`translate(${p.x} ${p.y})`);
     wiresSvg.appendChild(spark);
-    const dx=(Math.random()-.5)*55, dy=-15-Math.random()*28;
-    spark.animate([{transform:"translate(0,0)",opacity:1},{transform:`translate(${dx}px,${dy}px)`,opacity:0}],{duration:1100, easing:"ease-out"}).onfinish=()=>spark.remove();
+    const dx=(Math.random()-.5)*42, dy=24+Math.random()*48;
+    spark.animate([{transform:`translate(${p.x}px,${p.y}px) translate(0px,0px)`,opacity:1},{transform:`translate(${p.x}px,${p.y}px) translate(${dx}px,${dy}px)`,opacity:0}],{duration:650+Math.random()*500,easing:"ease-in"}).onfinish=()=>spark.remove();
   },1200);
 
   // Lightning flashes toward the pointer
