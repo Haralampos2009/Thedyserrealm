@@ -41,6 +41,7 @@
         </div>
         <h1 class="profile-name">lampik2009 <span class="sparkle">✨</span></h1>
         <p class="profile-bio"><span id="typed-text"></span><span class="typing-cursor"></span></p>
+        <p class="electrician-badge"><span aria-hidden="true">⚡</span> Electrician in training <span class="badge-dot">·</span> lampik2009</p>
         <div class="status-pill"><span class="status-dot-icon status-offline" id="status-dot"></span><span id="status-text">Offline</span></div>
         <div class="stats-grid">
           <div class="stat-box"><div id="local-time" class="stat-value">--:--:--</div><div class="stat-label">LOCAL TIME</div></div>
@@ -643,6 +644,63 @@ dropBtn.addEventListener('click',place);restartBtn.addEventListener('click',rese
 <script>
 /* REALM DROP MOBILE CONTROLS — correct canvas target and hold-to-move */
 (()=>{const controls=document.getElementById('realm-drop-touch-controls'),canvas=document.getElementById('drop-board');if(!controls||!canvas)return;const keys={left:'ArrowLeft',right:'ArrowRight',down:'ArrowDown',rotate:'ArrowUp',drop:' '};let timer=null;const stop=()=>{if(timer){clearInterval(timer);timer=null}};const fire=action=>{const key=keys[action];if(!key)return;canvas.focus({preventScroll:true});canvas.dispatchEvent(new KeyboardEvent('keydown',{key,bubbles:true,cancelable:true}));canvas.dispatchEvent(new KeyboardEvent('keyup',{key,bubbles:true,cancelable:true}))};controls.querySelectorAll('[data-drop-action]').forEach(btn=>{btn.addEventListener('pointerdown',ev=>{ev.preventDefault();stop();const a=btn.dataset.dropAction;fire(a);if(['left','right','down'].includes(a))timer=setInterval(()=>fire(a),115);if(btn.setPointerCapture&&ev.pointerId!==undefined){try{btn.setPointerCapture(ev.pointerId)}catch(_){}}});['pointerup','pointercancel','lostpointercapture','pointerleave'].forEach(type=>btn.addEventListener(type,stop));btn.addEventListener('contextmenu',ev=>ev.preventDefault())});window.addEventListener('blur',stop)})();
+</script>
+
+
+<script>
+/* Tiny synthesized sound effects for the browser mini-games; no audio files required. */
+(()=> {
+  let ctx;
+  let lastSound=0;
+  function gameTone(kind="tap"){
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC)return;
+      const nowMs=performance.now();
+      if(nowMs-lastSound<45)return;
+      lastSound=nowMs;
+      ctx=ctx||new AC();
+      if(ctx.state==="suspended")ctx.resume();
+      const now=ctx.currentTime;
+      const presets={
+        tap:[520,680,.055,"sine"],
+        move:[300,380,.035,"triangle"],
+        eat:[620,980,.11,"sine"],
+        merge:[360,720,.12,"triangle"],
+        drop:[190,95,.12,"square"],
+        rotate:[420,560,.05,"triangle"],
+        win:[520,1040,.18,"sine"],
+        start:[330,660,.12,"triangle"]
+      };
+      const p=presets[kind]||presets.tap;
+      const osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.type=p[3];osc.frequency.setValueAtTime(p[0],now);
+      osc.frequency.exponentialRampToValueAtTime(Math.max(50,p[1]),now+p[2]);
+      gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.045,now+.008);
+      gain.gain.exponentialRampToValueAtTime(.0001,now+p[2]+.03);
+      osc.connect(gain);gain.connect(ctx.destination);osc.start(now);osc.stop(now+p[2]+.04);
+    }catch(_){}
+  }
+  const gameSelector='.game-card button, .game-card canvas, .game-card .board-2048, .game-card [data-stack-action], .game-card [data-drop-action]';
+  document.addEventListener("click",e=>{
+    const el=e.target.closest(gameSelector);
+    if(!el)return;
+    if(el.id==="clicker-tap"||el.id==="clicker-upgrade"||el.id==="clicker-auto-buy"||el.classList.contains("shape-choice"))return;
+    const id=el.id||"",txt=(el.textContent||"").toLowerCase();
+    if(id.includes("start")||id.includes("new")||txt.includes("restart"))gameTone("start");
+    else if(id.includes("undo"))gameTone("move");
+    else if(el.closest("#board-2048"))gameTone("merge");
+    else if(el.closest("#drop-board")||el.hasAttribute("data-drop-action"))gameTone("drop");
+    else if(el.closest("#snake-board"))gameTone("eat");
+    else if(el.hasAttribute("data-stack-action"))gameTone("drop");
+    else gameTone("tap");
+  },true);
+  document.addEventListener("keydown",e=>{
+    if(!["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," ","w","a","s","d","W","A","S","D"].includes(e.key))return;
+    const el=e.target;
+    if(el.closest&&el.closest(".game-card"))gameTone(el.closest("#board-2048")?"merge":el.closest("#drop-board")?"move":"move");
+  },true);
+})();
 </script>
 
 </body>
