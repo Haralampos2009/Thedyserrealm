@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -255,27 +255,27 @@
   // Clock and typewriter intro
   function updateTime() { $("local-time").textContent = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit", second:"2-digit"}); }
   updateTime(); setInterval(updateTime, 1000);
-  const intro = "Yo 👋 Less words, more deeds 🚀";
-  const introLines = [intro, "⚡ Electrician in training", "🔧 Building cool things · lampik2009"];
-  let introLine = 0;
-  let introIndex = 0;
+  const introLines = ["Yo 👋 Less words, more deeds 🚀", "⚡ Electrician in training", "🔧 Building cool things · lampik2009"];
+  let introLine = 0, introIndex = 0, introDeleting = false;
   (function typeIntro() {
     const target = $("typed-text");
     const line = introLines[introLine];
-    if (introIndex < line.length) {
-      target.textContent += line.charAt(introIndex++);
-      setTimeout(typeIntro, 68);
+    if (!introDeleting) {
+      target.textContent = line.slice(0, ++introIndex);
+      if (introIndex >= line.length) {
+        setTimeout(() => { introDeleting = true; typeIntro(); }, 1550);
+        return;
+      }
+      setTimeout(typeIntro, 65);
     } else {
-      setTimeout(() => {
-        target.classList.add("typing-fade");
-        setTimeout(() => {
-          introLine = (introLine + 1) % introLines.length;
-          introIndex = 0;
-          target.textContent = "";
-          target.classList.remove("typing-fade");
-          typeIntro();
-        }, 350);
-      }, 1450);
+      target.textContent = line.slice(0, --introIndex);
+      if (introIndex <= 0) {
+        introDeleting = false;
+        introLine = (introLine + 1) % introLines.length;
+        setTimeout(typeIntro, 280);
+        return;
+      }
+      setTimeout(typeIntro, 34);
     }
   })();
 
@@ -390,7 +390,7 @@
     $("snake-score").textContent=snakeScore;$("snake-best").textContent=snakeBest;
   }
   function stopSnake(text){clearInterval(snakeTimer);snakeTimer=null;snakeRunning=false;if(text)$("snake-start").textContent=text}
-  function startSnake(){stopSnake();snake=[{x:9,y:10},{x:8,y:10},{x:7,y:10}];dir={x:1,y:0};nextDir={x:1,y:0};snakeScore=0;food=randomFood();snakeRunning=true;$("snake-start").textContent="Restart";drawSnake();snakeTimer=setInterval(tickSnake,125)}
+  function startSnake(){stopSnake();snake=[{x:9,y:10},{x:8,y:10},{x:7,y:10}];dir={x:1,y:0};nextDir={x:1,y:0};snakeScore=0;food=randomFood();snakeRunning=true;$("snake-start").textContent="Restart";drawSnake();snakeTimer=setInterval(tickSnake,175)}
   function tickSnake(){
     dir={...nextDir};const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y},ate=head.x===food.x&&head.y===food.y,body=ate?snake:snake.slice(0,-1);
     if(head.x<0||head.x>=GRID||head.y<0||head.y>=GRID||body.some(p=>p.x===head.x&&p.y===head.y)){stopSnake("Game over — retry");return}
@@ -563,6 +563,7 @@
 <script>
 /* REALM STACK — wooden block balance game */
 (()=>{const canvas=document.getElementById('realm-stack-board');if(!canvas)return;const ctx=canvas.getContext('2d'),W=canvas.width,H=canvas.height,scoreEl=document.getElementById('realm-stack-score'),bestEl=document.getElementById('realm-stack-best'),dropBtn=document.getElementById('realm-stack-drop'),restartBtn=document.getElementById('realm-stack-restart');let best=Number(localStorage.getItem('realmStackBest')||0),blocks=[],active=null,score=0,running=true,anim=null;bestEl.textContent=best;
+function woodSound(kind='drop'){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ac=woodSound.ctx||(woodSound.ctx=new AC());if(ac.state==='suspended')ac.resume();const now=ac.currentTime;const noiseBuffer=ac.createBuffer(1,Math.floor(ac.sampleRate*(kind==='fail'?.24:.13)),ac.sampleRate),data=noiseBuffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length);const noise=ac.createBufferSource();noise.buffer=noiseBuffer;const filter=ac.createBiquadFilter();filter.type='lowpass';filter.frequency.setValueAtTime(kind==='fail'?520:1250,now);filter.frequency.exponentialRampToValueAtTime(90,now+(kind==='fail'?.24:.13));const ng=ac.createGain();ng.gain.setValueAtTime(.0001,now);ng.gain.exponentialRampToValueAtTime(kind==='fail'?.18:.09,now+.008);ng.gain.exponentialRampToValueAtTime(.0001,now+(kind==='fail'?.24:.13));noise.connect(filter);filter.connect(ng);ng.connect(ac.destination);noise.start(now);noise.stop(now+(kind==='fail'?.25:.14));const osc=ac.createOscillator(),og=ac.createGain();osc.type='triangle';osc.frequency.setValueAtTime(kind==='fail'?105:kind==='perfect'?230:165,now);osc.frequency.exponentialRampToValueAtTime(kind==='fail'?48:kind==='perfect'?120:72,now+.16);og.gain.setValueAtTime(.0001,now);og.gain.exponentialRampToValueAtTime(kind==='fail'?.12:.07,now+.012);og.gain.exponentialRampToValueAtTime(.0001,now+.19);osc.connect(og);og.connect(ac.destination);osc.start(now);osc.stop(now+.2)}catch(_){}}
 function makeBlock(x,y,w,h){return{x,y,w,h}}
 function reset(){if(anim)cancelAnimationFrame(anim);score=0;running=true;blocks=[makeBlock(76,H-38,148,24)];active={x:24,y:H-95,w:92,h:24,dir:1,speed:1.55};scoreEl.textContent='0';dropBtn.textContent='Drop block';draw();loop()}
 function cloud(x,y,s){ctx.save();ctx.globalAlpha=.78;ctx.fillStyle='#f3fbff';ctx.shadowColor='rgba(255,255,255,.5)';ctx.shadowBlur=8*s;[[0,5,14],[17,-2,19],[38,5,15],[23,8,20]].forEach(([dx,dy,r])=>{ctx.beginPath();ctx.ellipse(x+dx*s,y+dy*s,r*s,r*.62*s,0,0,Math.PI*2);ctx.fill()});ctx.restore()}
@@ -573,7 +574,7 @@ function draw(){const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'
 tree(17,H-12,.9);tree(54,H-12,.62);tree(W-18,H-12,.92);tree(W-54,H-12,.62);
 const t=Date.now()/270;bird(((Date.now()/24)%380)-40,35+Math.sin(t)*9,.9,t);bird(((Date.now()/31+140)%380)-40,68+Math.sin(t*.8+2)*7,.63,t+2);
 ctx.fillStyle='#78bd78';ctx.beginPath();ctx.moveTo(0,H-20);ctx.quadraticCurveTo(70,H-62,143,H-27);ctx.quadraticCurveTo(220,H-68,W,H-24);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();ctx.fillStyle='#4b8b52';ctx.fillRect(0,H-12,W,12);blocks.forEach(b=>block(b));if(active&&running)block(active,true);if(!running){ctx.fillStyle='rgba(12,31,38,.5)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='bold 21px system-ui';ctx.fillText('TOWER FELL!',W/2,H/2-6);ctx.font='12px system-ui';ctx.fillText('Tap New tower to try again',W/2,H/2+18)}}
-function place(){if(!running||!active)return;const top=blocks[blocks.length-1],left=Math.max(active.x,top.x),right=Math.min(active.x+active.w,top.x+top.w),overlap=right-left;if(overlap<12){running=false;active=null;draw();return}const perfect=overlap>=Math.min(active.w,top.w)-8;blocks.push(makeBlock(left,top.y-active.h,overlap,active.h));score++;scoreEl.textContent=score;if(score>best){best=score;bestEl.textContent=best;try{localStorage.setItem('realmStackBest',String(best))}catch(_){}}if(blocks.length>10){const shift=blocks[blocks.length-1].y-105;blocks=blocks.map(b=>({...b,y:b.y-shift}))}const t=blocks[blocks.length-1];active={x:active.dir>0?5:W-t.w-5,y:t.y-active.h,w:t.w,h:active.h,dir:active.dir,speed:Math.min(4.5,1.55+score*.055)};if(perfect)active.x=Math.max(0,Math.min(W-active.w,active.x));draw()}
+function place(){if(!running||!active)return;const top=blocks[blocks.length-1],left=Math.max(active.x,top.x),right=Math.min(active.x+active.w,top.x+top.w),overlap=right-left;if(overlap<12){woodSound('fail');running=false;active=null;draw();return}const perfect=overlap>=Math.min(active.w,top.w)-8;blocks.push(makeBlock(left,top.y-active.h,overlap,active.h));woodSound(perfect?'perfect':'drop');score++;scoreEl.textContent=score;if(score>best){best=score;bestEl.textContent=best;try{localStorage.setItem('realmStackBest',String(best))}catch(_){}}if(blocks.length>10){const shift=blocks[blocks.length-1].y-105;blocks=blocks.map(b=>({...b,y:b.y-shift}))}const t=blocks[blocks.length-1];active={x:active.dir>0?5:W-t.w-5,y:t.y-active.h,w:t.w,h:active.h,dir:active.dir,speed:Math.min(4.5,1.55+score*.055)};if(perfect)active.x=Math.max(0,Math.min(W-active.w,active.x));draw()}
 function move(dir){if(!active||!running)return;active.x=Math.max(0,Math.min(W-active.w,active.x+dir*12));draw()}
 function loop(){if(!running)return;if(active){active.x+=active.dir*active.speed;if(active.x<=0){active.x=0;active.dir=1}else if(active.x+active.w>=W){active.x=W-active.w;active.dir=-1}draw()}anim=requestAnimationFrame(loop)}
 dropBtn.addEventListener('click',place);restartBtn.addEventListener('click',reset);canvas.addEventListener('click',place);canvas.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a'){e.preventDefault();move(-1)}else if(e.key==='ArrowRight'||e.key.toLowerCase()==='d'){e.preventDefault();move(1)}else if(e.key===' '||e.key==='ArrowDown'){e.preventDefault();place()}});document.querySelectorAll('[data-stack-action]').forEach(b=>b.addEventListener('click',()=>move(b.dataset.stackAction==='left'?-1:1)));reset()})();
