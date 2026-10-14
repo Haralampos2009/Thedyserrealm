@@ -441,3 +441,11 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 .profile-name{font-size:clamp(1.65rem,4vw,2rem);text-shadow:0 0 22px rgba(100,255,205,.12)}
 .profile-bio{min-height:2.9em;display:flex;align-items:center;justify-content:center;padding:0 4px;color:#a8ffe0!important;font-family:"Outfit",Inter,system-ui,sans-serif!important;font-size:.9rem!important;font-weight:600;letter-spacing:.015em;line-height:1.45;text-shadow:0 0 14px rgba(77,255,194,.16)}
 .profile-bio #typed-text{overflow-wrap:anywhere}.profile-bio #typed-text.typing-fade{opacity:.15}.typing-cursor{border-color:#8affdc!important;box-shadow:0 0 8px rgba(138,255,220,.65)}
+
+
+/* Clearer Snake cells and more obvious wire-puzzle targets */
+#snake-board { image-rendering:auto; border-color:rgba(134,255,190,.6); box-shadow:0 0 0 2px rgba(30,90,57,.45),0 10px 28px rgba(0,0,0,.22); }
+.wire-puzzle-card #wire-room-svg { touch-action:none; }
+.wire-puzzle-card #wire-a-tip,.wire-puzzle-card #wire-b-tip { filter:drop-shadow(0 0 7px rgba(255,197,105,.8)); stroke-width:4; }
+.wire-puzzle-card .wire-puzzle-status { color:#c8ffe2; font-weight:600; }
+.wire-puzzle-card .game-hint { line-height:1.55; }
