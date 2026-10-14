@@ -226,6 +226,32 @@
               </svg>
             </div>
             <div class="game-controls"><button class="game-btn" id="wire-switch">Flip switch: OFF</button><button class="game-btn secondary" id="wire-reset">Reset wires</button><span class="wire-moves">Connections: <strong id="wire-moves">0/2</strong></span></div>
+            <div class="game-controls"><button class="game-btn secondary" id="wire-room-toggle">Open Room 02 · LED Lab</button><span class="wire-moves" id="wire-room-label">Room 01 · Lamp circuit</span></div>
+            <section id="wire-room-two" class="wire-room wire-room-two" hidden>
+              <div class="wire-puzzle-status" id="wire-two-status" aria-live="polite">Connect red to + and blue to − on each LED. Match the colors to light both diodes.</div>
+              <svg id="wire-room-two-svg" viewBox="0 0 600 330" role="img" aria-label="Second electrical room with two LEDs and four matching wire sockets">
+                <defs><linearGradient id="ledWall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#18392d"/><stop offset="1" stop-color="#08150f"/></linearGradient><radialGradient id="ledRedGlow"><stop stop-color="#ff5656" stop-opacity=".85"/><stop offset="1" stop-color="#ff3030" stop-opacity="0"/></radialGradient><radialGradient id="ledBlueGlow"><stop stop-color="#4db8ff" stop-opacity=".85"/><stop offset="1" stop-color="#168aff" stop-opacity="0"/></radialGradient></defs>
+                <rect width="600" height="330" rx="14" fill="url(#ledWall)"/><path d="M0 278H600M30 0V278M570 0V278" stroke="#315644" stroke-width="2" opacity=".65"/>
+                <rect x="30" y="30" width="540" height="222" rx="12" fill="#15271e" stroke="#71917b" stroke-width="2"/>
+                <text x="300" y="55" fill="#d6f5df" font-size="14" text-anchor="middle" font-weight="bold">LED TEST PANEL · ROOM 02</text>
+                <rect x="65" y="76" width="190" height="145" rx="10" fill="#0a1710" stroke="#456b51" stroke-width="2"/>
+                <text x="160" y="98" fill="#d6f5df" font-size="12" text-anchor="middle">RED DIODE · LED 1</text>
+                <ellipse id="led1-halo" cx="160" cy="145" rx="58" ry="48" fill="url(#ledRedGlow)" opacity="0"/>
+                <circle id="led1-light" cx="160" cy="145" r="21" fill="#552c30" stroke="#ff7777" stroke-width="3"/><path d="M149 167v15h22v-15" fill="#7d8e83" stroke="#b5c7ba" stroke-width="2"/><path d="M154 182v16m12-16v16" stroke="#b5c7ba" stroke-width="3"/>
+                <text x="160" y="211" fill="#ffb0b0" font-size="10" text-anchor="middle">RED + / BLACK −</text>
+                <rect x="345" y="76" width="190" height="145" rx="10" fill="#0a1710" stroke="#456b51" stroke-width="2"/>
+                <text x="440" y="98" fill="#d6f5df" font-size="12" text-anchor="middle">BLUE DIODE · LED 2</text>
+                <ellipse id="led2-halo" cx="440" cy="145" rx="58" ry="48" fill="url(#ledBlueGlow)" opacity="0"/>
+                <circle id="led2-light" cx="440" cy="145" r="21" fill="#203d54" stroke="#76c7ff" stroke-width="3"/><path d="M429 167v15h22v-15" fill="#7d8e83" stroke="#b5c7ba" stroke-width="2"/><path d="M434 182v16m12-16v16" stroke="#b5c7ba" stroke-width="3"/>
+                <text x="440" y="211" fill="#a9ddff" font-size="10" text-anchor="middle">BLUE + / BLACK −</text>
+                <text x="160" y="244" fill="#c7e7d2" font-size="10" text-anchor="middle">Drag red wire to red socket</text><text x="440" y="244" fill="#c7e7d2" font-size="10" text-anchor="middle">Drag blue wire to blue socket</text>
+                <path id="led-wire-red" d="M110 286 Q125 250 160 170" fill="none" stroke="#e75c5c" stroke-width="6" stroke-linecap="round"/><circle id="led-red-tip" cx="110" cy="286" r="11" fill="#ff8888" stroke="#ffe0e0" stroke-width="3" tabindex="0" role="button" aria-label="Drag red wire to red diode"/>
+                <path id="led-wire-blue" d="M490 286 Q475 250 440 170" fill="none" stroke="#55a9ef" stroke-width="6" stroke-linecap="round"/><circle id="led-blue-tip" cx="490" cy="286" r="11" fill="#85ceff" stroke="#e0f4ff" stroke-width="3" tabindex="0" role="button" aria-label="Drag blue wire to blue diode"/>
+                <circle cx="160" cy="145" r="34" fill="none" stroke="#ff8888" stroke-width="2" stroke-dasharray="5 4"/><circle cx="440" cy="145" r="34" fill="none" stroke="#85ceff" stroke-width="2" stroke-dasharray="5 4"/>
+                <text x="300" y="310" fill="#92b5a0" font-size="11" text-anchor="middle">MATCH THE WIRE COLORS TO POWER BOTH LEDS</text>
+              </svg>
+              <div class="game-controls"><button class="game-btn secondary" id="wire-two-reset">Reset Room 02</button><span class="wire-moves">LEDs lit: <strong id="wire-two-count">0/2</strong></span></div>
+            </section>
             <p class="game-hint">Easy mode: drag each glowing tip to the matching numbered socket (1 → 1, 2 → 2). Target rings are generous. Then flip the switch.</p>
           </article>
         </div>
@@ -530,6 +556,35 @@
   $("wire-switch").addEventListener("click",()=>{if(!(wireState.a&&wireState.b))return;wireState.on=!wireState.on;if(window.realmGameSound)window.realmGameSound(wireState.on?"power":"tap");renderWires()});
   $("wire-reset").addEventListener("click",()=>{wireState.a=false;wireState.b=false;wireState.on=false;setTip("a",wireHomes.a.x,wireHomes.a.y);setTip("b",wireHomes.b.x,wireHomes.b.y);renderWires()});
   renderWires();
+
+  // Room 02: two simple color-matching LED circuits.
+  const roomTwo=$("wire-room-two"), roomToggle=$("wire-room-toggle"), roomLabel=$("wire-room-label");
+  const ledState={red:false,blue:false,drag:null};
+  const ledSvg=$("wire-room-two-svg");
+  const ledTips={red:$("led-red-tip"),blue:$("led-blue-tip")};
+  const ledPaths={red:$("led-wire-red"),blue:$("led-wire-blue")};
+  const ledHomes={red:{x:110,y:286},blue:{x:490,y:286}};
+  const ledTargets={red:{x:160,y:145},blue:{x:440,y:145}};
+  function ledPoint(e){const p=ledSvg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(ledSvg.getScreenCTM().inverse())}
+  function setLedTip(k,x,y){ledTips[k].setAttribute("cx",x);ledTips[k].setAttribute("cy",y);if(k==="red")ledPaths[k].setAttribute("d",`M110 286 Q125 250 145 205 T${x} ${y}`);else ledPaths[k].setAttribute("d",`M490 286 Q475 250 455 205 T${x} ${y}`)}
+  function renderLedRoom(){
+    const count=Number(ledState.red)+Number(ledState.blue);
+    $("wire-two-count").textContent=count+"/2";
+    $("led1-light").setAttribute("fill",ledState.red?"#ff4242":"#552c30");$("led1-light").setAttribute("stroke",ledState.red?"#ffd0d0":"#ff7777");$("led1-halo").setAttribute("opacity",ledState.red?"1":"0");
+    $("led2-light").setAttribute("fill",ledState.blue?"#38aaff":"#203d54");$("led2-light").setAttribute("stroke",ledState.blue?"#d0efff":"#76c7ff");$("led2-halo").setAttribute("opacity",ledState.blue?"1":"0");
+    $("wire-two-status").textContent=count===2?"⚡ Both diodes are glowing! Room 02 complete.":count===1?"Nice! One diode is on. Connect the other wire to its matching color.":"Drag the red wire to the red LED and the blue wire to the blue LED.";
+    if(count===2&&window.realmGameSound)window.realmGameSound("power");
+  }
+  ["red","blue"].forEach(k=>{
+    const tip=ledTips[k];tip.style.cursor="grab";
+    tip.addEventListener("pointerdown",e=>{e.preventDefault();ledState.drag=k;tip.setPointerCapture(e.pointerId);tip.style.cursor="grabbing"});
+    tip.addEventListener("pointermove",e=>{if(ledState.drag!==k)return;const p=ledPoint(e);setLedTip(k,Math.max(12,Math.min(588,p.x)),Math.max(12,Math.min(318,p.y)))});
+    tip.addEventListener("pointerup",e=>{if(ledState.drag!==k)return;ledState.drag=null;const p=ledPoint(e),t=ledTargets[k];if(Math.hypot(p.x-t.x,p.y-t.y)<58){ledState[k]=true;setLedTip(k,t.x,k==="red"?170:170);if(window.realmGameSound)window.realmGameSound("connect")}else{ledState[k]=false;const home=ledHomes[k];setLedTip(k,home.x,home.y)}renderLedRoom();tip.style.cursor="grab"});
+    tip.addEventListener("pointercancel",()=>{ledState.drag=null;tip.style.cursor="grab"});
+  });
+  roomToggle.addEventListener("click",()=>{const opening=roomTwo.hidden;roomTwo.hidden=!opening;roomToggle.textContent=opening?"Back to Room 01 · Lamp circuit":"Open Room 02 · LED Lab";roomLabel.textContent=opening?"Room 02 · LED test panel":"Room 01 · Lamp circuit";if(window.realmGameSound)window.realmGameSound("tap")});
+  $("wire-two-reset").addEventListener("click",()=>{ledState.red=false;ledState.blue=false;ledState.drag=null;setLedTip("red",ledHomes.red.x,ledHomes.red.y);setLedTip("blue",ledHomes.blue.x,ledHomes.blue.y);renderLedRoom()});
+  renderLedRoom();
 
   // Realm Drop: polished tetromino arcade with ghost landing, rotation and line combos
   const dropCanvas=$("drop-board"), dropCtx=dropCanvas.getContext("2d"), cols=10, rows=15, cell=24;
