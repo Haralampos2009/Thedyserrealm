@@ -41,7 +41,6 @@
         </div>
         <h1 class="profile-name">lampik2009 <span class="sparkle">✨</span></h1>
         <p class="profile-bio"><span id="typed-text"></span><span class="typing-cursor"></span></p>
-        <p class="electrician-badge"><span aria-hidden="true">⚡</span> Electrician in training <span class="badge-dot">·</span> lampik2009</p>
         <div class="status-pill"><span class="status-dot-icon status-offline" id="status-dot"></span><span id="status-text">Offline</span></div>
         <div class="stats-grid">
           <div class="stat-box"><div id="local-time" class="stat-value">--:--:--</div><div class="stat-label">LOCAL TIME</div></div>
@@ -257,11 +256,26 @@
   function updateTime() { $("local-time").textContent = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit", second:"2-digit"}); }
   updateTime(); setInterval(updateTime, 1000);
   const intro = "Yo 👋 Less words, more deeds 🚀";
+  const introLines = [intro, "⚡ Electrician in training", "🔧 Building cool things · lampik2009"];
+  let introLine = 0;
   let introIndex = 0;
   (function typeIntro() {
-    if (introIndex < intro.length) {
-      $("typed-text").textContent += intro.charAt(introIndex++);
-      setTimeout(typeIntro, 75);
+    const target = $("typed-text");
+    const line = introLines[introLine];
+    if (introIndex < line.length) {
+      target.textContent += line.charAt(introIndex++);
+      setTimeout(typeIntro, 68);
+    } else {
+      setTimeout(() => {
+        target.classList.add("typing-fade");
+        setTimeout(() => {
+          introLine = (introLine + 1) % introLines.length;
+          introIndex = 0;
+          target.textContent = "";
+          target.classList.remove("typing-fade");
+          typeIntro();
+        }, 350);
+      }, 1450);
     }
   })();
 
