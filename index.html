@@ -338,10 +338,8 @@
     return el;
   }
   function addCable(wire) {
-    wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:"#000", "stroke-width":"12","stroke-linecap":"round","stroke-linejoin":"round",opacity:".55",style:"filter:blur(3px)"}));
     wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:"#101a15","stroke-width":"8","stroke-linecap":"round","stroke-linejoin":"round"}));
     wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:wire.color,"stroke-width":"4.8","stroke-linecap":"round","stroke-linejoin":"round",style:`filter:drop-shadow(0 0 3px ${wire.color})`}));
-    wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:"#fff","stroke-width":"1","stroke-linecap":"round","stroke-linejoin":"round",opacity:".35",transform:"translate(0 -1)"}));
     // Short insulated ferrule followed by a visible, tapered bare-copper conductor.
     const dx=wire.tipDx ?? 6, dy=wire.tipDy ?? 6, len=Math.hypot(dx,dy), ux=dx/len, uy=dy/len;
     const sx=wire.x-ux*7, sy=wire.y-uy*7, ex=wire.x+dx, ey=wire.y+dy;
@@ -371,6 +369,9 @@
   initWires(); addEventListener("resize",initWires);
   setInterval(() => {
     if (document.hidden || !wireTips.length) return;
+    // Spawn several small sparks so the background feels more electrically active.
+    const burst = 1 + (Math.random() < 0.7 ? 1 : 0) + (Math.random() < 0.3 ? 1 : 0);
+    for (let i = 0; i < burst; i++) {
     const p = wireTips[Math.floor(Math.random()*wireTips.length)];
     const spark = svgEl("g",{});
     // Bright spark core with a short jagged tail; particles travel downward.
@@ -380,7 +381,8 @@
     wiresSvg.appendChild(spark);
     const dx=(Math.random()-.5)*42, dy=24+Math.random()*48;
     spark.animate([{transform:`translate(${p.x}px,${p.y}px) translate(0px,0px)`,opacity:1},{transform:`translate(${p.x}px,${p.y}px) translate(${dx}px,${dy}px)`,opacity:0}],{duration:650+Math.random()*500,easing:"ease-in"}).onfinish=()=>spark.remove();
-  },1200);
+    }
+  },420);
 
   // Lightning flashes toward the pointer
   let mouseX=innerWidth/2, mouseY=innerHeight/2;
