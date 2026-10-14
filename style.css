@@ -435,3 +435,10 @@ body:before{content:"";position:fixed;width:700px;height:700px;border-radius:50%
 }
 .electrician-badge>span:first-child { color:#8bffe0; text-shadow:0 0 12px rgba(110,255,204,.6); }
 .electrician-badge .badge-dot { color:#4fd1b0; }
+
+/* Clear, visible typewriter intro and upgraded display typography */
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap");
+.profile-name,.section-title,.game-heading h3,.project-info h3,.back-title{font-family:"Outfit","Space Grotesk",sans-serif!important;font-weight:700;letter-spacing:-.045em}
+.profile-name{font-size:clamp(1.65rem,4vw,2rem);text-shadow:0 0 22px rgba(100,255,205,.12)}
+.profile-bio{min-height:2.9em;display:flex;align-items:center;justify-content:center;padding:0 4px;color:#a8ffe0!important;font-family:"Outfit",sans-serif!important;font-size:.9rem!important;font-weight:600;letter-spacing:.015em;line-height:1.45;text-shadow:0 0 14px rgba(77,255,194,.16);transition:opacity .25s ease,transform .25s ease}
+.profile-bio #typed-text{overflow-wrap:anywhere}.profile-bio #typed-text.typing-fade{opacity:.15}.typing-cursor{border-color:#8affdc!important;box-shadow:0 0 8px rgba(138,255,220,.65)}
