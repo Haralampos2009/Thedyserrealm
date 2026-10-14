@@ -327,6 +327,10 @@
   // Realistic multi-layer SVG cables and occasional sparks
   const svgNS = "http://www.w3.org/2000/svg";
   const wiresSvg = $("wires-canvas");
+  const copperDefs=svgEl("defs",{});
+  const copperGrad=svgEl("linearGradient",{id:"realm-copper-tip",x1:"0",y1:"0",x2:"1",y2:"1"});
+  [["0%","#ffe7ad"],["42%","#d88a43"],["100%","#8b451f"]].forEach(([offset,color])=>copperGrad.appendChild(svgEl("stop",{offset,"stop-color":color})));
+  copperDefs.appendChild(copperGrad); wiresSvg.appendChild(copperDefs);
   let wireTips = [];
   function svgEl(tag, attrs) {
     const el = document.createElementNS(svgNS, tag);
@@ -338,25 +342,30 @@
     wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:"#101a15","stroke-width":"8","stroke-linecap":"round","stroke-linejoin":"round"}));
     wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:wire.color,"stroke-width":"4.8","stroke-linecap":"round","stroke-linejoin":"round",style:`filter:drop-shadow(0 0 3px ${wire.color})`}));
     wiresSvg.appendChild(svgEl("path",{d:wire.d,fill:"none",stroke:"#fff","stroke-width":"1","stroke-linecap":"round","stroke-linejoin":"round",opacity:".35",transform:"translate(0 -1)"}));
-    wiresSvg.appendChild(svgEl("circle",{cx:wire.x,cy:wire.y,r:"5.2",fill:"#111b15",stroke:"#687c70","stroke-width":"1.3"}));
-    wiresSvg.appendChild(svgEl("circle",{cx:wire.x,cy:wire.y,r:"2.2",fill:wire.color,style:`filter:drop-shadow(0 0 5px ${wire.color})`}));
-    wireTips.push({x:wire.x,y:wire.y,color:wire.color});
+    // Short insulated ferrule followed by a visible, tapered bare-copper conductor.
+    const dx=wire.tipDx ?? 6, dy=wire.tipDy ?? 6, len=Math.hypot(dx,dy), ux=dx/len, uy=dy/len;
+    const sx=wire.x-ux*7, sy=wire.y-uy*7, ex=wire.x+dx, ey=wire.y+dy;
+    wiresSvg.appendChild(svgEl("path",{d:`M${sx-uy*2.5} ${sy+ux*2.5} L${wire.x-uy*2.5} ${wire.y+ux*2.5} L${wire.x+uy*2.5} ${wire.y-ux*2.5} L${sx+uy*2.5} ${sy-ux*2.5} Z`,fill:wire.color,stroke:"#17221b","stroke-width":".8"}));
+    wiresSvg.appendChild(svgEl("path",{d:`M${wire.x-uy*1.7} ${wire.y+ux*1.7} L${ex-uy*1.2} ${ey+ux*1.2} L${ex+uy*1.2} ${ey-ux*1.2} L${wire.x+uy*1.7} ${wire.y-ux*1.7} Z`,fill:"url(#realm-copper-tip)",stroke:"#f0bd78","stroke-width":".55",style:"filter:drop-shadow(0 0 3px rgba(232,155,72,.55))"}));
+    // Fine strands make the cut conductor read as copper, not a round terminal.
+    for(let strand=-1;strand<=1;strand++) wiresSvg.appendChild(svgEl("path",{d:`M${wire.x+ux*1.5+uy*strand*.8} ${wire.y+uy*1.5-ux*strand*.8} L${ex+uy*strand*.55} ${ey-ux*strand*.55}`,fill:"none",stroke:strand===0?"#ffe0a1":"#a95c2b","stroke-width":".65","stroke-linecap":"round"}));
+    wireTips.push({x:ex,y:ey,color:wire.color});
   }
   function initWires() {
     const w = innerWidth, h = innerHeight;
     wiresSvg.setAttribute("viewBox",`0 0 ${w} ${h}`);
     wiresSvg.innerHTML = ""; wireTips = [];
     [
-      {color:"#ef4444",d:"M 0 22 C 45 22 82 22 115 26 S 145 45 155 59",x:155,y:59},
-      {color:"#3b82f6",d:"M 0 48 C 42 48 72 48 94 53 S 119 75 132 91",x:132,y:91},
-      {color:"#84cc16",d:"M 0 74 C 32 74 53 74 74 82 S 96 109 111 126",x:111,y:126},
-      {color:"#f59e0b",d:"M 0 100 C 25 100 43 103 57 113 S 77 143 91 160",x:91,y:160},
-      {color:"#ef4444",d:`M ${w} 22 C ${w-45} 22 ${w-82} 22 ${w-115} 26 S ${w-145} 45 ${w-155} 59`,x:w-155,y:59},
-      {color:"#3b82f6",d:`M ${w} 48 C ${w-42} 48 ${w-72} 48 ${w-94} 53 S ${w-119} 75 ${w-132} 91`,x:w-132,y:91},
-      {color:"#84cc16",d:`M ${w} 74 C ${w-32} 74 ${w-53} 74 ${w-74} 82 S ${w-96} 109 ${w-111} 126`,x:w-111,y:126},
-      {color:"#f59e0b",d:`M ${w} 100 C ${w-25} 100 ${w-43} 103 ${w-57} 113 S ${w-77} 143 ${w-91} 160`,x:w-91,y:160},
-      {color:"#3b82f6",d:`M 0 ${h-35} C 48 ${h-35} 86 ${h-35} 110 ${h-47} S 130 ${h-65} 145 ${h-82}`,x:145,y:h-82},
-      {color:"#ef4444",d:`M ${w} ${h-35} C ${w-48} ${h-35} ${w-86} ${h-35} ${w-110} ${h-47} S ${w-130} ${h-65} ${w-145} ${h-82}`,x:w-145,y:h-82}
+      {color:"#ef4444",d:"M 0 22 C 45 22 82 22 115 26 S 145 45 155 59",x:155,y:59,tipDx:6,tipDy:7},
+      {color:"#3b82f6",d:"M 0 48 C 42 48 72 48 94 53 S 119 75 132 91",x:132,y:91,tipDx:6,tipDy:7},
+      {color:"#84cc16",d:"M 0 74 C 32 74 53 74 74 82 S 96 109 111 126",x:111,y:126,tipDx:6,tipDy:7},
+      {color:"#f59e0b",d:"M 0 100 C 25 100 43 103 57 113 S 77 143 91 160",x:91,y:160,tipDx:6,tipDy:7},
+      {color:"#ef4444",d:`M ${w,tipDx:-6,tipDy:7} 22 C ${w-45} 22 ${w-82} 22 ${w-115} 26 S ${w-145} 45 ${w-155} 59`,x:w-155,y:59},
+      {color:"#3b82f6",d:`M ${w,tipDx:-6,tipDy:7} 48 C ${w-42} 48 ${w-72} 48 ${w-94} 53 S ${w-119} 75 ${w-132} 91`,x:w-132,y:91},
+      {color:"#84cc16",d:`M ${w,tipDx:-6,tipDy:7} 74 C ${w-32} 74 ${w-53} 74 ${w-74} 82 S ${w-96} 109 ${w-111} 126`,x:w-111,y:126},
+      {color:"#f59e0b",d:`M ${w,tipDx:-6,tipDy:7} 100 C ${w-25} 100 ${w-43} 103 ${w-57} 113 S ${w-77} 143 ${w-91} 160`,x:w-91,y:160},
+      {color:"#3b82f6",d:`M 0 ${h-35} C 48 ${h-35} 86 ${h-35} 110 ${h-47} S 130 ${h-65} 145 ${h-82}`,x:145,y:h-82,tipDx:6,tipDy:-7},
+      {color:"#ef4444",d:`M ${w} ${h-35} C ${w-48} ${h-35} ${w-86} ${h-35} ${w-110} ${h-47} S ${w-130} ${h-65} ${w-145} ${h-82}`,x:w-145,y:h-82,tipDx:-6,tipDy:-7}
     ].forEach(addCable);
   }
   initWires(); addEventListener("resize",initWires);
