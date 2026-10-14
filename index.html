@@ -354,16 +354,16 @@
   function initWires() {
     const w = innerWidth, h = innerHeight;
     wiresSvg.setAttribute("viewBox",`0 0 ${w} ${h}`);
-    wiresSvg.innerHTML = ""; wireTips = [];
+    wiresSvg.innerHTML = ""; wiresSvg.appendChild(copperDefs); wireTips = [];
     [
       {color:"#ef4444",d:"M 0 22 C 45 22 82 22 115 26 S 145 45 155 59",x:155,y:59,tipDx:6,tipDy:7},
       {color:"#3b82f6",d:"M 0 48 C 42 48 72 48 94 53 S 119 75 132 91",x:132,y:91,tipDx:6,tipDy:7},
       {color:"#84cc16",d:"M 0 74 C 32 74 53 74 74 82 S 96 109 111 126",x:111,y:126,tipDx:6,tipDy:7},
       {color:"#f59e0b",d:"M 0 100 C 25 100 43 103 57 113 S 77 143 91 160",x:91,y:160,tipDx:6,tipDy:7},
-      {color:"#ef4444",d:`M ${w,tipDx:-6,tipDy:7} 22 C ${w-45} 22 ${w-82} 22 ${w-115} 26 S ${w-145} 45 ${w-155} 59`,x:w-155,y:59},
-      {color:"#3b82f6",d:`M ${w,tipDx:-6,tipDy:7} 48 C ${w-42} 48 ${w-72} 48 ${w-94} 53 S ${w-119} 75 ${w-132} 91`,x:w-132,y:91},
-      {color:"#84cc16",d:`M ${w,tipDx:-6,tipDy:7} 74 C ${w-32} 74 ${w-53} 74 ${w-74} 82 S ${w-96} 109 ${w-111} 126`,x:w-111,y:126},
-      {color:"#f59e0b",d:`M ${w,tipDx:-6,tipDy:7} 100 C ${w-25} 100 ${w-43} 103 ${w-57} 113 S ${w-77} 143 ${w-91} 160`,x:w-91,y:160},
+      {color:"#ef4444",d:`M ${w} 22 C ${w-45} 22 ${w-82} 22 ${w-115} 26 S ${w-145} 45 ${w-155} 59`,x:w-155,y:59,tipDx:-6,tipDy:7},
+      {color:"#3b82f6",d:`M ${w} 48 C ${w-42} 48 ${w-72} 48 ${w-94} 53 S ${w-119} 75 ${w-132} 91`,x:w-132,y:91,tipDx:-6,tipDy:7},
+      {color:"#84cc16",d:`M ${w} 74 C ${w-32} 74 ${w-53} 74 ${w-74} 82 S ${w-96} 109 ${w-111} 126`,x:w-111,y:126,tipDx:-6,tipDy:7},
+      {color:"#f59e0b",d:`M ${w} 100 C ${w-25} 100 ${w-43} 103 ${w-57} 113 S ${w-77} 143 ${w-91} 160`,x:w-91,y:160,tipDx:-6,tipDy:7},
       {color:"#3b82f6",d:`M 0 ${h-35} C 48 ${h-35} 86 ${h-35} 110 ${h-47} S 130 ${h-65} 145 ${h-82}`,x:145,y:h-82,tipDx:6,tipDy:-7},
       {color:"#ef4444",d:`M ${w} ${h-35} C ${w-48} ${h-35} ${w-86} ${h-35} ${w-110} ${h-47} S ${w-130} ${h-65} ${w-145} ${h-82}`,x:w-145,y:h-82,tipDx:-6,tipDy:-7}
     ].forEach(addCable);
